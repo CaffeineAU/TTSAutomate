@@ -20,6 +20,7 @@ using System.Windows.Navigation;
 using NAudio.Wave;
 using System.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Speech;
 
 namespace TTSTranslate
 {
@@ -29,6 +30,7 @@ namespace TTSTranslate
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         Boolean filenameSelected = false;
+        System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
 
         private Boolean needToSave = true;
 
@@ -43,6 +45,47 @@ namespace TTSTranslate
             }
         }
 
+        private List<VoiceProvider> providers = new List<VoiceProvider>();
+
+        public List<VoiceProvider> TTSEngines
+        {
+            get { return providers; }
+            set
+            {
+                providers = value;
+                OnPropertyChanged("TTSEngines");
+            }
+        }
+
+        private VoiceProvider selectedEngine;
+
+        public VoiceProvider SelectedEngine
+        {
+            get { return selectedEngine; }
+            set
+            {
+                selectedEngine = value;
+                OnPropertyChanged("SelectedEngine");
+                OnPropertyChanged("UseWeb");
+                OnPropertyChanged("UseLocal");
+            }
+        }
+
+        public Visibility UseWeb
+        {
+            get
+            {
+                return (SelectedEngine.ProviderClass == VoiceProvider.Class.Web) ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+
+        public Visibility UseLocal
+        {
+            get
+            {
+                return (SelectedEngine.ProviderClass != VoiceProvider.Class.Web) ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
 
         BackgroundWorker DownloaderWorker = new BackgroundWorker();
 
@@ -156,6 +199,14 @@ namespace TTSTranslate
                 PhraseItems.Add(new PhraseItem());
             }
 
+            TTSEngines.Add(new VoiceProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Gooogle, ProviderClass= VoiceProvider.Class.Web });
+            SelectedEngine = TTSEngines[0];
+
+            foreach (var voice in ssss.GetInstalledVoices())
+            {
+                TTSEngines.Add(new VoiceProvider { Name = voice.VoiceInfo.Name, ProviderType = VoiceProvider.Provider.Microsoft, ProviderClass= VoiceProvider.Class.Local });
+            } 
+
             Title = String.Format("TTSTranslate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
             Cultures.AddRange(CultureInfo.GetCultures(CultureTypes.FrameworkCultures));
@@ -218,19 +269,26 @@ namespace TTSTranslate
                             {
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-                                wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
-                                using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                                if (SelectedEngine.ProviderClass == VoiceProvider.Class.Web)
                                 {
-                                    var newFormat = new WaveFormat(16000, 16, 1);
-                                    using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
-                                    //using (WaveStream pcm = WaveFormatConversionStream.CreatePcmStream(mp3))
+                                    wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
+                                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
                                     {
-
-                                        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                        var newFormat = new WaveFormat(16000, 16, 1);
+                                        using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                                        {
+                                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    ssss.SelectVoice(SelectedEngine.Name);
+                                    
+                                    ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
+                                    ssss.Speak(item.Phrase);
+                                }
                                 item.DownloadComplete = true;
-                                wc.Dispose();
                                 DownloaderWorker.ReportProgress(++i);
                             }
                         }
@@ -240,6 +298,7 @@ namespace TTSTranslate
                         }
                     }
                 }
+                wc.Dispose();
             }
             catch (Exception Ex)
             {
@@ -260,7 +319,7 @@ namespace TTSTranslate
             mp.MediaEnded += delegate { mp.Close(); };
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             foreach (var item in PhraseItems)
             {
@@ -345,6 +404,35 @@ namespace TTSTranslate
             }
         }
 
+        private void CreatePhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (NeedToSave && PhraseItems.Count(n => !IsPhraseEmpty(n)) > 0)
+            {
+                switch (MessageBox.Show("Your phrases file is not saved. Would you like to save it before you create another file?", "Unsaved Phrases file", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
+                {
+                    case MessageBoxResult.Cancel:
+                        return;
+                    case MessageBoxResult.Yes:
+                        if (SaveOrSaveAs())
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        return;
+                }
+            }
+
+            PhraseFileName = "New Phrase File";
+            filenameSelected = false;
+            NeedToSave = false;
+        }
+
         private void BrowseOutputDirectoryCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             var dlg = new CommonOpenFileDialog();
@@ -371,15 +459,16 @@ namespace TTSTranslate
             SaveOrSaveAs();
         }
 
-        private void SaveOrSaveAs()
+        private Boolean SaveOrSaveAs()
         {
             if (filenameSelected)
             {
                 SavePhraseFile(PhraseFileName);
+                return true;
             }
             else
             {
-                SaveAs();
+                return SaveAs();
             }
         }
 
@@ -410,7 +499,7 @@ namespace TTSTranslate
             SaveAs();
         }
 
-        private void SaveAs()
+        private Boolean SaveAs()
         {
             var dlg = new System.Windows.Forms.SaveFileDialog();
             dlg.Title = "Save Phrase file";
@@ -423,6 +512,7 @@ namespace TTSTranslate
                 SavePhraseFile(dlg.FileName);
                 Properties.Settings.Default.LastPhraseFile = Path.GetDirectoryName(dlg.FileName);
             }
+            return result == System.Windows.Forms.DialogResult.OK;
         }
 
         private void StartDownloadingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -525,6 +615,49 @@ namespace TTSTranslate
                 }
             }
         }
+
+        private void EngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (var item in PhraseItems)
+            {
+                item.DownloadComplete = false;
+            }
+
+        }
+
+    }
+    public class VoiceProvider : INotifyPropertyChanged
+    {
+
+        public enum Provider
+        {
+            Microsoft,
+            Gooogle,
+        }
+
+        public enum Class
+        {
+            Local,
+            Web,
+        }
+
+        public string Name { get; set; }
+
+        public Provider ProviderType { get; set; }
+
+        public Class ProviderClass { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(String name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1}", Name, ProviderClass);
+        }
+
     }
 
     public class PhraseItem : INotifyPropertyChanged

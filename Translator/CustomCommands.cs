@@ -21,6 +21,17 @@ namespace TTSTranslate.Commands
             }
     );
 
+        public static readonly RoutedUICommand CreatePhraseFileCommand = new RoutedUICommand
+    (
+            "CreatePhraseFileCommand",
+            "CreatePhraseFileCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.N, ModifierKeys.Control)
+            }
+    );
+
         public static readonly RoutedUICommand BrowseOutputDirectoryCommand = new RoutedUICommand
     (
             "BrowseOutputDirectoryCommand",
