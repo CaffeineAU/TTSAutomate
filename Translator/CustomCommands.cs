@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using TTSTranslate;
+
+namespace TTSTranslate.Commands
+{
+    public static class CustomCommands
+    {
+        public static readonly RoutedUICommand BrowsePhraseFileCommand = new RoutedUICommand
+    (
+            "BrowsePhraseFileCommand",
+            "BrowsePhraseFileCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.O, ModifierKeys.Control)
+            }
+    );
+
+        public static readonly RoutedUICommand BrowseOutputDirectoryCommand = new RoutedUICommand
+    (
+            "BrowseOutputDirectoryCommand",
+            "BrowseOutputDirectoryCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.P, ModifierKeys.Control)
+            }
+    );
+
+        public static readonly RoutedUICommand StartDownloadingCommand = new RoutedUICommand
+    (
+            "StartDownloadingCommand",
+            "StartDownloadingCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.G, ModifierKeys.Control)
+            }
+    );
+        public static readonly RoutedUICommand StopDownloadingCommand = new RoutedUICommand
+    (
+            "StopDownloadingCommand",
+            "StopDownloadingCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.H, ModifierKeys.Control)
+            }
+    );
+
+        public static readonly RoutedUICommand SavePhraseFileCommand = new RoutedUICommand
+    (
+            "SavePhraseFileCommand",
+            "SavePhraseFileCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.S, ModifierKeys.Control)
+            }
+    );
+
+        public static readonly RoutedUICommand SaveAsPhraseFileCommand = new RoutedUICommand
+    (
+            "SaveAsPhraseFileCommand",
+            "SaveAsPhraseFileCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.A, ModifierKeys.Control)
+            }
+    );
+    }
+}
