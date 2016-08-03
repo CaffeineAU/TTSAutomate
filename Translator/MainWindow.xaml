@@ -15,6 +15,8 @@
         <CommandBinding Command="self:CustomCommands.StopDownloadingCommand" CanExecute="StopDownloadingCommand_CanExecute" Executed="StopDownloadingCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.SavePhraseFileCommand" CanExecute="SavePhraseFileCommand_CanExecute" Executed="SavePhraseFileCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.SaveAsPhraseFileCommand" CanExecute="SavePhraseFileCommand_CanExecute" Executed="SaveAsPhraseFileCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.InsertRowsAboveCommand" CanExecute="InsertRowsAboveCommand_CanExecute" Executed="InsertRowsAboveCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.InsertRowsBelowCommand" CanExecute="InsertRowsBelowCommand_CanExecute" Executed="InsertRowsBelowCommand_Executed" />
     </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -29,8 +31,10 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2"  Grid.ColumnSpan="3" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" Grid.RowSpan="2" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" EnableRowVirtualization="False"  >
+        <DataGrid x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="3" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" EnableRowVirtualization="False" SelectionChanged="WordsListView_SelectionChanged"  >
             <DataGrid.Resources>
                 <local:RowIndexConverter x:Key="RowIndexConverter"/>
             </DataGrid.Resources>
@@ -38,8 +42,8 @@
                 <DataTemplate>
                     <TextBlock>
                         <TextBlock.Text>
-                            <MultiBinding Converter="{StaticResource RowIndexConverter}">
-                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged"/>
+                            <MultiBinding Converter="{StaticResource RowIndexConverter}"  UpdateSourceTrigger="PropertyChanged">
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=DataGridRow}" Mode="TwoWay"/>
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -84,11 +88,8 @@
         </TextBox>
         <Label  Content="Output Directory" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Grid.Row="1" Margin="5" Grid.Column="1"/>
         <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Path=OutputDirectoryName}" VerticalContentAlignment="Center" VerticalAlignment="Stretch"  Grid.Column="2" Grid.Row="1" Margin="5" IsReadOnly="True"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Stretch"  Grid.ColumnSpan="2">
-            <Button  Content="Go!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="120" Command="self:CustomCommands.StartDownloadingCommand" Margin="5"/>
-            <Button  Content="Stop!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="120" Command="self:CustomCommands.StopDownloadingCommand" Margin="5"/>
-        </StackPanel>
-            <ProgressBar HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="4" Grid.Column="2" Margin="5" Maximum="{Binding DownloadCount}" Value="{Binding DownloadProgress}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Stretch"  Grid.ColumnSpan="2"/>
+        <ProgressBar HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="6" Grid.Column="2" Margin="5" Maximum="{Binding DownloadCount}" Value="{Binding DownloadProgress}"/>
         <StackPanel Grid.Column="3" HorizontalAlignment="Stretch"  Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="5" >
             <Button  Content="Open Phrase File..." HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand"/>
             <Button  Content="Select Output Directory..." HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand"/>
@@ -103,9 +104,13 @@
             <Label Content="Language" Visibility="{Binding Path=UseWeb}" />
             <ComboBox ItemsSource="{Binding Path=Cultures}" DisplayMemberPath="DisplayName" Visibility="{Binding Path=UseWeb}" SelectedValue="{Binding SelectedCulture, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" />
         </StackPanel>
-        <Button  Content="Save Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="3" Margin="5" Command="self:CustomCommands.SavePhraseFileCommand"/>
-        <Button  Content="Save Phrase File As..." HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="4" Margin="5" Command="self:CustomCommands.SaveAsPhraseFileCommand"/>
+        <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="3" Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
+        <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="4" Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
+        <Button  Content="Save Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="5" Margin="5" Command="self:CustomCommands.SavePhraseFileCommand"/>
+        <Button  Content="Save Phrase File As..." HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="6" Margin="5" Command="self:CustomCommands.SaveAsPhraseFileCommand"/>
         <Image x:Name="image" Source="{Binding HeaderImage}" HorizontalAlignment="Stretch" Margin="5"  VerticalAlignment="Stretch" Grid.RowSpan="2"/>
+        <Button  Content="Stop!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="self:CustomCommands.StopDownloadingCommand" Margin="5" Grid.Column="1" Grid.Row="6"/>
+        <Button  Content="Go!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="self:CustomCommands.StartDownloadingCommand" Margin="5" Grid.Column="0" Grid.Row="6"/>
 
     </Grid>
 </Window>

@@ -72,6 +72,18 @@ namespace TTSTranslate
             }
         }
 
+
+        private int selectedRowCount;
+
+        public int SelectedRowCount
+        {
+            get { return selectedRowCount; }
+            set { selectedRowCount = value;
+                OnPropertyChanged("SelectedRowCount");
+            }
+        }
+
+
         private int speechRate;
 
         public int SpeechRate
@@ -587,6 +599,34 @@ namespace TTSTranslate
             }
         }
 
+        private void InsertRowsAboveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute =  WordsListView.SelectedItems.Count > 0;
+        }
+
+        private void InsertRowsAboveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            int rowsToAdd = WordsListView.SelectedItems.Count;
+            for (int i = 0; i < rowsToAdd; i++)
+            {
+                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[0] as PhraseItem), new PhraseItem());
+            }
+        }
+
+        private void InsertRowsBelowCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = WordsListView.SelectedItems.Count > 0;
+        }
+
+        private void InsertRowsBelowCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            int rowsToAdd = WordsListView.SelectedItems.Count;
+            for (int i = 0; i < rowsToAdd; i++)
+            {
+                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[WordsListView.SelectedItems.Count - 1] as PhraseItem) + 1, new PhraseItem());
+            }
+        }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (PhraseItems.Count > 0)
@@ -677,6 +717,11 @@ namespace TTSTranslate
                 item.DownloadComplete = false;
             }
 
+        }
+
+        private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedRowCount = WordsListView.SelectedItems.Count;
         }
     }
     public class VoiceProvider : INotifyPropertyChanged

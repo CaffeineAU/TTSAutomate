@@ -85,5 +85,25 @@ namespace TTSTranslate.Commands
                 new KeyGesture(Key.A, ModifierKeys.Control)
             }
     );
+        public static readonly RoutedUICommand InsertRowsAboveCommand = new RoutedUICommand
+    (
+            "InsertRowsAboveCommand",
+            "InsertRowsAboveCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.Up, ModifierKeys.Control)
+            }
+    );
+        public static readonly RoutedUICommand InsertRowsBelowCommand = new RoutedUICommand
+    (
+            "InsertRowsBelowCommand",
+            "InsertRowsBelowCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.Down, ModifierKeys.Control)
+            }
+    );
     }
 }
