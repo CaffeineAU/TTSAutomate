@@ -96,13 +96,114 @@
             <Button  Content="Create new Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.CreatePhraseFileCommand"/>
             <Label Content="TTS Provider"/>
             <ComboBox ItemsSource="{Binding Path=TTSEngines}" SelectedValue="{Binding SelectedEngine, Mode=TwoWay}" SelectionChanged="EngineComboBox_SelectionChanged" />
-            <TextBlock Text="Note: Only WAV files will be created" TextWrapping="Wrap" Foreground="#FF970000" Visibility="{Binding Path=UseLocal}"/>
-            <Label Content="{Binding SpeechRate}" ContentStringFormat="Speech rate: {0}" Visibility="{Binding Path=UseLocal}" />
-            <Slider Visibility="{Binding Path=UseLocal}" Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged"/>
-            <Label Content="{Binding Volume}" ContentStringFormat="Volume: {0}" Visibility="{Binding Path=UseLocal}" />
-            <Slider Visibility="{Binding Path=UseLocal}" Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged" TickFrequency="10" LargeChange="10"/>
-            <Label Content="Language" Visibility="{Binding Path=UseWeb}" />
-            <ComboBox ItemsSource="{Binding Path=Cultures}" DisplayMemberPath="DisplayName" Visibility="{Binding Path=UseWeb}" SelectedValue="{Binding SelectedCulture, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" />
+            <TextBlock Text="Note: Only WAV files will be created" TextWrapping="Wrap" Foreground="#FF970000" >
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Label Content="{Binding SpeechRate}" ContentStringFormat="Speech rate: {0}" >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <Slider  Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged">
+                <Slider.Style>
+                    <Style TargetType="{x:Type Slider}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Slider.Style>
+            </Slider>
+            <Label Content="{Binding Volume}" ContentStringFormat="Volume: {0}"  >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <Slider Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged" TickFrequency="10" LargeChange="10">
+                <Slider.Style>
+                    <Style TargetType="{x:Type Slider}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Slider.Style>
+            </Slider>
+            <Label Content="Language" >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Google">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <ComboBox ItemsSource="{Binding Path=Cultures}" DisplayMemberPath="DisplayName" SelectedValue="{Binding SelectedCulture, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Google">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
+            <Label Content="Voice" >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <ComboBox ItemsSource="{Binding Path=TextToSpeechVoices}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
         </StackPanel>
         <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="3" Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
         <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="4" Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>

@@ -33,6 +33,35 @@ namespace TTSTranslate
         System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
         WebClient wc;
 
+        private ObservableCollection<TTSVoice> ttsVoices = new ObservableCollection<TTSVoice>();
+
+        public ObservableCollection<TTSVoice> TextToSpeechVoices
+        {
+            get { return ttsVoices; }
+            set { ttsVoices = value; }
+        }
+
+        private TTSVoice selectedVoice;
+
+        public TTSVoice SelectedVoice
+        {
+            get { return selectedVoice; }
+            set
+            {
+                selectedVoice = value;
+                OnPropertyChanged("SelectedVoice");
+            }
+        }
+
+        private int engineIndex;
+
+        public int EngineIndex
+        {
+            get { return TTSEngines.IndexOf(SelectedEngine); }
+            set { engineIndex = value; }
+        }
+
+
         private Boolean needToSave = true;
 
         public Boolean NeedToSave
@@ -69,6 +98,7 @@ namespace TTSTranslate
                 OnPropertyChanged("SelectedEngine");
                 OnPropertyChanged("UseWeb");
                 OnPropertyChanged("UseLocal");
+                OnPropertyChanged("EngineIndex");
             }
         }
 
@@ -230,6 +260,8 @@ namespace TTSTranslate
         public MainWindow()
         {
             InitializeComponent();
+
+
             //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
             for (int i = 0; i < InitialPhraseItems; i++)
@@ -237,13 +269,15 @@ namespace TTSTranslate
                 PhraseItems.Add(new PhraseItem());
             }
 
-            TTSEngines.Add(new VoiceProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Gooogle, ProviderClass= VoiceProvider.Class.Web });
+            TTSEngines.Add(new VoiceProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Google, ProviderClass = VoiceProvider.Class.Web });
+            TTSEngines.Add(new VoiceProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
+
             SelectedEngine = TTSEngines[0];
 
             foreach (var voice in ssss.GetInstalledVoices())
             {
-                TTSEngines.Add(new VoiceProvider { Name = voice.VoiceInfo.Name, ProviderType = VoiceProvider.Provider.Microsoft, ProviderClass= VoiceProvider.Class.Local });
-            } 
+                TTSEngines.Add(new VoiceProvider { Name = voice.VoiceInfo.Name, ProviderType = VoiceProvider.Provider.Microsoft, ProviderClass = VoiceProvider.Class.Local });
+            }
 
             Title = String.Format("TTSTranslate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
@@ -255,6 +289,26 @@ namespace TTSTranslate
             DownloaderWorker.WorkerSupportsCancellation = true;
             DownloaderWorker.RunWorkerCompleted += DownloaderWorkder_RunWorkerCompleted;
             DownloaderWorker.ProgressChanged += DownloaderWorkder_ProgressChanged;
+
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice="IVONA Brian22 (UK English)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Jade (French)", Voice="IVONA CΘline22 (French)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Gabriel (French)", Voice="IVONA Mathieu22 (French)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Nadine (German)", Voice="IVONA Marlene22 (German)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Michael (German)", Voice="IVONA Hans22 (German)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Valentina (Russian)", Voice="IVONA Tatyana22 (Russian)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "John (US English)", Voice = "IVONA Eric22"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Jenna (US English)", Voice="IVONA Jennifer22"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "George (US English)", Voice="IVONA Joey22"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Alice (US English)", Voice="IVONA Kimberly22"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Daisy (US English)", Voice="IVONA Salli22"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Alessandra (Italian)", Voice="IVONA Carla22 (Italian)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Giovanni (Italian)", Voice="IVONA Giorgio22 (Italian)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Isabella (Spanish [Modern])", Voice="IVONA Conchita22 (Spanish [Modern])"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Mateo (Spanish [Modern])", Voice="IVONA Enrique22 (Spanish [Modern])"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Rodrigo (Portuguese)", Voice="IVONA Cristiano22 (Portuguese)"});
+            SelectedVoice = TextToSpeechVoices[0];
+        
 
             this.DataContext = this;
         }
@@ -315,9 +369,21 @@ namespace TTSTranslate
                             {
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-                                if (SelectedEngine.ProviderClass == VoiceProvider.Class.Web)
+                                if (SelectedEngine.ProviderType == VoiceProvider.Provider.Google)
                                 {
                                     wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
+                                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                                    {
+                                        var newFormat = new WaveFormat(16000, 16, 1);
+                                        using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                                        {
+                                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                        }
+                                    }
+                                }
+                                else if (SelectedEngine.ProviderType == VoiceProvider.Provider.wwwfromtexttospeechcom)
+                                {
+                                    HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
                                     using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
                                     {
                                         var newFormat = new WaveFormat(16000, 16, 1);
@@ -335,7 +401,7 @@ namespace TTSTranslate
 
                                     ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
                                     ssss.Speak(item.Phrase);
-                                    
+
                                 }
                                 item.DownloadComplete = true;
                                 DownloaderWorker.ReportProgress(++i);
@@ -601,7 +667,7 @@ namespace TTSTranslate
 
         private void InsertRowsAboveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute =  WordsListView.SelectedItems.Count > 0;
+            e.CanExecute = WordsListView.SelectedItems.Count > 0;
         }
 
         private void InsertRowsAboveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -730,7 +796,8 @@ namespace TTSTranslate
         public enum Provider
         {
             Microsoft,
-            Gooogle,
+            Google,
+            wwwfromtexttospeechcom
         }
 
         public enum Class
@@ -827,6 +894,12 @@ namespace TTSTranslate
         {
             throw new NotImplementedException();
         }
+    }
+
+    public class TTSVoice
+    {
+        public String Name { get; set; }
+        public String Voice { get; set; }
     }
 }
 // http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q=Thousand&tl=En-au
