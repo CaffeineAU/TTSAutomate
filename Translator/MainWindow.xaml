@@ -96,6 +96,10 @@
             <Label Content="TTS Provider"/>
             <ComboBox ItemsSource="{Binding Path=TTSEngines}" SelectedValue="{Binding SelectedEngine, Mode=TwoWay}" SelectionChanged="EngineComboBox_SelectionChanged" />
             <TextBlock Text="Note: Only WAV files will be created" TextWrapping="Wrap" Foreground="#FF970000" Visibility="{Binding Path=UseLocal}"/>
+            <Label Content="{Binding SpeechRate}" ContentStringFormat="Speech rate: {0}" Visibility="{Binding Path=UseLocal}" />
+            <Slider Visibility="{Binding Path=UseLocal}" Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged"/>
+            <Label Content="{Binding Volume}" ContentStringFormat="Volume: {0}" Visibility="{Binding Path=UseLocal}" />
+            <Slider Visibility="{Binding Path=UseLocal}" Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged" TickFrequency="10" LargeChange="10"/>
             <Label Content="Language" Visibility="{Binding Path=UseWeb}" />
             <ComboBox ItemsSource="{Binding Path=Cultures}" DisplayMemberPath="DisplayName" Visibility="{Binding Path=UseWeb}" SelectedValue="{Binding SelectedCulture, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" />
         </StackPanel>

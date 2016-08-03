@@ -31,6 +31,7 @@ namespace TTSTranslate
     {
         Boolean filenameSelected = false;
         System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
+        WebClient wc;
 
         private Boolean needToSave = true;
 
@@ -70,6 +71,31 @@ namespace TTSTranslate
                 OnPropertyChanged("UseLocal");
             }
         }
+
+        private int speechRate;
+
+        public int SpeechRate
+        {
+            get { return speechRate; }
+            set
+            {
+                speechRate = value;
+                OnPropertyChanged("SpeechRate");
+            }
+        }
+
+        private int volume = 100;
+
+        public int Volume
+        {
+            get { return volume; }
+            set
+            {
+                volume = value;
+                OnPropertyChanged("Volume");
+            }
+        }
+
 
         public Visibility UseWeb
         {
@@ -254,10 +280,18 @@ namespace TTSTranslate
 
         private void DownloaderWorkder_DoWork(object sender, DoWorkEventArgs e)
         {
-            WebClient wc = new WebClient();
             int i = 0;
             try
             {
+                if (SelectedEngine.ProviderClass == VoiceProvider.Class.Local)
+                {
+                    ssss = new System.Speech.Synthesis.SpeechSynthesizer();
+                }
+                else
+                {
+                    wc = new WebClient();
+                }
+
                 foreach (var item in PhraseItems)
                 {
                     if (!IsPhraseEmpty(item))
@@ -284,9 +318,12 @@ namespace TTSTranslate
                                 else
                                 {
                                     ssss.SelectVoice(SelectedEngine.Name);
-                                    
+                                    ssss.Volume = Volume;
+                                    ssss.Rate = SpeechRate;
+
                                     ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
                                     ssss.Speak(item.Phrase);
+                                    
                                 }
                                 item.DownloadComplete = true;
                                 DownloaderWorker.ReportProgress(++i);
@@ -298,7 +335,15 @@ namespace TTSTranslate
                         }
                     }
                 }
-                wc.Dispose();
+                if (SelectedEngine.ProviderClass == VoiceProvider.Class.Local)
+                {
+                    ssss.Dispose();
+                }
+                else
+                {
+                    wc.Dispose();
+
+                }
             }
             catch (Exception Ex)
             {
@@ -625,6 +670,14 @@ namespace TTSTranslate
 
         }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            foreach (var item in PhraseItems)
+            {
+                item.DownloadComplete = false;
+            }
+
+        }
     }
     public class VoiceProvider : INotifyPropertyChanged
     {
