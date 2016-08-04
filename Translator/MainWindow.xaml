@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TTSTranslate"
         xmlns:self="clr-namespace:TTSTranslate.Commands"
         mc:Ignorable="d"
-        Title="TTSTranslate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing">
+        Title="TTSAutomate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing">
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.BrowsePhraseFileCommand" Executed="BrowsePhraseFileCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.CreatePhraseFileCommand" Executed="CreatePhraseFileCommand_Executed" />
@@ -188,6 +188,9 @@
                             <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Ivona">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
@@ -198,6 +201,18 @@
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
+            <ComboBox ItemsSource="{Binding Path=IvonaSupportedVoices.Voices}" SelectedValue="{Binding SelectedIvonaVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Ivona">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>

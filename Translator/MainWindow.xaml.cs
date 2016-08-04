@@ -54,6 +54,31 @@ namespace TTSTranslate
             }
         }
 
+        private Voice selectedIvonaVoice;
+
+        public Voice SelectedIvonaVoice
+        {
+            get { return selectedIvonaVoice; }
+            set
+            {
+                selectedIvonaVoice = value;
+                OnPropertyChanged("SelectedIvonaVoice");
+            }
+        }
+
+        private SupportedVoices supportedVoices;// = new List<Voice>();
+
+        public SupportedVoices IvonaSupportedVoices
+        {
+            get { return supportedVoices; }
+            set
+            {
+                supportedVoices = value;
+                OnPropertyChanged("IvonaSupportedVoices");
+            }
+        }
+
+
         private int engineIndex;
 
         public int EngineIndex
@@ -72,7 +97,7 @@ namespace TTSTranslate
             {
                 needToSave = value;
                 OnPropertyChanged("NeedToSave");
-                Title = String.Format("TTSTranslate {2} - {0} {1}", PhraseFileName, NeedToSave ? "(Unsaved)" : "", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, NeedToSave ? "(Unsaved)" : "", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
         }
 
@@ -261,8 +286,14 @@ namespace TTSTranslate
         public MainWindow()
         {
             InitializeComponent();
-
-            File.WriteAllBytes("c:\\temp\\ivona.mp3", IvonaRequest.IvonaCreateSpeech("Hello there"));
+            BackgroundWorker loadIvonaVoicesWorker = new BackgroundWorker();
+            loadIvonaVoicesWorker.DoWork += delegate
+            {
+                IvonaSupportedVoices = IvonaRequest.IvonaListVoices();
+                SelectedIvonaVoice = IvonaSupportedVoices.Voices[0];
+            };
+            loadIvonaVoicesWorker.RunWorkerAsync();
+            
 
             //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
@@ -274,17 +305,18 @@ namespace TTSTranslate
 
             PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
 
+            TTSEngines.Add(new VoiceProvider { Name = "Ivona", ProviderType = VoiceProvider.Provider.Ivona, ProviderClass = VoiceProvider.Class.Web });
             TTSEngines.Add(new VoiceProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Google, ProviderClass = VoiceProvider.Class.Web });
-            TTSEngines.Add(new VoiceProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
-
-            SelectedEngine = TTSEngines[0];
-
             foreach (var voice in ssss.GetInstalledVoices())
             {
                 TTSEngines.Add(new VoiceProvider { Name = voice.VoiceInfo.Name, ProviderType = VoiceProvider.Provider.Microsoft, ProviderClass = VoiceProvider.Class.Local });
             }
+            TTSEngines.Add(new VoiceProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
 
-            Title = String.Format("TTSTranslate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            SelectedEngine = TTSEngines[0];
+
+
+            Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
             Cultures.AddRange(CultureInfo.GetCultures(CultureTypes.FrameworkCultures));
             Cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
@@ -375,39 +407,53 @@ namespace TTSTranslate
                             {
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
                                 System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-                                if (SelectedEngine.ProviderType == VoiceProvider.Provider.Google)
+                                switch (SelectedEngine.ProviderType)
                                 {
-                                    wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
-                                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                    {
-                                        var newFormat = new WaveFormat(16000, 16, 1);
-                                        using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
-                                        {
-                                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
-                                        }
-                                    }
-                                }
-                                else if (SelectedEngine.ProviderType == VoiceProvider.Provider.wwwfromtexttospeechcom)
-                                {
-                                    HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
-                                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                    {
-                                        var newFormat = new WaveFormat(22050, 16, 1);
-                                        using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
-                                        {
-                                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    ssss.SelectVoice(SelectedEngine.Name);
-                                    ssss.Volume = Volume;
-                                    ssss.Rate = SpeechRate;
+                                    case VoiceProvider.Provider.Microsoft:
+                                        ssss.SelectVoice(SelectedEngine.Name);
+                                        ssss.Volume = Volume;
+                                        ssss.Rate = SpeechRate;
 
-                                    ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
-                                    ssss.Speak(item.Phrase);
+                                        ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
+                                        ssss.Speak(item.Phrase);
 
+                                        break;
+                                    case VoiceProvider.Provider.Google:
+                                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
+                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                                        {
+                                            var newFormat = new WaveFormat(16000, 16, 1);
+                                            using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                                            {
+                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                            }
+                                        }
+                                        break;
+                                    case VoiceProvider.Provider.Ivona:
+                                        File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), IvonaRequest.IvonaCreateSpeech(item.Phrase, SelectedIvonaVoice));
+                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                                        {
+                                            var newFormat = new WaveFormat(16000, 16, 1);
+                                            using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                                            {
+                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                            }
+                                        }
+
+                                        break;
+                                    case VoiceProvider.Provider.wwwfromtexttospeechcom:
+                                        HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
+                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                                        {
+                                            var newFormat = new WaveFormat(16000, 16, 1);
+                                            using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                                            {
+                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
                                 }
                                 item.DownloadComplete = true;
                                 DownloaderWorker.ReportProgress(++i);
@@ -807,6 +853,7 @@ namespace TTSTranslate
         {
             Microsoft,
             Google,
+            Ivona,
             wwwfromtexttospeechcom
         }
 
