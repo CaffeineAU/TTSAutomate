@@ -262,7 +262,7 @@ namespace TTSTranslate
         {
             InitializeComponent();
 
-           // IvonaRequest ir = new IvonaRequest();
+            File.WriteAllBytes("c:\\temp\\ivona.mp3", IvonaRequest.IvonaCreateSpeech("Hello there"));
 
             //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
