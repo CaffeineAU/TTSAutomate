@@ -21,6 +21,7 @@ using NAudio.Wave;
 using System.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Speech;
+using System.Collections.Specialized;
 
 namespace TTSTranslate
 {
@@ -261,13 +262,17 @@ namespace TTSTranslate
         {
             InitializeComponent();
 
+           // IvonaRequest ir = new IvonaRequest();
 
             //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
+            List<PhraseItem> initialitems = new List<PhraseItem>();
             for (int i = 0; i < InitialPhraseItems; i++)
             {
-                PhraseItems.Add(new PhraseItem());
+                initialitems.Add(new PhraseItem());
             }
+
+            PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
 
             TTSEngines.Add(new VoiceProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Google, ProviderClass = VoiceProvider.Class.Web });
             TTSEngines.Add(new VoiceProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
@@ -292,7 +297,8 @@ namespace TTSTranslate
 
             TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)"});
             TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice="IVONA Brian22 (UK English)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Jade (French)", Voice="IVONA CΘline22 (French)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Jade (French)", Voice = "IVONA CΘline22 (French)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Nicole (AU English)", Voice = "IVONA Nicole22" });
             TextToSpeechVoices.Add(new TTSVoice { Name = "Gabriel (French)", Voice="IVONA Mathieu22 (French)"});
             TextToSpeechVoices.Add(new TTSVoice { Name = "Nadine (German)", Voice="IVONA Marlene22 (German)"});
             TextToSpeechVoices.Add(new TTSVoice { Name = "Michael (German)", Voice="IVONA Hans22 (German)"});
@@ -386,7 +392,7 @@ namespace TTSTranslate
                                     HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
                                     using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
                                     {
-                                        var newFormat = new WaveFormat(16000, 16, 1);
+                                        var newFormat = new WaveFormat(22050, 16, 1);
                                         using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
                                         {
                                             WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
@@ -465,9 +471,11 @@ namespace TTSTranslate
             PhraseItems.Clear();
             Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.+)\|(?<Phrase>.+)\b");
 
+            List<PhraseItem> items = new List<PhraseItem>();
+
             for (int i = 0; i < InitialPhraseItems; i++)
             {
-                PhraseItems.Add(new PhraseItem());
+                items.Add(new PhraseItem());
             }
 
             int j = 0;
@@ -480,11 +488,13 @@ namespace TTSTranslate
                 {
                     if (j >= phraseItems.Count)
                     {
-                        PhraseItems.Add(new PhraseItem());
+                        items.Add(new PhraseItem());
                     }
-                    PhraseItems[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
+                    items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
                 }
             }
+
+            PhraseItems = new ObservableCollection<PhraseItem>(items);
         }
 
         private void SavePhraseFileCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -900,6 +910,38 @@ namespace TTSTranslate
     {
         public String Name { get; set; }
         public String Voice { get; set; }
+    }
+
+    public class ObservableCollectionEx<T> : ObservableCollection<T>
+    {
+        private bool _notificationSupressed = false;
+        private bool _supressNotification = false;
+        public bool SupressNotification
+        {
+            get
+            {
+                return _supressNotification;
+            }
+            set
+            {
+                _supressNotification = value;
+                if (_supressNotification == false && _notificationSupressed)
+                {
+                    this.OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+                    _notificationSupressed = false;
+                }
+            }
+        }
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (SupressNotification)
+            {
+                _notificationSupressed = true;
+                return;
+            }
+            base.OnCollectionChanged(e);
+        }
     }
 }
 // http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q=Thousand&tl=En-au
