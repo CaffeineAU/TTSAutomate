@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TTSTranslate"
         xmlns:self="clr-namespace:TTSTranslate.Commands"
         mc:Ignorable="d"
-        Title="TTSAutomate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing">
+        Title="TTSAutomate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus">
     <Window.CommandBindings>
         <CommandBinding Command="self:CustomCommands.BrowsePhraseFileCommand" Executed="BrowsePhraseFileCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.CreatePhraseFileCommand" Executed="CreatePhraseFileCommand_Executed" />
@@ -120,7 +120,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Slider  Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged">
+            <Slider  Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="SpeechRateSlider_ValueChanged">
                 <Slider.Style>
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -144,7 +144,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Slider Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="Slider_ValueChanged" TickFrequency="10" LargeChange="10">
+            <Slider Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="VolumeSlider_ValueChanged" TickFrequency="10" LargeChange="10">
                 <Slider.Style>
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />

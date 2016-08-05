@@ -22,6 +22,7 @@ using System.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Speech;
 using System.Collections.Specialized;
+using System.Windows.Threading;
 
 namespace TTSTranslate
 {
@@ -41,6 +42,13 @@ namespace TTSTranslate
             get { return ttsVoices; }
             set { ttsVoices = value; }
         }
+
+        Boolean speaking =false;
+        object speakinglock = 0;
+        string message = "";
+
+        DispatcherTimer speakTimer = new DispatcherTimer( DispatcherPriority.Render);
+
 
         private TTSVoice selectedVoice;
 
@@ -134,7 +142,9 @@ namespace TTSTranslate
         public int SelectedRowCount
         {
             get { return selectedRowCount; }
-            set { selectedRowCount = value;
+            set
+            {
+                selectedRowCount = value;
                 OnPropertyChanged("SelectedRowCount");
             }
         }
@@ -282,10 +292,13 @@ namespace TTSTranslate
         public BitmapImage HeaderImage { get; private set; }
         MediaPlayer mp = new MediaPlayer();
         private int InitialPhraseItems = 499;
+        private bool LoadedWindow = false;
 
         public MainWindow()
         {
             InitializeComponent();
+            speakTimer.Interval = TimeSpan.FromMilliseconds(100);
+            speakTimer.Stop();
             BackgroundWorker loadIvonaVoicesWorker = new BackgroundWorker();
             loadIvonaVoicesWorker.DoWork += delegate
             {
@@ -293,7 +306,9 @@ namespace TTSTranslate
                 SelectedIvonaVoice = IvonaSupportedVoices.Voices[0];
             };
             loadIvonaVoicesWorker.RunWorkerAsync();
-            
+
+            speakTimer.Tick += MicrosoftSpeak; 
+
 
             //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
@@ -327,29 +342,29 @@ namespace TTSTranslate
             DownloaderWorker.RunWorkerCompleted += DownloaderWorkder_RunWorkerCompleted;
             DownloaderWorker.ProgressChanged += DownloaderWorkder_ProgressChanged;
 
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice="IVONA Brian22 (UK English)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice = "IVONA Brian22 (UK English)" });
             TextToSpeechVoices.Add(new TTSVoice { Name = "Jade (French)", Voice = "IVONA CΘline22 (French)" });
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Nicole (AU English)", Voice = "IVONA Nicole22" });
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Gabriel (French)", Voice="IVONA Mathieu22 (French)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Nadine (German)", Voice="IVONA Marlene22 (German)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Michael (German)", Voice="IVONA Hans22 (German)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Valentina (Russian)", Voice="IVONA Tatyana22 (Russian)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "John (US English)", Voice = "IVONA Eric22"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Jenna (US English)", Voice="IVONA Jennifer22"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "George (US English)", Voice="IVONA Joey22"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Alice (US English)", Voice="IVONA Kimberly22"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Daisy (US English)", Voice="IVONA Salli22"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Alessandra (Italian)", Voice="IVONA Carla22 (Italian)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Giovanni (Italian)", Voice="IVONA Giorgio22 (Italian)"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Isabella (Spanish [Modern])", Voice="IVONA Conchita22 (Spanish [Modern])"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Mateo (Spanish [Modern])", Voice="IVONA Enrique22 (Spanish [Modern])"});
-            TextToSpeechVoices.Add(new TTSVoice { Name = "Rodrigo (Portuguese)", Voice="IVONA Cristiano22 (Portuguese)"});
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Gabriel (French)", Voice = "IVONA Mathieu22 (French)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Nadine (German)", Voice = "IVONA Marlene22 (German)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Michael (German)", Voice = "IVONA Hans22 (German)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Valentina (Russian)", Voice = "IVONA Tatyana22 (Russian)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "John (US English)", Voice = "IVONA Eric22" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Jenna (US English)", Voice = "IVONA Jennifer22" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "George (US English)", Voice = "IVONA Joey22" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Alice (US English)", Voice = "IVONA Kimberly22" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Daisy (US English)", Voice = "IVONA Salli22" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Alessandra (Italian)", Voice = "IVONA Carla22 (Italian)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Giovanni (Italian)", Voice = "IVONA Giorgio22 (Italian)" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Isabella (Spanish [Modern])", Voice = "IVONA Conchita22 (Spanish [Modern])" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Mateo (Spanish [Modern])", Voice = "IVONA Enrique22 (Spanish [Modern])" });
+            TextToSpeechVoices.Add(new TTSVoice { Name = "Rodrigo (Portuguese)", Voice = "IVONA Cristiano22 (Portuguese)" });
             SelectedVoice = TextToSpeechVoices[0];
-        
+
 
             this.DataContext = this;
         }
+
 
         private void DownloaderWorkder_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -499,6 +514,60 @@ namespace TTSTranslate
             foreach (var item in PhraseItems)
             {
                 item.DownloadComplete = false;
+            }
+            AnnounceNewVoice();
+        }
+
+        private void AnnounceNewVoice()
+        {
+            if (LoadedWindow)
+            {
+
+                String newVoice = String.Format("{0} selected", SelectedEngine.Name);
+                String newVoiceFile = String.Format("{0}.mp3", Guid.NewGuid());
+
+                switch (SelectedEngine.ProviderType)
+                {
+                    case VoiceProvider.Provider.Microsoft:
+                        ssss.SelectVoice(SelectedEngine.Name);
+                        ssss.Volume = Volume;
+                        ssss.Rate = SpeechRate;
+
+                        ssss.SetOutputToDefaultAudioDevice();
+                        ssss.Speak(newVoice);
+                        break;
+                    case VoiceProvider.Provider.Google:
+                        newVoice = String.Format("Google {0} selected", SelectedCulture.DisplayName);
+                        wc = new WebClient();
+                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", newVoice, SelectedCulture.Name), newVoiceFile);
+                        wc.Dispose();
+
+                        mp.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
+                        mp.Volume = 1;
+                        mp.Play();
+                        mp.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
+                        break;
+                    case VoiceProvider.Provider.Ivona:
+                        newVoice = String.Format("Ivona {0} selected", SelectedIvonaVoice == null ? "Salli" : SelectedIvonaVoice.Name);
+                        File.WriteAllBytes(newVoiceFile, IvonaRequest.IvonaCreateSpeech(newVoice, SelectedIvonaVoice == null ? new Voice { Name = "Salli", Language = "en-US", Gender = "Female" } : SelectedIvonaVoice));
+                        mp.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
+                        mp.Volume = 1;
+                        mp.Play();
+                        mp.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
+                        break;
+                    case VoiceProvider.Provider.wwwfromtexttospeechcom:
+                        newVoice = String.Format("From text to speech . com {0} selected", SelectedVoice.Name);
+                        HTTPPost h = new HTTPPost(newVoice, newVoiceFile, SelectedVoice.Voice);
+                        mp.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
+                        mp.Volume = 1;
+                        mp.Play();
+                        mp.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
+                        break;
+                    default:
+                        break;
+
+
+                }
             }
         }
 
@@ -774,7 +843,7 @@ namespace TTSTranslate
         {
             foreach (PhraseItem item in WordsListView.SelectedItems)
             {
-                if (PhraseItems.IndexOf(item) < PhraseItems.Count-1)
+                if (PhraseItems.IndexOf(item) < PhraseItems.Count - 1)
                 {
                     PhraseItems.Move(PhraseItems.IndexOf(item), PhraseItems.IndexOf(item) + 1);
                 }
@@ -861,21 +930,78 @@ namespace TTSTranslate
             {
                 item.DownloadComplete = false;
             }
+            AnnounceNewVoice();
 
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void SpeechRateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             foreach (var item in PhraseItems)
             {
                 item.DownloadComplete = false;
             }
+            Console.WriteLine("Starting timer");
+            message = (String.Format("{0}", SpeechRate));
+            speakTimer.Start();
 
+
+        }
+
+        private void MicrosoftSpeak(object sender, EventArgs e)
+        {
+            speakTimer.Stop();
+            
+            if (LoadedWindow && SelectedEngine.ProviderType == VoiceProvider.Provider.Microsoft)
+            {
+
+                lock (speakinglock)
+                {
+                    ssss.SelectVoice(SelectedEngine.Name);
+                    ssss.Volume = Volume;
+                    ssss.Rate = SpeechRate;
+                    ssss.SetOutputToDefaultAudioDevice();
+                    ssss.Speak(message);
+                    ssss.SpeakCompleted += delegate { speaking = false; };
+                    while (speaking)
+                    {
+                        System.Threading.Thread.Sleep(50);
+                    }
+                    Console.WriteLine("----- Stopped timer");
+
+                }
+            }
+        }
+
+        private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            foreach (var item in PhraseItems)
+            {
+                item.DownloadComplete = false;
+            }
+            Console.WriteLine("Starting timer");
+            message = (String.Format("{0}", Volume));
+            speakTimer.Start();
+            //speakTimer.Elapsed += delegate { new Task(() => { MicrosoftSpeak(String.Format("{0}", Volume)); }).Start(); };
         }
 
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedRowCount = WordsListView.SelectedItems.Count;
+        }
+
+        private void ComboBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Window_GotFocus(object sender, RoutedEventArgs e)
+        {
+            LoadedWindow = true;
+
+        }
+
+        private void Slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
     public class VoiceProvider : INotifyPropertyChanged
