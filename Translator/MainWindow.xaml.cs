@@ -532,7 +532,7 @@ namespace TTSTranslate
 
                 foreach (Match match in r.Matches(contents))
                 {
-                    if (j >= phraseItems.Count)
+                    if (j >= items.Count)
                     {
                         items.Add(new PhraseItem());
                     }
@@ -746,6 +746,38 @@ namespace TTSTranslate
             for (int i = 0; i < rowsToAdd; i++)
             {
                 PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[WordsListView.SelectedItems.Count - 1] as PhraseItem) + 1, new PhraseItem());
+            }
+        }
+
+        private void MoveRowsUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = WordsListView.SelectedItems.Count > 0;
+        }
+
+        private void MoveRowsUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in WordsListView.SelectedItems)
+            {
+                if (PhraseItems.IndexOf(item) > 0)
+                {
+                    PhraseItems.Move(PhraseItems.IndexOf(item), PhraseItems.IndexOf(item) - 1);
+                }
+            }
+        }
+
+        private void MoveRowsDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = WordsListView.SelectedItems.Count > 0;
+        }
+
+        private void MoveRowsDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in WordsListView.SelectedItems)
+            {
+                if (PhraseItems.IndexOf(item) < PhraseItems.Count-1)
+                {
+                    PhraseItems.Move(PhraseItems.IndexOf(item), PhraseItems.IndexOf(item) + 1);
+                }
             }
         }
 

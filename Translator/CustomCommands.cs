@@ -105,5 +105,25 @@ namespace TTSTranslate.Commands
                 new KeyGesture(Key.Down, ModifierKeys.Control)
             }
     );
+        public static readonly RoutedUICommand MoveRowsUpCommand = new RoutedUICommand
+    (
+            "MoveRowsUpCommand",
+            "MoveRowsUpCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.PageUp, ModifierKeys.Control)
+            }
+    );
+        public static readonly RoutedUICommand MoveRowsDownCommand = new RoutedUICommand
+    (
+            "MoveRowsDownCommand",
+            "MoveRowsDownCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.PageDown, ModifierKeys.Control)
+            }
+    );
     }
 }

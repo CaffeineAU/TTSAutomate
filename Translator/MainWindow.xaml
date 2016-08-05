@@ -17,6 +17,8 @@
         <CommandBinding Command="self:CustomCommands.SaveAsPhraseFileCommand" CanExecute="SavePhraseFileCommand_CanExecute" Executed="SaveAsPhraseFileCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.InsertRowsAboveCommand" CanExecute="InsertRowsAboveCommand_CanExecute" Executed="InsertRowsAboveCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.InsertRowsBelowCommand" CanExecute="InsertRowsBelowCommand_CanExecute" Executed="InsertRowsBelowCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.MoveRowsUpCommand" CanExecute="MoveRowsUpCommand_CanExecute" Executed="MoveRowsUpCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.MoveRowsDownCommand" CanExecute="MoveRowsDownCommand_CanExecute" Executed="MoveRowsDownCommand_Executed" />
     </Window.CommandBindings>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -29,12 +31,10 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="300"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="3" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" EnableRowVirtualization="False" SelectionChanged="WordsListView_SelectionChanged"  >
+        <DataGrid x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="3" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems, UpdateSourceTrigger=PropertyChanged}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" EnableRowVirtualization="False" SelectionChanged="WordsListView_SelectionChanged"  >
             <DataGrid.Resources>
                 <local:RowIndexConverter x:Key="RowIndexConverter"/>
             </DataGrid.Resources>
@@ -220,9 +220,14 @@
                 </ComboBox.Style>
             </ComboBox>
         </StackPanel>
-        <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="3" Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
-        <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="4" Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
-        <Button  Content="Save Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="5" Margin="5" Command="self:CustomCommands.SavePhraseFileCommand"/>
+        <StackPanel Orientation="Vertical" Grid.Column="3" Grid.Row="3" VerticalAlignment="Bottom">
+            <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Move {0} rows(s) up" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsUpCommand"/>
+            <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Move {0} rows(s) down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsDownCommand"/>
+            <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
+            <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
+            <Button  Content="Save Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="5" Margin="5" Command="self:CustomCommands.SavePhraseFileCommand"/>
+
+        </StackPanel>
         <Button  Content="Save Phrase File As..." HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="6" Margin="5" Command="self:CustomCommands.SaveAsPhraseFileCommand"/>
         <Image x:Name="image" Source="{Binding HeaderImage}" HorizontalAlignment="Stretch" Margin="5"  VerticalAlignment="Stretch" Grid.RowSpan="2"/>
         <Button  Content="Stop!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="self:CustomCommands.StopDownloadingCommand" Margin="5" Grid.Column="1" Grid.Row="6"/>
