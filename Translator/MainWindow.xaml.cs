@@ -317,7 +317,7 @@ namespace TTSTranslate
             List<PhraseItem> initialitems = new List<PhraseItem>();
             for (int i = 0; i < InitialPhraseItems; i++)
             {
-                initialitems.Add(new PhraseItem());
+                initialitems.Add(new PhraseItem { Phrase = "" });
             }
 
             PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
@@ -530,8 +530,11 @@ namespace TTSTranslate
             }
             else
             {
-                DownloadItem((dep as DataGridRow).DataContext as PhraseItem);
-                PlayAudio(((Button)sender).CommandParameter);
+                if (!IsPhraseEmpty((dep as DataGridRow).DataContext as PhraseItem))
+                {
+                    DownloadItem((dep as DataGridRow).DataContext as PhraseItem);
+                    PlayAudio(((Button)sender).CommandParameter);
+                }
             }
 
 
@@ -622,7 +625,7 @@ namespace TTSTranslate
 
             for (int i = 0; i < InitialPhraseItems; i++)
             {
-                items.Add(new PhraseItem());
+                items.Add(new PhraseItem { Phrase = "" });
             }
 
             int j = 0;
@@ -635,7 +638,7 @@ namespace TTSTranslate
                 {
                     if (j >= items.Count)
                     {
-                        items.Add(new PhraseItem());
+                        items.Add(new PhraseItem { Phrase = "" });
                     }
                     items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
                 }
@@ -797,12 +800,12 @@ namespace TTSTranslate
 
         private void StartDownloadingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            bool canDownload = (!String.IsNullOrEmpty(OutputDirectoryName) && !String.IsNullOrEmpty(PhraseFileName) && WorkerFinished);
+            bool canDownload = (!String.IsNullOrEmpty(OutputDirectoryName));
             foreach (var item in PhraseItems)
             {
                 item.CanDownload = canDownload;
             }
-            e.CanExecute = canDownload;
+            e.CanExecute = canDownload && !String.IsNullOrEmpty(PhraseFileName) && WorkerFinished;
         }
 
         private void StartDownloadingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -1123,7 +1126,15 @@ namespace TTSTranslate
                 return String.Format("{0}\\{1}", Folder, FileName);
             }
         }
-        public String Phrase { get; set; }
+        private String phrase;
+
+        public String Phrase
+        {
+            get { return phrase; }
+            set { phrase = value;
+                OnPropertyChanged("Phrase");
+            }
+        }
 
         private Boolean downloadComplete = false;
 
@@ -1148,6 +1159,8 @@ namespace TTSTranslate
                 OnPropertyChanged("CanDownload");
             }
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(String name)
