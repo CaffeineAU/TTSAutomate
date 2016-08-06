@@ -56,12 +56,17 @@
                 <DataGridTemplateColumn Header="Play">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Click="PlayButton_Click" CommandParameter="{Binding FullPathAndFile}"  Content="Play">
+                            <Button Click="PlayButton_Click" CommandParameter="{Binding FullPathAndFile}" >
                                 <Button.Style>
                                     <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Content" Value="Play" />
+                                        <Setter Property="IsEnabled" Value="False" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding DownloadComplete}" Value="False">
-                                                <Setter Property="IsEnabled" Value="False" />
+                                                <Setter Property="Content" Value="Preview" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CanDownload}" Value="True">
+                                                <Setter Property="IsEnabled" Value="True" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

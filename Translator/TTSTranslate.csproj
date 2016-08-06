@@ -81,6 +81,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="credentials.cs" />
     <Compile Include="CustomCommands.cs" />
     <Compile Include="HTTPPost.cs" />
     <Compile Include="IvonaRequest.cs" />

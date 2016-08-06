@@ -11,12 +11,9 @@ using System.Web.Script.Serialization;
 
 namespace TTSTranslate
 {
-    class IvonaRequest
+    partial class IvonaRequest
     {
 
-        // Please replace this with your own values
-        const string AccessKey = "GDNAIZ3FOT27P5YJ4UQA";
-        const string SecretKey = "zfSCPa3rTjlK0hB0AeUB5w7Gbpo9LLhZkGF8tVTE";
 
         public IvonaRequest()
         {

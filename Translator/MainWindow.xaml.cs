@@ -51,6 +51,7 @@ namespace TTSTranslate
         DispatcherTimer speakTimer = new DispatcherTimer( DispatcherPriority.Render);
 
 
+
         private TTSVoice selectedVoice;
 
         public TTSVoice SelectedVoice
@@ -421,69 +422,9 @@ namespace TTSTranslate
                         {
                             if (!item.DownloadComplete)
                             {
-                                System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
-                                System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-                                switch (SelectedEngine.ProviderType)
-                                {
-                                    case VoiceProvider.Provider.Microsoft:
-                                        ssss.SelectVoice(SelectedEngine.Name);
-                                        ssss.Volume = Volume;
-                                        ssss.Rate = SpeechRate;
-
-                                        ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
-                                        ssss.Speak(item.Phrase);
-
-                                        break;
-                                    case VoiceProvider.Provider.Google:
-                                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
-                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                        {
-                                            var newFormat = new WaveFormat(16000, 1);
-                                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                                            {
-                                                resampler.ResamplerQuality = 60;
-                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
-                                            }
-                                        }
-                                        break;
-                                    case VoiceProvider.Provider.Ivona:
-                                        File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), IvonaRequest.IvonaCreateSpeech(item.Phrase, SelectedIvonaVoice));
-                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                        {
-                                            var newFormat = new WaveFormat(16000, 1);
-                                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                                            {
-                                                resampler.ResamplerQuality = 60;
-                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
-                                            }
-                                        }
-                                        //using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                        //{
-                                        //    var newFormat = new WaveFormat(16000, 1);
-                                        //    using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
-                                        //    {
-                                        //        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wavConverted\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
-                                        //    }
-                                        //}
-
-                                        break;
-                                    case VoiceProvider.Provider.wwwfromtexttospeechcom:
-                                        HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
-                                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                                        {
-                                            var newFormat = new WaveFormat(16000, 1);
-                                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                                            {
-                                                resampler.ResamplerQuality = 60;
-                                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
-                                            }
-                                        }
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                item.DownloadComplete = true;
+                                DownloadItem(item);
                                 DownloaderWorker.ReportProgress(++i);
+
                             }
                         }
                         else
@@ -508,9 +449,92 @@ namespace TTSTranslate
             }
         }
 
+        private void DownloadItem(PhraseItem item)
+        {
+            System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
+            System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
+            switch (SelectedEngine.ProviderType)
+            {
+                case VoiceProvider.Provider.Microsoft:
+                    ssss.SelectVoice(SelectedEngine.Name);
+                    ssss.Volume = Volume;
+                    ssss.Rate = SpeechRate;
+
+                    ssss.SetOutputToWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), new System.Speech.AudioFormat.SpeechAudioFormatInfo(16000, System.Speech.AudioFormat.AudioBitsPerSample.Sixteen, System.Speech.AudioFormat.AudioChannel.Mono));
+                    ssss.Speak(item.Phrase);
+
+                    break;
+                case VoiceProvider.Provider.Google:
+                    wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
+                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                    {
+                        var newFormat = new WaveFormat(16000, 1);
+                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        {
+                            resampler.ResamplerQuality = 60;
+                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
+                        }
+                    }
+                    break;
+                case VoiceProvider.Provider.Ivona:
+                    File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), IvonaRequest.IvonaCreateSpeech(item.Phrase, SelectedIvonaVoice));
+                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                    {
+                        var newFormat = new WaveFormat(16000, 1);
+                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        {
+                            resampler.ResamplerQuality = 60;
+                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
+                        }
+                    }
+                    //using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                    //{
+                    //    var newFormat = new WaveFormat(16000, 1);
+                    //    using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
+                    //    {
+                    //        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wavConverted\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
+                    //    }
+                    //}
+
+                    break;
+                case VoiceProvider.Provider.wwwfromtexttospeechcom:
+                    HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
+                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                    {
+                        var newFormat = new WaveFormat(16000, 1);
+                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        {
+                            resampler.ResamplerQuality = 60;
+                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            item.DownloadComplete = true;
+        }
+
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            PlayAudio(((Button)sender).CommandParameter);
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is DataGridRow)) // Find the cell that was clicked
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+            // now dep is the row that contains the button that was clicked
+
+            if (((dep as DataGridRow).DataContext as PhraseItem).DownloadComplete)
+            {
+                PlayAudio(((Button)sender).CommandParameter);
+            }
+            else
+            {
+                DownloadItem((dep as DataGridRow).DataContext as PhraseItem);
+                PlayAudio(((Button)sender).CommandParameter);
+            }
+
+
         }
 
         private void PlayAudio(object file)
@@ -773,7 +797,12 @@ namespace TTSTranslate
 
         private void StartDownloadingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (!String.IsNullOrEmpty(OutputDirectoryName) && !String.IsNullOrEmpty(PhraseFileName) && WorkerFinished);
+            bool canDownload = (!String.IsNullOrEmpty(OutputDirectoryName) && !String.IsNullOrEmpty(PhraseFileName) && WorkerFinished);
+            foreach (var item in PhraseItems)
+            {
+                item.CanDownload = canDownload;
+            }
+            e.CanExecute = canDownload;
         }
 
         private void StartDownloadingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -1105,6 +1134,18 @@ namespace TTSTranslate
             {
                 downloadComplete = value;
                 OnPropertyChanged("DownloadComplete");
+            }
+        }
+
+        private Boolean canDownload = false;
+
+        public Boolean CanDownload
+        {
+            get { return canDownload; }
+            set
+            {
+                canDownload = value;
+                OnPropertyChanged("CanDownload");
             }
         }
 
