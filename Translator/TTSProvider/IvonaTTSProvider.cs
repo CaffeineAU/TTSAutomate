@@ -1,54 +1,72 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
-
-namespace TTSTranslate
+namespace TTSAutomate
 {
-    partial class IvonaRequest
+    partial class IvonaTTSProvider : TTSProvider
     {
-
-
-        public IvonaRequest()
+        public IvonaTTSProvider()
         {
-            //try
-            //{
-            //    byte[] voice = IvonaCreateSpeech("Mary has a little lamb. Alice has a black cat.");
-            //    var path = Guid.NewGuid().ToString("N") + ".wav";
-            //    File.WriteAllBytes(path, voice);
-            //    Console.WriteLine("Voice has been successfully created at {0}{1}", AppDomain.CurrentDomain.BaseDirectory, path);
-            //}
-            //catch (WebException ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //    foreach (string header in ex.Response.Headers)
-            //    {
-            //        Console.WriteLine("{0}: {1}", header, ex.Response.Headers[header]);
-            //    }
-            //    using (var responseStream = ex.Response.GetResponseStream())
-            //    {
-            //        if (responseStream != null)
-            //        {
-            //            using (var streamReader = new StreamReader(responseStream))
-            //            {
-            //                Console.WriteLine(streamReader.ReadToEnd());
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
+            Name = "Ivona Text To Speech";
+            ProviderType = Provider.Ivona;
+            ProviderClass = Class.Web;
+            HasVoices = true;
+            HasDiscreteSpeed = true;
+            BackgroundWorker loadVoicesWorker = new BackgroundWorker();
+            loadVoicesWorker.DoWork += delegate
+            {
+                AvailableVoices = IvonaListVoices().Voices;
+                SelectedVoice = AvailableVoices[0];
+            };
+            loadVoicesWorker.RunWorkerAsync();
+
+            AvailableSpeeds.Add("x-slow");
+            AvailableSpeeds.Add("slow");
+            AvailableSpeeds.Add("medium");
+            AvailableSpeeds.Add("fast");
+            //AvailableSpeeds.Add("x - fast"); // Returns 400 - Bad request :(
+            SelectedSpeed = "medium";
         }
 
-        public static byte[] IvonaCreateSpeech(string text, Voice selectedVoice)
+        public override void DownloadItem(PhraseItem item, string folder)
+        {
+            try
+            {
+                File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
+                using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                {
+                    var newFormat = new WaveFormat(16000, 1);
+                    using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                    {
+                        resampler.ResamplerQuality = 60;
+                        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                    }
+                }
+            }
+            catch(Exception Ex)
+            {
+                Console.WriteLine(Ex);
+            }
+        }
+
+        public override void DownloadAndPlay(PhraseItem item)
+        {
+        }
+
+        public override void AnnounceVoice()
+        {
+        }
+
+        public byte[] IvonaCreateSpeech(string text, Voice selectedVoice)
         {
             var date = DateTime.UtcNow;
 
@@ -77,7 +95,7 @@ namespace TTSTranslate
                 },
                 Parameters = new
                 {
-                    Rate = "medium",
+                    Rate = SelectedSpeed,
                     Volume = "medium",
                     SentenceBreak = 500,
                     ParagraphBreak = 800
@@ -115,13 +133,11 @@ namespace TTSTranslate
 
             var hashedCanonicalRequest = HexEncode(Hash(ToBytes(canonicalRequest)));
 
-
             // Task 2: Create a String to Sign for Signature Version 4
             // StringToSign  = Algorithm + '\n' + RequestDate + '\n' + CredentialScope + '\n' + HashedCanonicalRequest
 
             var stringToSign = string.Format("{0}\n{1}\n{2}\n{3}", algorithm, requestDate, credentialScope,
                 hashedCanonicalRequest);
-
 
             // Task 3: Calculate the AWS Signature Version 4
 
@@ -130,7 +146,6 @@ namespace TTSTranslate
 
             // signature = HexEncode(HMAC(derived-signing-key, string-to-sign))
             var signature = HexEncode(HmacSha256(stringToSign, signingKey));
-
 
             // Task 4: Prepare a signed request
             // Authorization: algorithm Credential=access key ID/credential scope, SignedHeadaers=SignedHeaders, Signature=signature
@@ -186,7 +201,6 @@ namespace TTSTranslate
             const string canonicalQueryString = "";
             const string contentType = "application/json";
 
-
             const string host = serviceName + "." + regionName + ".ivonacloud.com";
 
             var obj = new
@@ -221,13 +235,11 @@ namespace TTSTranslate
 
             var hashedCanonicalRequest = HexEncode(Hash(ToBytes(canonicalRequest)));
 
-
             // Task 2: Create a String to Sign for Signature Version 4
             // StringToSign  = Algorithm + '\n' + RequestDate + '\n' + CredentialScope + '\n' + HashedCanonicalRequest
 
             var stringToSign = string.Format("{0}\n{1}\n{2}\n{3}", algorithm, requestDate, credentialScope,
                 hashedCanonicalRequest);
-
 
             // Task 3: Calculate the AWS Signature Version 4
 
@@ -236,7 +248,6 @@ namespace TTSTranslate
 
             // signature = HexEncode(HMAC(derived-signing-key, string-to-sign))
             var signature = HexEncode(HmacSha256(stringToSign, signingKey));
-
 
             // Task 4: Prepare a signed request
             // Authorization: algorithm Credential=access key ID/credential scope, SignedHeadaers=SignedHeaders, Signature=signature
@@ -310,27 +321,9 @@ namespace TTSTranslate
             return new HMACSHA256(key).ComputeHash(ToBytes(data));
         }
     }
-
     public class SupportedVoices
     {
         public List<Voice> Voices { get; set; }
-
-        //public Voices(List<Voice> voices)
-        //{
-        //    SupportedVoices = voices;
-
-        //}
     }
 
-    public class Voice
-    {
-        public String Name { get; set; }
-        public String Language { get; set; }
-        public String Gender { get; set; }
-
-        public override string ToString()
-        {
-            return String.Format("{0}, {1}, {2}", Name, Language, Gender);
-        }
-    }
 }

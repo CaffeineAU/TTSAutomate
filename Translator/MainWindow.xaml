@@ -1,10 +1,10 @@
-﻿<Window x:Class="TTSTranslate.MainWindow"
+﻿<Window x:Class="TTSAutomate.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TTSTranslate"
-        xmlns:self="clr-namespace:TTSTranslate.Commands"
+        xmlns:local="clr-namespace:TTSAutomate"
+        xmlns:self="clr-namespace:TTSAutomate.Commands"
         mc:Ignorable="d"
         Title="TTSAutomate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus">
     <Window.CommandBindings>
@@ -101,24 +101,48 @@
             <Button  Content="Create new Phrase File" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.CreatePhraseFileCommand"/>
             <Label Content="TTS Provider"/>
             <ComboBox ItemsSource="{Binding Path=TTSEngines}" SelectedValue="{Binding SelectedEngine, Mode=TwoWay}" SelectionChanged="EngineComboBox_SelectionChanged" />
-            <TextBlock Text="Note: Only WAV files will be created" TextWrapping="Wrap" Foreground="#FF970000" >
-                <TextBlock.Style>
-                    <Style TargetType="{x:Type TextBlock}">
+            <Label Content="Voice" >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVoices}" Value="true">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                </Label.Style>
+            </Label>
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableVoices}" SelectedValue="{Binding SelectedEngine.SelectedVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVoices}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
             <Label Content="{Binding SpeechRate}" ContentStringFormat="Speech rate: {0}" >
                 <Label.Style>
                     <Style TargetType="{x:Type Label}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasSpeed}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <Label Content="Speech rate:" >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasDiscreteSpeed}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -130,19 +154,31 @@
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasSpeed}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Slider.Style>
             </Slider>
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableSpeeds}" SelectedItem="{Binding Path=SelectedEngine.SelectedSpeed}" SelectionChanged="VoiceComboBox_SelectionChanged">
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasDiscreteSpeed}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
             <Label Content="{Binding Volume}" ContentStringFormat="Volume: {0}"  >
                 <Label.Style>
                     <Style TargetType="{x:Type Label}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVolume}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -154,76 +190,13 @@
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Microsoft">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVolume}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Slider.Style>
             </Slider>
-            <Label Content="Language" >
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Google">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
-            <ComboBox ItemsSource="{Binding Path=Cultures}" DisplayMemberPath="DisplayName" SelectedValue="{Binding SelectedCulture, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
-                <ComboBox.Style>
-                    <Style TargetType="{x:Type ComboBox}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Google">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
-            <Label Content="Voice" >
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Ivona">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Label.Style>
-            </Label>
-            <ComboBox ItemsSource="{Binding Path=TextToSpeechVoices}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
-                <ComboBox.Style>
-                    <Style TargetType="{x:Type ComboBox}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="wwwfromtexttospeechcom">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
-            <ComboBox ItemsSource="{Binding Path=IvonaSupportedVoices.Voices}" SelectedValue="{Binding SelectedIvonaVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
-                <ComboBox.Style>
-                    <Style TargetType="{x:Type ComboBox}">
-                        <Setter Property="Visibility" Value="Collapsed" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.ProviderType}" Value="Ivona">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
-            </ComboBox>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Column="3" Grid.Row="3" VerticalAlignment="Bottom">
             <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Move {0} rows(s) up" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsUpCommand"/>

@@ -7,7 +7,7 @@
     <ProjectGuid>{C749DFE6-7B04-495F-B9D7-C451477FF639}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TTSTranslate</RootNamespace>
+    <RootNamespace>TTSAutomate</RootNamespace>
     <AssemblyName>TTSAutomate</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -73,6 +73,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
+    <Compile Include="TTSProvider\TTSProvider.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -84,7 +86,6 @@
     <Compile Include="credentials.cs" />
     <Compile Include="CustomCommands.cs" />
     <Compile Include="HTTPPost.cs" />
-    <Compile Include="IvonaRequest.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

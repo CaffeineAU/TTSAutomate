@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using TTSTranslate;
+using TTSAutomate;
 
-namespace TTSTranslate.Commands
+namespace TTSAutomate.Commands
 {
     public static class CustomCommands
     {
