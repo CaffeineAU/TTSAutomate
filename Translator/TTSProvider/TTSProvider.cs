@@ -143,9 +143,9 @@ namespace TTSAutomate
 
         public abstract void AnnounceVoice();
 
-        public abstract void DownloadItem(PhraseItem item, string folder);
+        public abstract Boolean DownloadItem(PhraseItem item, string folder);
 
-        public abstract void DownloadAndPlay(PhraseItem item);
+        public abstract Boolean DownloadAndPlay(PhraseItem item);
 
     }
 

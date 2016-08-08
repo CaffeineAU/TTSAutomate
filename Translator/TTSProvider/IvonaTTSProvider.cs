@@ -37,7 +37,7 @@ namespace TTSAutomate
             SelectedSpeed = "medium";
         }
 
-        public override void DownloadItem(PhraseItem item, string folder)
+        public override Boolean DownloadItem(PhraseItem item, string folder)
         {
             try
             {
@@ -51,15 +51,18 @@ namespace TTSAutomate
                         WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
                     }
                 }
+                return true;
             }
             catch(Exception Ex)
             {
                 Console.WriteLine(Ex);
+                return false;
             }
         }
 
-        public override void DownloadAndPlay(PhraseItem item)
+        public override Boolean DownloadAndPlay(PhraseItem item)
         {
+            return true;
         }
 
         public override void AnnounceVoice()
@@ -85,7 +88,7 @@ namespace TTSAutomate
             {
                 Input = new
                 {
-                    Data = text,
+                    Data = Encoding.UTF8.GetString(Encoding.Default.GetBytes(text)),
                     Type = "text/plain"
                 },
                 OutputFormat = new

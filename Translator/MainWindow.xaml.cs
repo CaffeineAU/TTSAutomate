@@ -409,7 +409,7 @@ namespace TTSAutomate
         {
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
             System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-                SelectedEngine.DownloadItem(item, OutputDirectoryName);
+            item.DownloadComplete = SelectedEngine.DownloadItem(item, OutputDirectoryName);
                 //case VoiceProvider.Provider.Microsoft:
                 //    //ssss = new System.Speech.Synthesis.SpeechSynthesizer();
                 //    ssss.SelectVoice(SelectedEngine.Name);
@@ -469,7 +469,6 @@ namespace TTSAutomate
                 //    break;
                 //default:
                 //    break;
-            item.DownloadComplete = true;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
