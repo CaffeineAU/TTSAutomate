@@ -279,6 +279,7 @@ namespace TTSAutomate
             PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
 
             TTSEngines.Add(new IvonaTTSProvider());
+            TTSEngines.Add(new GoogleTTSProvider());
             //TTSEngines.Add(new TTSProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Google, ProviderClass = VoiceProvider.Class.Web });
             //foreach (var voice in ssss.GetInstalledVoices())
             //{
@@ -291,8 +292,6 @@ namespace TTSAutomate
 
             Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-            Cultures.AddRange(CultureInfo.GetCultures(CultureTypes.FrameworkCultures));
-            Cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 
             DownloaderWorker.DoWork += DownloaderWorkder_DoWork;
             DownloaderWorker.WorkerReportsProgress = true;

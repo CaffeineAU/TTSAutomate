@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
     <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
     <Compile Include="TTSProvider\TTSProvider.cs" />
     <Page Include="MainWindow.xaml">
