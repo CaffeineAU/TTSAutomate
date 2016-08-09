@@ -33,16 +33,10 @@ namespace TTSAutomate
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         Boolean filenameSelected = false;
-        System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
-        WebClient wc;
 
-        private ObservableCollection<TTSVoice> ttsVoices = new ObservableCollection<TTSVoice>();
+        //System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
+        //WebClient wc;
 
-        public ObservableCollection<TTSVoice> TextToSpeechVoices
-        {
-            get { return ttsVoices; }
-            set { ttsVoices = value; }
-        }
 
         Boolean speaking =false;
         object speakinglock = 0;
@@ -51,14 +45,6 @@ namespace TTSAutomate
         DispatcherTimer speakTimer = new DispatcherTimer( DispatcherPriority.Render);
 
 
-
-        private int engineIndex;
-
-        public int EngineIndex
-        {
-            get { return TTSEngines.IndexOf(SelectedEngine); }
-            set { engineIndex = value; }
-        }
 
 
         private Boolean needToSave = true;
@@ -111,48 +97,6 @@ namespace TTSAutomate
             {
                 selectedRowCount = value;
                 OnPropertyChanged("SelectedRowCount");
-            }
-        }
-
-
-        private int speechRate;
-
-        public int SpeechRate
-        {
-            get { return speechRate; }
-            set
-            {
-                speechRate = value;
-                OnPropertyChanged("SpeechRate");
-            }
-        }
-
-        private int volume = 100;
-
-        public int Volume
-        {
-            get { return volume; }
-            set
-            {
-                volume = value;
-                OnPropertyChanged("Volume");
-            }
-        }
-
-
-        public Visibility UseWeb
-        {
-            get
-            {
-                return (SelectedEngine.ProviderClass == TTSProvider.Class.Web) ? Visibility.Visible : Visibility.Hidden;
-            }
-        }
-
-        public Visibility UseLocal
-        {
-            get
-            {
-                return (SelectedEngine.ProviderClass != TTSProvider.Class.Web) ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -230,30 +174,6 @@ namespace TTSAutomate
         }
 
 
-        private List<CultureInfo> cultures = new List<CultureInfo>();
-
-        public List<CultureInfo> Cultures
-        {
-            get { return cultures; }
-            set
-            {
-                cultures = value;
-                OnPropertyChanged("Cultures");
-            }
-        }
-
-        private CultureInfo selectedCulture = CultureInfo.CurrentCulture;
-
-        public CultureInfo SelectedCulture
-        {
-            get { return selectedCulture; }
-            set
-            {
-                selectedCulture = value;
-                OnPropertyChanged("SelectedCulture");
-            }
-        }
-
         public BitmapImage HeaderImage { get; private set; }
         MediaPlayer mp = new MediaPlayer();
         private int InitialPhraseItems = 499;
@@ -267,8 +187,6 @@ namespace TTSAutomate
 
             speakTimer.Tick += MicrosoftSpeak; 
 
-
-            //phraseItems.Add(new PhraseItem());
             HeaderImage = LoadImage("speech-bubble.png");
             List<PhraseItem> initialitems = new List<PhraseItem>();
             for (int i = 0; i < InitialPhraseItems; i++)
@@ -293,11 +211,11 @@ namespace TTSAutomate
             Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
 
-            DownloaderWorker.DoWork += DownloaderWorkder_DoWork;
+            DownloaderWorker.DoWork += DownloaderWorker_DoWork;
             DownloaderWorker.WorkerReportsProgress = true;
             DownloaderWorker.WorkerSupportsCancellation = true;
-            DownloaderWorker.RunWorkerCompleted += DownloaderWorkder_RunWorkerCompleted;
-            DownloaderWorker.ProgressChanged += DownloaderWorkder_ProgressChanged;
+            DownloaderWorker.RunWorkerCompleted += DownloaderWorker_RunWorkerCompleted;
+            DownloaderWorker.ProgressChanged += DownloaderWorker_ProgressChanged;
 
             //TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)" });
             //TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice = "IVONA Brian22 (UK English)" });
@@ -323,12 +241,12 @@ namespace TTSAutomate
         }
 
 
-        private void DownloaderWorkder_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void DownloaderWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             DownloadProgress = e.ProgressPercentage;
         }
 
-        private void DownloaderWorkder_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void DownloaderWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             WorkerFinished = true;
             DownloadProgress = DownloadCount;
@@ -354,32 +272,30 @@ namespace TTSAutomate
             return image;
         }
 
-        private void DownloaderWorkder_DoWork(object sender, DoWorkEventArgs e)
+        private void DownloaderWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             int i = 0;
             try
             {
-                if (SelectedEngine.ProviderClass == TTSProvider.Class.Local)
-                {
-                    ssss = new System.Speech.Synthesis.SpeechSynthesizer();
-                }
-                else
-                {
-                    wc = new WebClient();
-                }
+                //if (SelectedEngine.ProviderClass == TTSProvider.Class.Local)
+                //{
+                //    ssss = new System.Speech.Synthesis.SpeechSynthesizer();
+                //}
+                //else
+                //{
+                //    wc = new WebClient();
+                //}
 
                 foreach (var item in PhraseItems)
                 {
                     if (!IsPhraseEmpty(item))
                     {
-
                         if (!DownloaderWorker.CancellationPending)
                         {
                             if (!item.DownloadComplete)
                             {
                                 DownloadItem(item);
                                 DownloaderWorker.ReportProgress(++i);
-
                             }
                         }
                         else
@@ -388,15 +304,15 @@ namespace TTSAutomate
                         }
                     }
                 }
-                if (SelectedEngine.ProviderClass == TTSProvider.Class.Local)
-                {
-                    ssss.Dispose();
-                }
-                else
-                {
-                    wc.Dispose();
+                //if (SelectedEngine.ProviderClass == TTSProvider.Class.Local)
+                //{
+                //    ssss.Dispose();
+                //}
+                //else
+                //{
+                //    wc.Dispose();
 
-                }
+                //}
             }
             catch (Exception Ex)
             {
@@ -420,40 +336,6 @@ namespace TTSAutomate
                 //    //ssss.SetOutputToWaveFile(null);
                 //    // ssss.SpeakCompleted += delegate {ssss.Dispose(); };
 
-                //    break;
-                //case VoiceProvider.Provider.Google:
-                //    wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedCulture.Name), String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
-                //    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                //    {
-                //        var newFormat = new WaveFormat(16000, 1);
-                //        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                //        {
-                //            resampler.ResamplerQuality = 60;
-                //            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
-                //        }
-                //    }
-                //    break;
-                //case VoiceProvider.Provider.Ivona:
-                //    File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), IvonaRequest.IvonaCreateSpeech(item.Phrase, SelectedIvonaVoice));
-                //    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                //    {
-                //        var newFormat = new WaveFormat(16000, 1);
-                //        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                //        {
-                //            resampler.ResamplerQuality = 60;
-                //            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), resampler);
-                //        }
-                //    }
-                //    //using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
-                //    //{
-                //    //    var newFormat = new WaveFormat(16000, 1);
-                //    //    using (var conversionStream = new WaveFormatConversionStream(newFormat, mp3))
-                //    //    {
-                //    //        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wavConverted\\{1}\\{2}.wav", OutputDirectoryName, item.Folder, item.FileName), conversionStream);
-                //    //    }
-                //    //}
-
-                //    break;
                 //case VoiceProvider.Provider.wwwfromtexttospeechcom:
                 //    HTTPPost h = new HTTPPost(item.Phrase, String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName), SelectedVoice.Voice);
                 //    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
@@ -517,48 +399,6 @@ namespace TTSAutomate
             if (LoadedWindow)
             {
                 SelectedEngine.AnnounceVoice();
-                //MediaPlayer mp2 = new MediaPlayer();
-
-                //String newVoice = String.Format("{0} selected", SelectedEngine.Name);
-                //String newVoiceFile = String.Format("{0}.mp3", Guid.NewGuid());
-
-                //switch (SelectedEngine.ProviderType)
-                //{
-                //    case TTSProvider.Provider.Microsoft:
-                //        new Task(() => { MicrosoftSay(newVoice); }).Start();
-                //        break;
-                //    case TTSProvider.Provider.Google:
-                //        newVoice = String.Format("Google {0} selected", SelectedCulture.DisplayName);
-                //        wc = new WebClient();
-                //        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", newVoice, SelectedCulture.Name), newVoiceFile);
-                //        wc.Dispose();
-
-                //        mp2.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
-                //        mp2.Volume = 1;
-                //        mp2.Play();
-                //        mp2.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
-                //        break;
-                //    case TTSProvider.Provider.Ivona:
-                //        newVoice = String.Format("Ivona {0} selected", SelectedIvonaVoice == null ? "Salli" : SelectedIvonaVoice.Name);
-                //        File.WriteAllBytes(newVoiceFile, IvonaRequest.IvonaCreateSpeech(newVoice, SelectedIvonaVoice == null ? new Voice { Name = "Salli", Language = "en-US", Gender = "Female" } : SelectedIvonaVoice));
-                //        mp2.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
-                //        mp2.Volume = 1;
-                //        mp2.Play();
-                //        mp2.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
-                //        break;
-                //    case TTSProvider.Provider.wwwfromtexttospeechcom:
-                //        newVoice = String.Format("From text to speech dot com {0} selected", SelectedVoice.Name);
-                //        HTTPPost h = new HTTPPost(newVoice, newVoiceFile, SelectedVoice.Voice);
-                //        mp2.Open(new Uri(newVoiceFile, UriKind.RelativeOrAbsolute));
-                //        mp2.Volume = 1;
-                //        mp2.Play();
-                //        mp2.MediaEnded += delegate { mp.Close(); File.Delete(newVoiceFile); };
-                //        break;
-                //    default:
-                //        break;
-
-
-                //}
             }
         }
 
@@ -939,7 +779,7 @@ namespace TTSAutomate
                 item.DownloadComplete = false;
             }
             Console.WriteLine("Starting timer");
-            message = (String.Format("{0}", SpeechRate));
+            //message = (String.Format("{0}", SpeechRate));
             speakTimer.Start();
 
 
@@ -960,17 +800,17 @@ namespace TTSAutomate
         {
                 lock (speakinglock)
                 {
-                    ssss.SelectVoice(SelectedEngine.Name);
-                    ssss.Volume = Volume;
-                    ssss.Rate = SpeechRate;
-                    ssss.SetOutputToDefaultAudioDevice();
-                    ssss.Speak(text);
-                    ssss.SpeakCompleted += delegate { speaking = false; };
-                    while (speaking)
-                    {
-                        System.Threading.Thread.Sleep(50);
-                    }
-                    Console.WriteLine("----- Stopped timer");
+                    //ssss.SelectVoice(SelectedEngine.Name);
+                    ////ssss.Volume = Volume;
+                    ////ssss.Rate = SpeechRate;
+                    //ssss.SetOutputToDefaultAudioDevice();
+                    //ssss.Speak(text);
+                    //ssss.SpeakCompleted += delegate { speaking = false; };
+                    //while (speaking)
+                    //{
+                    //    System.Threading.Thread.Sleep(50);
+                    //}
+                    //Console.WriteLine("----- Stopped timer");
 
                 }
 
@@ -984,7 +824,7 @@ namespace TTSAutomate
                 item.DownloadComplete = false;
             }
             Console.WriteLine("Starting timer");
-            message = (String.Format("{0}", Volume));
+            //message = (String.Format("{0}", Volume));
             speakTimer.Start();
             //speakTimer.Elapsed += delegate { new Task(() => { MicrosoftSpeak(String.Format("{0}", Volume)); }).Start(); };
         }
@@ -994,56 +834,12 @@ namespace TTSAutomate
             SelectedRowCount = WordsListView.SelectedItems.Count;
         }
 
-        private void ComboBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void Window_GotFocus(object sender, RoutedEventArgs e)
         {
             LoadedWindow = true;
 
         }
-
-        private void Slider_ValueChanged_1(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
-        }
     }
-    //public class VoiceProvider : INotifyPropertyChanged
-    //{
-
-    //    public enum Provider
-    //    {
-    //        Microsoft,
-    //        Google,
-    //        Ivona,
-    //        wwwfromtexttospeechcom
-    //    }
-
-    //    public enum Class
-    //    {
-    //        Local,
-    //        Web,
-    //    }
-
-    //    public string Name { get; set; }
-
-    //    public Provider ProviderType { get; set; }
-
-    //    public Class ProviderClass { get; set; }
-
-    //    public event PropertyChangedEventHandler PropertyChanged;
-    //    protected void OnPropertyChanged(String name)
-    //    {
-    //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    //    }
-
-    //    public override string ToString()
-    //    {
-    //        return String.Format("{0} - {1}", Name, ProviderClass);
-    //    }
-
-    //}
 
     public class PhraseItem : INotifyPropertyChanged
     {
@@ -1115,8 +911,6 @@ namespace TTSAutomate
                 OnPropertyChanged("CanDownload");
             }
         }
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(String name)

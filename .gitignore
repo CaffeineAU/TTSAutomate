@@ -280,3 +280,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /Translator/credentials.cs
+/Translator/TTSProvider/credentials.cs

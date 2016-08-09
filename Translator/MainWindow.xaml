@@ -125,12 +125,12 @@
                     </Style>
                 </ComboBox.Style>
             </ComboBox>
-            <Label Content="{Binding SpeechRate}" ContentStringFormat="Speech rate: {0}" >
+            <Label Content="{Binding Path=SelectedEngine.SelectedNumericSpeed}" ContentStringFormat="Speech rate: {0}" >
                 <Label.Style>
                     <Style TargetType="{x:Type Label}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasSpeed}" Value="True">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasNumericSpeed}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -149,19 +149,19 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Slider  Minimum="-10" SmallChange="1" Value="{Binding SpeechRate}" TickPlacement="BottomRight" ValueChanged="SpeechRateSlider_ValueChanged">
+            <Slider  Minimum="-10" SmallChange="1" Value="{Binding Path=SelectedEngine.SelectedNumericSpeed}" TickPlacement="BottomRight" ValueChanged="SpeechRateSlider_ValueChanged">
                 <Slider.Style>
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasSpeed}" Value="True">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasNumericSpeed}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Slider.Style>
             </Slider>
-            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableSpeeds}" SelectedItem="{Binding Path=SelectedEngine.SelectedSpeed}" SelectionChanged="VoiceComboBox_SelectionChanged">
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableSpeeds}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteSpeed}" SelectionChanged="VoiceComboBox_SelectionChanged">
                 <ComboBox.Style>
                     <Style TargetType="{x:Type ComboBox}">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -173,30 +173,54 @@
                     </Style>
                 </ComboBox.Style>
             </ComboBox>
-            <Label Content="{Binding Volume}" ContentStringFormat="Volume: {0}"  >
+            <Label Content="{Binding Path=SelectedEngine.SelectedNumericVolume}" ContentStringFormat="Volume: {0}"  >
                 <Label.Style>
                     <Style TargetType="{x:Type Label}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVolume}" Value="True">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasNumericVolume}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Label.Style>
             </Label>
-            <Slider Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Volume}" TickPlacement="BottomRight" ValueChanged="VolumeSlider_ValueChanged" TickFrequency="10" LargeChange="10">
+            <Slider Minimum="0" Maximum="100" SmallChange="1" Value="{Binding Path=SelectedEngine.SelectedNumericVolume}" TickPlacement="BottomRight" ValueChanged="VolumeSlider_ValueChanged" TickFrequency="10" LargeChange="10">
                 <Slider.Style>
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasVolume}" Value="True">
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasNumericVolume}" Value="True">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Slider.Style>
             </Slider>
+            <Label Content="Volume: "  >
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasDiscreteVolume}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableVolumes}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteVolume}" SelectionChanged="VoiceComboBox_SelectionChanged">
+                <ComboBox.Style>
+                    <Style TargetType="{x:Type ComboBox}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=SelectedEngine.HasDiscreteVolume}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Column="3" Grid.Row="3" VerticalAlignment="Bottom">
             <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Move {0} rows(s) up" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsUpCommand"/>

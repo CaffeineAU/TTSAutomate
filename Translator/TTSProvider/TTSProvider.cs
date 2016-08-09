@@ -60,15 +60,27 @@ namespace TTSAutomate
             }
         }
 
-        private Boolean hasVolume = false;
+        private Boolean hasNumericVolume = false;
 
-        public Boolean HasVolume
+        public Boolean HasNumericVolume
         {
-            get { return hasVolume; }
+            get { return hasNumericVolume; }
             set
             {
-                hasVolume = value;
-                OnPropertyChanged("HasVolume");
+                hasNumericVolume = value;
+                OnPropertyChanged("HasNumericVolume");
+            }
+        }
+
+        private Boolean hasDiscreteVolume = false;
+
+        public Boolean HasDiscreteVolume
+        {
+            get { return hasDiscreteVolume; }
+            set
+            {
+                hasDiscreteVolume = value;
+                OnPropertyChanged("HasDiscreteVolume");
             }
         }
 
@@ -128,15 +140,63 @@ namespace TTSAutomate
             }
         }
 
-        private String selectedSpeed = "";
+        private String selectedDiscreteSpeed = "";
 
-        public String SelectedSpeed
+        public String SelectedDiscreteSpeed
         {
-            get { return selectedSpeed; }
+            get { return selectedDiscreteSpeed; }
             set
             {
-                selectedSpeed = value;
-                OnPropertyChanged("SelectedSpeed");
+                selectedDiscreteSpeed = value;
+                OnPropertyChanged("SelectedDiscreteSpeed");
+            }
+        }
+
+        private int selectedNumericSpeed = 100;
+
+        public int SelectedNumericSpeed
+        {
+            get { return selectedNumericSpeed; }
+            set
+            {
+                selectedNumericSpeed = value;
+                OnPropertyChanged("SelectedNumericSpeed");
+            }
+        }
+
+        private List<String> availableVolumes = new List<string>();
+
+        public List<String> AvailableVolumes
+        {
+            get { return availableVolumes; }
+            set
+            {
+                availableVolumes = value;
+                OnPropertyChanged("AvailableVolumes");
+            }
+        }
+
+        private String selectedDiscreteVolume = "";
+
+        public String SelectedDiscreteVolume
+        {
+            get { return selectedDiscreteVolume; }
+            set
+            {
+                selectedDiscreteVolume = value;
+                OnPropertyChanged("SelectedDiscreteVolume");
+            }
+        }
+
+        private int selectedNumericVolume= 100;
+
+        public int SelectedNumericVolume
+        {
+            get { return selectedNumericVolume; }
+            set
+            {
+                selectedNumericVolume = value;
+                OnPropertyChanged("SelectedNumericVolume");
             }
         }
 

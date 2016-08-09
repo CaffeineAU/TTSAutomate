@@ -84,7 +84,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="credentials.cs" />
+    <Compile Include="TTSProvider\credentials.cs" />
     <Compile Include="CustomCommands.cs" />
     <Compile Include="HTTPPost.cs" />
     <Compile Include="MainWindow.xaml.cs">

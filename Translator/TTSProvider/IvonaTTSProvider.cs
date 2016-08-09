@@ -21,6 +21,7 @@ namespace TTSAutomate
             ProviderClass = Class.Web;
             HasVoices = true;
             HasDiscreteSpeed = true;
+            HasDiscreteVolume = true;
             BackgroundWorker loadVoicesWorker = new BackgroundWorker();
             loadVoicesWorker.DoWork += delegate
             {
@@ -29,12 +30,11 @@ namespace TTSAutomate
             };
             loadVoicesWorker.RunWorkerAsync();
 
-            AvailableSpeeds.Add("x-slow");
-            AvailableSpeeds.Add("slow");
-            AvailableSpeeds.Add("medium");
-            AvailableSpeeds.Add("fast");
-            //AvailableSpeeds.Add("x - fast"); // Returns 400 - Bad request :(
-            SelectedSpeed = "medium";
+            AvailableSpeeds.AddRange(new String[] { "x-slow", "slow", "medium", "fast", "x-fast" });
+            SelectedDiscreteSpeed = "medium";
+
+            AvailableVolumes.AddRange(new String[] { "silent", "x-soft", "soft", "medium", "loud", "x-loud" });
+            SelectedDiscreteVolume = "medium";
         }
 
         public override Boolean DownloadItem(PhraseItem item, string folder)
@@ -98,8 +98,8 @@ namespace TTSAutomate
                 },
                 Parameters = new
                 {
-                    Rate = SelectedSpeed,
-                    Volume = "medium",
+                    Rate = SelectedDiscreteSpeed,
+                    Volume = SelectedDiscreteVolume,
                     SentenceBreak = 500,
                     ParagraphBreak = 800
                 },
