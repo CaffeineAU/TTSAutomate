@@ -407,8 +407,7 @@ namespace TTSAutomate
             if (e.EditAction == DataGridEditAction.Commit)
             {
                 int rowIndex = e.Row.GetIndex();
-                (WordsListView.Items[rowIndex] as PhraseItem).DownloadComplete = false;
-                NeedToSave = true;
+                (WordsListView.Items[rowIndex] as PhraseItem).Editing = true;
             }
         }
 
@@ -729,13 +728,15 @@ namespace TTSAutomate
                         if ((dep as DataGridCell).IsEditing)
                         {
                             WordsListView.CommitEdit();
+                            WordsListView.EndInit();
+
                         }
                         else
                         {
                             WordsListView.BeginEdit();
                         }
+                        e.Handled = true;
                     }
-                    e.Handled = true;
                 }
             }
             if (e.Key == Key.Right && !((DependencyObject)e.OriginalSource is TextBox))
@@ -839,6 +840,18 @@ namespace TTSAutomate
             LoadedWindow = true;
 
         }
+
+        private void WordsListView_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                int rowIndex = e.Row.GetIndex();
+                (WordsListView.Items[rowIndex] as PhraseItem).DownloadComplete = false;
+                (WordsListView.Items[rowIndex] as PhraseItem).Editing = false;
+                NeedToSave = true;
+            }
+
+        }
     }
 
     public class PhraseItem : INotifyPropertyChanged
@@ -899,6 +912,19 @@ namespace TTSAutomate
                 OnPropertyChanged("DownloadComplete");
             }
         }
+
+        private Boolean editing = false;
+
+        public Boolean Editing
+        {
+            get { return editing; }
+            set
+            {
+                editing = value;
+                OnPropertyChanged("Editing");
+            }
+        }
+
 
         private Boolean canDownload = false;
 
