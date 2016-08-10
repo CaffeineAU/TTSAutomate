@@ -17,7 +17,6 @@ namespace TTSAutomate
         public IvonaTTSProvider()
         {
             Name = "Ivona Text To Speech";
-            ProviderType = Provider.Ivona;
             ProviderClass = Class.Web;
             HasVoices = true;
             HasDiscreteSpeed = true;
@@ -37,18 +36,21 @@ namespace TTSAutomate
             SelectedDiscreteVolume = "medium";
         }
 
-        public override Boolean DownloadItem(PhraseItem item, string folder)
+        public override Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
         {
             try
             {
                 File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                if (convertToWav.Value == true)
                 {
-                    var newFormat = new WaveFormat(16000, 1);
-                    using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                     {
-                        resampler.ResamplerQuality = 60;
-                        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                        var newFormat = new WaveFormat(16000, 1);
+                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        {
+                            resampler.ResamplerQuality = 60;
+                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                        }
                     }
                 }
                 return true;
@@ -63,10 +65,6 @@ namespace TTSAutomate
         public override Boolean DownloadAndPlay(PhraseItem item)
         {
             return true;
-        }
-
-        public override void AnnounceVoice()
-        {
         }
 
         public byte[] IvonaCreateSpeech(string text, Voice selectedVoice)

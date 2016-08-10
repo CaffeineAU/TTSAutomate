@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace TTSAutomate
 {
     public abstract class TTSProvider: INotifyPropertyChanged
     {
-        // this is ugly
-        public enum Provider
-        {
-            Microsoft,
-            Google,
-            Ivona,
-            wwwfromtexttospeechcom
-        }
 
         public enum Class
         {
@@ -86,8 +80,6 @@ namespace TTSAutomate
 
 
         public string Name { get; set; }
-
-        public Provider ProviderType { get; set; }
 
         public Class ProviderClass { get; set; }
 
@@ -201,9 +193,21 @@ namespace TTSAutomate
         }
 
 
-        public abstract void AnnounceVoice();
+        public virtual void AnnounceVoice()
+        {
+            string filename = String.Format("{0}", Guid.NewGuid());
+            System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
+            DownloadItem(new PhraseItem { Phrase = String.Format("{0} selected", SelectedVoice.Name), FileName = filename, Folder="." }, Path.GetTempPath(), false);
+            MediaPlayer mp = new MediaPlayer();
+            mp.Open(new Uri(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()), UriKind.RelativeOrAbsolute));
+            mp.Volume = 1;
+            mp.Play();
+            mp.MediaEnded += delegate { mp.Close(); File.Delete(filename); };
+            
 
-        public abstract Boolean DownloadItem(PhraseItem item, string folder);
+        }
+
+        public abstract Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
 
         public abstract Boolean DownloadAndPlay(PhraseItem item);
 

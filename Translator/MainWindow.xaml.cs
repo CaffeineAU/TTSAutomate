@@ -200,6 +200,7 @@ namespace TTSAutomate
 
             TTSEngines.Add(new IvonaTTSProvider());
             TTSEngines.Add(new GoogleTTSProvider());
+            TTSEngines.Add(new FromTextToSpeechTTSProvider());
             //TTSEngines.Add(new TTSProvider { Name = "Google Translate", ProviderType = VoiceProvider.Provider.Google, ProviderClass = VoiceProvider.Class.Web });
             //foreach (var voice in ssss.GetInstalledVoices())
             //{
@@ -219,24 +220,6 @@ namespace TTSAutomate
             DownloaderWorker.RunWorkerCompleted += DownloaderWorker_RunWorkerCompleted;
             DownloaderWorker.ProgressChanged += DownloaderWorker_ProgressChanged;
 
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Emma (UK English)", Voice = "IVONA Amy22 (UK English)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Harry (UK English)", Voice = "IVONA Brian22 (UK English)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Jade (French)", Voice = "IVONA CΘline22 (French)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Gabriel (French)", Voice = "IVONA Mathieu22 (French)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Nadine (German)", Voice = "IVONA Marlene22 (German)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Michael (German)", Voice = "IVONA Hans22 (German)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Valentina (Russian)", Voice = "IVONA Tatyana22 (Russian)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "John (US English)", Voice = "IVONA Eric22" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Jenna (US English)", Voice = "IVONA Jennifer22" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "George (US English)", Voice = "IVONA Joey22" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Alice (US English)", Voice = "IVONA Kimberly22" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Daisy (US English)", Voice = "IVONA Salli22" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Alessandra (Italian)", Voice = "IVONA Carla22 (Italian)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Giovanni (Italian)", Voice = "IVONA Giorgio22 (Italian)" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Isabella (Spanish [Modern])", Voice = "IVONA Conchita22 (Spanish [Modern])" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Mateo (Spanish [Modern])", Voice = "IVONA Enrique22 (Spanish [Modern])" });
-            //TextToSpeechVoices.Add(new TTSVoice { Name = "Rodrigo (Portuguese)", Voice = "IVONA Cristiano22 (Portuguese)" });
-            //SelectedVoice = TextToSpeechVoices[0];
 
 
             this.DataContext = this;
@@ -943,12 +926,6 @@ namespace TTSAutomate
         {
             throw new NotImplementedException();
         }
-    }
-
-    public class TTSVoice
-    {
-        public String Name { get; set; }
-        public String Voice { get; set; }
     }
 
 }
