@@ -34,6 +34,8 @@ namespace TTSAutomate
     {
         Boolean filenameSelected = false;
 
+        private bool isManualEditCommit;
+
         //System.Speech.Synthesis.SpeechSynthesizer ssss = new System.Speech.Synthesis.SpeechSynthesizer();
         //WebClient wc;
 
@@ -407,7 +409,16 @@ namespace TTSAutomate
             if (e.EditAction == DataGridEditAction.Commit)
             {
                 int rowIndex = e.Row.GetIndex();
-                (WordsListView.Items[rowIndex] as PhraseItem).Editing = true;
+                if (!isManualEditCommit)
+                {
+                    isManualEditCommit = true;
+                    DataGrid grid = (DataGrid)sender;
+                    grid.CommitEdit(DataGridEditingUnit.Row, true);
+                    isManualEditCommit = false;
+                }
+                (WordsListView.Items[rowIndex] as PhraseItem).DownloadComplete = false;
+                NeedToSave = true;
+
             }
         }
 
@@ -841,17 +852,6 @@ namespace TTSAutomate
 
         }
 
-        private void WordsListView_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
-        {
-            if (e.EditAction == DataGridEditAction.Commit)
-            {
-                int rowIndex = e.Row.GetIndex();
-                (WordsListView.Items[rowIndex] as PhraseItem).DownloadComplete = false;
-                (WordsListView.Items[rowIndex] as PhraseItem).Editing = false;
-                NeedToSave = true;
-            }
-
-        }
     }
 
     public class PhraseItem : INotifyPropertyChanged
@@ -912,19 +912,6 @@ namespace TTSAutomate
                 OnPropertyChanged("DownloadComplete");
             }
         }
-
-        private Boolean editing = false;
-
-        public Boolean Editing
-        {
-            get { return editing; }
-            set
-            {
-                editing = value;
-                OnPropertyChanged("Editing");
-            }
-        }
-
 
         private Boolean canDownload = false;
 
