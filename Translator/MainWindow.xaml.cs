@@ -363,20 +363,7 @@ namespace TTSAutomate
 
         private void PlayAudio(object file)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
-            {
-                PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file));
-            }
-            else
-            {
-                Application.Current.Dispatcher.BeginInvoke(
-                  DispatcherPriority.Background,
-                  new Action(() => {
-                      PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file));
-                  }));
-            }
-
-           
+            PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file));
         }
 
         public static void PlayAudioFullPath(string file)
@@ -399,7 +386,6 @@ namespace TTSAutomate
                       media.MediaEnded += delegate { media.Close(); };
                   }));
             }
-
         }
 
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -408,14 +394,14 @@ namespace TTSAutomate
             {
                 item.DownloadComplete = false;
             }
-            new Task(() => { AnnounceNewVoice(); }).Start();
+            AnnounceNewVoice();
         }
 
         private void AnnounceNewVoice()
         {
             if (LoadedWindow)
             {
-                SelectedEngine.AnnounceVoice();
+                new Task(() => { SelectedEngine.AnnounceVoice(); }).Start();
             }
         }
 
