@@ -198,11 +198,9 @@ namespace TTSAutomate
             string filename = String.Format("{0}", Guid.NewGuid());
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
             DownloadItem(new PhraseItem { Phrase = String.Format("{0} selected", SelectedVoice.Name), FileName = filename, Folder="." }, Path.GetTempPath(), false);
-            MediaPlayer mp = new MediaPlayer();
-            mp.Open(new Uri(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()), UriKind.RelativeOrAbsolute));
-            mp.Volume = 1;
-            mp.Play();
-            mp.MediaEnded += delegate { mp.Close(); File.Delete(filename); };
+
+            //MediaPlayer mp = new MediaPlayer();
+            MainWindow.PlayAudioFullPath(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()));
             
 
         }

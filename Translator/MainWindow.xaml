@@ -162,7 +162,7 @@
                     </Style>
                 </Slider.Style>
             </Slider>
-            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableSpeeds}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteSpeed}" SelectionChanged="VoiceComboBox_SelectionChanged">
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableSpeeds}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteSpeed}" SelectionChanged="EngineComboBox_SelectionChanged">
                 <ComboBox.Style>
                     <Style TargetType="{x:Type ComboBox}">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -210,7 +210,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableVolumes}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteVolume}" SelectionChanged="VoiceComboBox_SelectionChanged">
+            <ComboBox ItemsSource="{Binding Path=SelectedEngine.AvailableVolumes}" SelectedItem="{Binding Path=SelectedEngine.SelectedDiscreteVolume}" SelectionChanged="EngineComboBox_SelectionChanged">
                 <ComboBox.Style>
                     <Style TargetType="{x:Type ComboBox}">
                         <Setter Property="Visibility" Value="Collapsed" />

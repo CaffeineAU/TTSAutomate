@@ -85,7 +85,6 @@ namespace TTSAutomate
                 OnPropertyChanged("SelectedEngine");
                 OnPropertyChanged("UseWeb");
                 OnPropertyChanged("UseLocal");
-                OnPropertyChanged("EngineIndex");
             }
         }
 
@@ -177,7 +176,7 @@ namespace TTSAutomate
 
 
         public BitmapImage HeaderImage { get; private set; }
-        MediaPlayer mp = new MediaPlayer();
+        public static MediaPlayer media = new MediaPlayer();
         private int InitialPhraseItems = 499;
         private bool LoadedWindow = false;
 
@@ -364,10 +363,43 @@ namespace TTSAutomate
 
         private void PlayAudio(object file)
         {
-            mp.Open(new Uri(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file), UriKind.RelativeOrAbsolute));
-            mp.Volume = 1;
-            mp.Play();
-            mp.MediaEnded += delegate { mp.Close(); };
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file));
+            }
+            else
+            {
+                Application.Current.Dispatcher.BeginInvoke(
+                  DispatcherPriority.Background,
+                  new Action(() => {
+                      PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file));
+                  }));
+            }
+
+           
+        }
+
+        public static void PlayAudioFullPath(string file)
+        {
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
+                media.Volume = 1;
+                media.Play();
+                media.MediaEnded += delegate { media.Close(); };
+            }
+            else
+            {
+                Application.Current.Dispatcher.BeginInvoke(
+                  DispatcherPriority.Background,
+                  new Action(() => {
+                      media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
+                      media.Volume = 1;
+                      media.Play();
+                      media.MediaEnded += delegate { media.Close(); };
+                  }));
+            }
+
         }
 
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -763,7 +795,7 @@ namespace TTSAutomate
             {
                 item.DownloadComplete = false;
             }
-            new Task(() => { AnnounceNewVoice(); }).Start();
+           // new Task(() => { AnnounceNewVoice(); }).Start();
 
         }
 
