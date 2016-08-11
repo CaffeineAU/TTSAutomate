@@ -6,11 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace TTSAutomate
 {
     public abstract class TTSProvider: INotifyPropertyChanged
     {
+        //DispatcherTimer PlayTimer = new DispatcherTimer(DispatcherPriority.Render);
+        string message = "";
+        public Boolean initialLoad = true;
+        public TTSProvider()
+        {
+            System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
+        }
 
         public enum Class
         {
@@ -116,8 +124,24 @@ namespace TTSAutomate
             set
             {
                 selectedVoice = value;
+                PlayMessage(String.Format("{0} selected", SelectedVoice.Name));
                 OnPropertyChanged("SelectedVoice");
             }
+        }
+
+        private void PlayMessage(string messageToPlay)
+        {
+            if (!initialLoad)
+            {
+                new Task(() => { 
+                string filename = String.Format("{0}", Guid.NewGuid());
+                    DownloadItem(new PhraseItem { Phrase = String.Format("{0}", messageToPlay), FileName = filename, Folder = "." }, Path.GetTempPath(), false);
+                    MainWindow.PlayAudioFullPath(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()), true);
+                }).Start();
+            }
+            //message = messageToPlay;
+            //PlayTimer.Start();
+
         }
 
         private List<String> availableSpeeds = new List<string>();
@@ -140,6 +164,7 @@ namespace TTSAutomate
             set
             {
                 selectedDiscreteSpeed = value;
+                PlayMessage(String.Format("{0}", SelectedDiscreteSpeed));
                 OnPropertyChanged("SelectedDiscreteSpeed");
             }
         }
@@ -152,6 +177,7 @@ namespace TTSAutomate
             set
             {
                 selectedNumericSpeed = value;
+                PlayMessage(String.Format("{0}", SelectedNumericSpeed));
                 OnPropertyChanged("SelectedNumericSpeed");
             }
         }
@@ -176,6 +202,7 @@ namespace TTSAutomate
             set
             {
                 selectedDiscreteVolume = value;
+                PlayMessage(String.Format("{0}", SelectedDiscreteVolume));
                 OnPropertyChanged("SelectedDiscreteVolume");
             }
         }
@@ -188,21 +215,9 @@ namespace TTSAutomate
             set
             {
                 selectedNumericVolume = value;
+                PlayMessage(String.Format("{0}", SelectedNumericVolume));
                 OnPropertyChanged("SelectedNumericVolume");
             }
-        }
-
-
-        public virtual void AnnounceVoice()
-        {
-            string filename = String.Format("{0}", Guid.NewGuid());
-            System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
-            DownloadItem(new PhraseItem { Phrase = String.Format("{0} selected", SelectedVoice.Name), FileName = filename, Folder="." }, Path.GetTempPath(), false);
-
-            //MediaPlayer mp = new MediaPlayer();
-            MainWindow.PlayAudioFullPath(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()));
-            
-
         }
 
         public abstract Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
