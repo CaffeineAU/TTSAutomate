@@ -14,7 +14,7 @@ using System.Web.Script.Serialization;
 
 namespace TTSAutomate
 {
-    partial class FromTextToSpeechTTSProvider : TTSProvider
+    class FromTextToSpeechTTSProvider : TTSProvider
     {
         public FromTextToSpeechTTSProvider()
         {
@@ -42,7 +42,7 @@ namespace TTSAutomate
 
             HasDiscreteSpeed = true;
             AvailableSpeeds.AddRange(new String[] { "slow", "medium", "fast", "very fast" });
-
+            SelectedDiscreteSpeed = "medium";
         }
 
         public override Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
@@ -69,7 +69,7 @@ namespace TTSAutomate
             }
             catch(Exception Ex)
             {
-                Console.WriteLine(Ex);
+                Logger.Log(Ex.ToString());
                 return false;
             }
         }
@@ -93,6 +93,14 @@ namespace TTSAutomate
         public override Boolean DownloadAndPlay(PhraseItem item)
         {
             return true;
+        }
+        public override void Play(PhraseItem item)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+            }
         }
 
         private string GetDownloadURL(string Phrase)

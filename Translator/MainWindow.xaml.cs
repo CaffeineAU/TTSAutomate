@@ -24,6 +24,7 @@ using System.Speech;
 using System.Collections.Specialized;
 using System.Windows.Threading;
 using NAudio.Wave.SampleProviders;
+using System.Windows.Shell;
 
 namespace TTSAutomate
 {
@@ -167,6 +168,9 @@ namespace TTSAutomate
         {
             InitializeComponent();
 
+            //NAudio.MediaFoundation.MediaFoundationApi.Startup();
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+
             HeaderImage = LoadImage("speech-bubble.png");
 
             List<PhraseItem> initialitems = new List<PhraseItem>();
@@ -179,6 +183,7 @@ namespace TTSAutomate
 
             TTSEngines.Add(new IvonaTTSProvider());
             TTSEngines.Add(new GoogleTTSProvider());
+            TTSEngines.Add(new MicrosoftTTSProvider());
             TTSEngines.Add(new FromTextToSpeechTTSProvider());
             //foreach (var voice in ssss.GetInstalledVoices())
             //{
@@ -202,12 +207,16 @@ namespace TTSAutomate
         private void DownloaderWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             DownloadProgress = e.ProgressPercentage;
+            TaskbarItemInfo.ProgressValue = (double)(e.ProgressPercentage)/(double)(DownloadCount);
         }
 
         private void DownloaderWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             WorkerFinished = true;
             DownloadProgress = DownloadCount;
+            TaskbarItemInfo.ProgressValue = 1.0;
+            //TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -264,6 +273,11 @@ namespace TTSAutomate
         {
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
             System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
+            if (SelectedEngine.ProviderClass== TTSProvider.Class.Local)
+            {
+                System.IO.Directory.CreateDirectory(String.Format("{0}\\wav22050\\{1}\\", OutputDirectoryName, item.Folder));
+
+            }
             item.DownloadComplete = SelectedEngine.DownloadItem(item, OutputDirectoryName);
         }
 
@@ -295,7 +309,7 @@ namespace TTSAutomate
             PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file), false);
         }
 
-        public static void PlayAudioFullPath(string file, Boolean? deleteAfterPlay)
+        public static void PlayAudioFullPath(string file, Boolean? deleteAfterPlay = false)
         {
             if (LoadedWindow)
             {
@@ -462,22 +476,49 @@ namespace TTSAutomate
 
         private void BrowseOutputDirectoryCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            var dlg = new CommonOpenFileDialog();
-            dlg.Title = "Select output directory";
-            dlg.IsFolderPicker = true;
-            dlg.InitialDirectory = Properties.Settings.Default.LastOutputDirectory;
-            dlg.AddToMostRecentlyUsedList = false;
-            dlg.AllowNonFileSystemItems = false;
-            dlg.EnsurePathExists = true;
-            dlg.EnsureReadOnly = false;
-            dlg.EnsureValidNames = true;
-            dlg.Multiselect = false;
-            dlg.ShowPlacesList = true;
-
-            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            try
             {
-                OutputDirectoryName = dlg.FileName;
-                Properties.Settings.Default.LastOutputDirectory = dlg.FileName;
+                var dlg = new CommonOpenFileDialog();
+                dlg.Title = "Select output directory";
+                dlg.IsFolderPicker = true;
+                dlg.InitialDirectory = Properties.Settings.Default.LastOutputDirectory;
+                dlg.AddToMostRecentlyUsedList = false;
+                dlg.AllowNonFileSystemItems = false;
+                dlg.EnsurePathExists = true;
+                dlg.EnsureReadOnly = false;
+                dlg.EnsureValidNames = true;
+                dlg.Multiselect = false;
+                dlg.ShowPlacesList = true;
+
+                if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    OutputDirectoryName = dlg.FileName;
+                    Properties.Settings.Default.LastOutputDirectory = dlg.FileName;
+                }
+            }
+            catch (Exception ex) // Are we on windows XP? then we must use the old folder browser dialog
+            {
+                var dlg = new System.Windows.Forms.FolderBrowserDialog();
+                dlg.RootFolder = Environment.SpecialFolder.MyComputer;// 
+                dlg.SelectedPath = Properties.Settings.Default.LastOutputDirectory;
+                dlg.ShowNewFolderButton = true;
+                //dlg.Title = "Select output directory";
+                //dlg.IsFolderPicker = true;
+                //dlg.InitialDirectory 
+                //dlg.AddToMostRecentlyUsedList = false;
+                //dlg.AllowNonFileSystemItems = false;
+                //dlg.EnsurePathExists = true;
+                //dlg.EnsureReadOnly = false;
+                //dlg.EnsureValidNames = true;
+                //dlg.Multiselect = false;
+                //dlg.ShowPlacesList = true;
+
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    OutputDirectoryName = dlg.SelectedPath;
+                    Properties.Settings.Default.LastOutputDirectory = dlg.SelectedPath;
+                }
+
             }
         }
 
@@ -558,6 +599,8 @@ namespace TTSAutomate
             {
                 WorkerFinished = false;
                 DownloaderWorker.RunWorkerAsync();
+                TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+
                 DownloadCount = PhraseItems.Count(n => (n.DownloadComplete == false && !IsPhraseEmpty(n)));
             }
         }
@@ -629,7 +672,7 @@ namespace TTSAutomate
             {
                 if (PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) < PhraseItems.Count - 1)
                 {
-                    Console.WriteLine(String.Format("Moving {0} to {1}", PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1));
+                    Logger.Log(String.Format("Moving {0} to {1}", PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1));
                     PhraseItems.Move(PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1);
                 }
             }
@@ -637,6 +680,7 @@ namespace TTSAutomate
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+
             if (PhraseItems.Count > 0)
             {
                 if (NeedToSave && PhraseItems.Count(n => !IsPhraseEmpty(n)) > 0)
@@ -656,6 +700,7 @@ namespace TTSAutomate
                     }
                 }
                 Properties.Settings.Default.Save();
+                //NAudio.MediaFoundation.MediaFoundationApi.Shutdown();
             }
         }
 

@@ -51,6 +51,10 @@
       <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NAudio.Lame, Version=1.0.3.3048, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Lame.1.0.4\lib\net20\NAudio.Lame.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Speech" />
@@ -73,8 +77,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Logger.cs" />
     <Compile Include="TTSProvider\FromTextToSpeechTTSProvider.cs" />
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
+    <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
     <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
     <Compile Include="TTSProvider\TTSProvider.cs" />
     <Page Include="MainWindow.xaml">
@@ -125,6 +131,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="speech-bubble.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libmp3lame.32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libmp3lame.64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

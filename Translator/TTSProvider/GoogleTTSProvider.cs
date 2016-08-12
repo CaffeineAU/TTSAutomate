@@ -13,7 +13,7 @@ using System.Web.Script.Serialization;
 
 namespace TTSAutomate
 {
-    partial class GoogleTTSProvider : TTSProvider
+    class GoogleTTSProvider : TTSProvider
     {
 
         public GoogleTTSProvider()
@@ -57,7 +57,7 @@ namespace TTSAutomate
             }
             catch(Exception Ex)
             {
-                Console.WriteLine(Ex);
+                Logger.Log(Ex.ToString());
                 return false;
             }
         }
@@ -67,6 +67,14 @@ namespace TTSAutomate
             return true;
         }
 
+        public override void Play(PhraseItem item)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+            }
+        }
     }
 
 }

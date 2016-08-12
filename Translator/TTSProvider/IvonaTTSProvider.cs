@@ -57,7 +57,7 @@ namespace TTSAutomate
             }
             catch(Exception Ex)
             {
-                Console.WriteLine(Ex);
+                Logger.Log(Ex.ToString());
                 return false;
             }
         }
@@ -65,6 +65,12 @@ namespace TTSAutomate
         public override Boolean DownloadAndPlay(PhraseItem item)
         {
             return true;
+        }
+
+        public override void Play(PhraseItem item)
+        {
+            File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
+            MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
         }
 
         public byte[] IvonaCreateSpeech(string text, Voice selectedVoice)

@@ -20,6 +20,9 @@
         <CommandBinding Command="self:CustomCommands.MoveRowsUpCommand" CanExecute="MoveRowsUpCommand_CanExecute" Executed="MoveRowsUpCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.MoveRowsDownCommand" CanExecute="MoveRowsDownCommand_CanExecute" Executed="MoveRowsDownCommand_Executed" />
     </Window.CommandBindings>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo/>
+    </Window.TaskbarItemInfo>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>

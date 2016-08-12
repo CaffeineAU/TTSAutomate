@@ -134,9 +134,8 @@ namespace TTSAutomate
             if (!initialLoad)
             {
                 new Task(() => { 
-                string filename = String.Format("{0}", Guid.NewGuid());
-                    DownloadItem(new PhraseItem { Phrase = String.Format("{0}", messageToPlay), FileName = filename, Folder = "." }, Path.GetTempPath(), false);
-                    MainWindow.PlayAudioFullPath(String.Format("{1}\\mp3\\{0}.mp3", filename, Path.GetTempPath()), true);
+                    string filename = String.Format("{0}", Guid.NewGuid());
+                    Play(new PhraseItem { Phrase = String.Format("{0}", messageToPlay), FileName = filename, Folder = "." });
                 }).Start();
             }
             //message = messageToPlay;
@@ -223,6 +222,8 @@ namespace TTSAutomate
         public abstract Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
 
         public abstract Boolean DownloadAndPlay(PhraseItem item);
+
+        public abstract void Play(PhraseItem item);
 
     }
 
