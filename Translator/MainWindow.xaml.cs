@@ -273,11 +273,6 @@ namespace TTSAutomate
         {
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
             System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-            if (SelectedEngine.ProviderClass== TTSProvider.Class.Local)
-            {
-                System.IO.Directory.CreateDirectory(String.Format("{0}\\wav22050\\{1}\\", OutputDirectoryName, item.Folder));
-
-            }
             item.DownloadComplete = SelectedEngine.DownloadItem(item, OutputDirectoryName);
         }
 
@@ -494,6 +489,10 @@ namespace TTSAutomate
                 {
                     OutputDirectoryName = dlg.FileName;
                     Properties.Settings.Default.LastOutputDirectory = dlg.FileName;
+                    foreach (var item in PhraseItems)
+                    {
+                        item.DownloadComplete = false;
+                    }
                 }
             }
             catch (Exception ex) // Are we on windows XP? then we must use the old folder browser dialog
@@ -517,6 +516,11 @@ namespace TTSAutomate
                 {
                     OutputDirectoryName = dlg.SelectedPath;
                     Properties.Settings.Default.LastOutputDirectory = dlg.SelectedPath;
+                    foreach (var item in PhraseItems)
+                    {
+                        item.DownloadComplete = false;
+                    }
+
                 }
 
             }
@@ -793,6 +797,7 @@ namespace TTSAutomate
                 item.initialLoad = false;
             }
         }
+
     }
 
     public class PhraseItem : INotifyPropertyChanged

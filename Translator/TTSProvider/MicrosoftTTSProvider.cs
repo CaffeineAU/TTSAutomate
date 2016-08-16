@@ -56,34 +56,37 @@ namespace TTSAutomate
         {
             try
             {
-
-                using (var synth = new SpeechSynthesizer())
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    synth.SelectVoice(SelectedVoice.Name);
-                    synth.Volume = Int32.Parse(SelectedDiscreteVolume);
-                    synth.Rate = Int32.Parse(SelectedDiscreteSpeed);
-                    synth.SetOutputToWaveFile(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
-                    synth.Speak(item.Phrase);
-                }
-                using (WaveFileReader wav = new WaveFileReader(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
-                {
-                    FileStream fs = new FileStream(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), FileMode.Create);
-                    using (var writer = new LameMP3FileWriter(fs, wav.WaveFormat, 128))
+                    ms.Seek(0, SeekOrigin.Begin);
+                    using (var synth = new SpeechSynthesizer())
                     {
-                        wav.CopyTo(writer);
+                        synth.SelectVoice(SelectedVoice.Name);
+                        synth.Volume = Int32.Parse(SelectedDiscreteVolume);
+                        synth.Rate = Int32.Parse(SelectedDiscreteSpeed);
+                        synth.SetOutputToWaveStream(ms);//.SetOutputToWaveFile(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
+                        synth.Speak(item.Phrase);
+                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+                    using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
+                    {
+                        FileStream fs = new FileStream(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), FileMode.Create);
+                        using (var writer = new LameMP3FileWriter(fs, wav.WaveFormat, 128))
+                        {
+                            wav.CopyTo(writer);
+                        }
+                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+                    using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
+                    {
+                        var newFormat = new WaveFormat(16000, 1);
+                        using (var resampler = new MediaFoundationResampler(wav, newFormat))
+                        {
+                            resampler.ResamplerQuality = 60;
+                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                        }
                     }
                 }
-                using (WaveFileReader wav = new WaveFileReader(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
-                {
-                    var newFormat = new WaveFormat(16000, 1);
-                    using (var resampler = new MediaFoundationResampler(wav, newFormat))
-                    {
-                        resampler.ResamplerQuality = 60;
-                        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                    }
-                }
-
-
                 return true;
             }
             catch (Exception Ex)
