@@ -25,6 +25,7 @@ using System.Collections.Specialized;
 using System.Windows.Threading;
 using NAudio.Wave.SampleProviders;
 using System.Windows.Shell;
+using System.Threading;
 
 namespace TTSAutomate
 {
@@ -252,8 +253,7 @@ namespace TTSAutomate
                         {
                             if (!item.DownloadComplete)
                             {
-                                DownloadItem(item);
-                                DownloaderWorker.ReportProgress(++i);
+                                DownloadItem(item, false);
                             }
                         }
                         else
@@ -267,13 +267,33 @@ namespace TTSAutomate
             {
                 MessageBox.Show("Couldn't download audio\r\n\r\n" + Ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            while (PhraseItems.Count(n => n.DownloadComplete) < PhraseItems.Count)
+            {
+                if (!DownloaderWorker.CancellationPending)
+                {
+                    DownloaderWorker.ReportProgress(PhraseItems.Count(n => n.DownloadComplete));
+                    Thread.Sleep(100);
+                }
+                else
+                {
+                    return;
+                }
+
+            }
         }
 
-        private void DownloadItem(PhraseItem item)
+        private void DownloadItem(PhraseItem item, bool play)
         {
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3\\{1}\\", OutputDirectoryName, item.Folder));
             System.IO.Directory.CreateDirectory(String.Format("{0}\\wav\\{1}\\", OutputDirectoryName, item.Folder));
-            item.DownloadComplete = SelectedEngine.DownloadItem(item, OutputDirectoryName);
+            if (play)
+            {
+                SelectedEngine.DownloadAndPlayItem(item, OutputDirectoryName);
+            }
+            else
+            {
+                SelectedEngine.DownloadItem(item, OutputDirectoryName);
+            }
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -293,8 +313,7 @@ namespace TTSAutomate
             {
                 if (!IsPhraseEmpty((dep as DataGridRow).DataContext as PhraseItem))
                 {
-                    DownloadItem((dep as DataGridRow).DataContext as PhraseItem);
-                    PlayAudio(((Button)sender).CommandParameter);
+                    DownloadItem((dep as DataGridRow).DataContext as PhraseItem, true);
                 }
             }
         }

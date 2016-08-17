@@ -219,9 +219,9 @@ namespace TTSAutomate
             }
         }
 
-        public abstract Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
+        public abstract void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
 
-        public abstract Boolean DownloadAndPlay(PhraseItem item);
+        public abstract void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav = true);
 
         public abstract void Play(PhraseItem item);
 

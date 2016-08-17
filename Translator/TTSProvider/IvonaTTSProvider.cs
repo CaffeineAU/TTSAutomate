@@ -36,35 +36,65 @@ namespace TTSAutomate
             SelectedDiscreteVolume = "medium";
         }
 
-        public override Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
         {
             try
             {
-                File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                if (convertToWav.Value == true)
+                new Task(() =>
                 {
-                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                    File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
+                    if (convertToWav.Value == true)
                     {
-                        var newFormat = new WaveFormat(16000, 1);
-                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                         {
-                            resampler.ResamplerQuality = 60;
-                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                            var newFormat = new WaveFormat(16000, 1);
+                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                            {
+                                resampler.ResamplerQuality = 60;
+                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                            }
                         }
                     }
-                }
-                return true;
+                    item.DownloadComplete = true;
+                }).Start();
+
             }
-            catch(Exception Ex)
+            catch (Exception Ex)
             {
                 Logger.Log(Ex.ToString());
-                return false;
+                item.DownloadComplete = false;
             }
         }
 
-        public override Boolean DownloadAndPlay(PhraseItem item)
+        public override void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav)
         {
-            return true;
+            try
+            {
+                new Task(() =>
+                {
+                    File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
+                    if (convertToWav.Value == true)
+                    {
+                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                        {
+                            var newFormat = new WaveFormat(16000, 1);
+                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                            {
+                                resampler.ResamplerQuality = 60;
+                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                            }
+                        }
+                    }
+                    item.DownloadComplete = true;
+                    MainWindow.PlayAudioFullPath(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
+                }).Start();
+
+            }
+            catch (Exception Ex)
+            {
+                Logger.Log(Ex.ToString());
+                item.DownloadComplete = false;
+            }
         }
 
         public override void Play(PhraseItem item)

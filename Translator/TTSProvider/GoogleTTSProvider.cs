@@ -33,38 +33,41 @@ namespace TTSAutomate
             loadVoicesWorker.RunWorkerAsync();
         }
 
-        public override Boolean DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
         {
             try
             {
-                using (WebClient wc = new WebClient())
+                new Task(() =>
                 {
-                    wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
-                }
-                if (convertToWav.Value == true)
-                {
-                    using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                    using (WebClient wc = new WebClient())
                     {
-                        var newFormat = new WaveFormat(16000, 1);
-                        using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
+                    }
+                    if (convertToWav.Value == true)
+                    {
+                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                         {
-                            resampler.ResamplerQuality = 60;
-                            WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                            var newFormat = new WaveFormat(16000, 1);
+                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
+                            {
+                                resampler.ResamplerQuality = 60;
+                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                            }
                         }
                     }
-                }
-                return true;
+                    item.DownloadComplete = true;
+                }).Start();
+
             }
-            catch(Exception Ex)
+            catch (Exception Ex)
             {
                 Logger.Log(Ex.ToString());
-                return false;
+                item.DownloadComplete = false;
             }
         }
 
-        public override Boolean DownloadAndPlay(PhraseItem item)
+        public override void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav)
         {
-            return true;
         }
 
         public override void Play(PhraseItem item)
