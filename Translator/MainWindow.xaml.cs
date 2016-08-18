@@ -445,7 +445,12 @@ namespace TTSAutomate
             }
 
             var dlg = new System.Windows.Forms.OpenFileDialog();
-            dlg.InitialDirectory = Properties.Settings.Default.LastPhraseFile;
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile ))
+            {
+            dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.LastPhraseFile);
+
+            }
+            dlg.FileName = Properties.Settings.Default.LastPhraseFile;
 
             dlg.Title = "Open a Phrase file";
             dlg.Filter = "Phrase Files (*.psv)|*.psv|All Files (*.*)|*.*";
@@ -456,7 +461,7 @@ namespace TTSAutomate
                 PhraseFileName = dlg.FileName;
                 LoadPhraseFile(PhraseFileName);
                 filenameSelected = true;
-                Properties.Settings.Default.LastPhraseFile = Path.GetDirectoryName(dlg.FileName);
+                Properties.Settings.Default.LastPhraseFile = dlg.FileName; //Path.GetDirectoryName(dlg.FileName);
                 NeedToSave = false;
             }
         }
@@ -515,7 +520,7 @@ namespace TTSAutomate
                     }
                 }
             }
-            catch (Exception ex) // Are we on windows XP? then we must use the old folder browser dialog
+            catch  // Are we on windows XP? then we must use the old folder browser dialog
             {
                 var dlg = new System.Windows.Forms.FolderBrowserDialog();
                 dlg.RootFolder = Environment.SpecialFolder.MyComputer;// 

@@ -56,6 +56,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web.Extensions" />
@@ -78,6 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Logger.cs" />
+    <Compile Include="PortableSettingsProvider.cs" />
     <Compile Include="TTSProvider\FromTextToSpeechTTSProvider.cs" />
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
     <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
@@ -139,6 +141,7 @@
     <Content Include="libmp3lame.64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="ToDo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

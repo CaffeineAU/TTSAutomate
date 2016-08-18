@@ -1,0 +1,8 @@
+﻿Add option dialog
+[*]Option: automatically re-open last psv file
+[*]Option: automatically set output directory
+[*]Option: remember language / provider selections
+[*]Option: automatically fill in folder name on new line, based on previous line
+[*]Option: choose whether to encode to wav 
+[*]Option: choose sample rate / bits per sample
+[*]Option: choose ivona region eu-west-1 (EU, Dublin), us-east-1 (US East, N. Virginia), us-west-2 (US West, Oregon)
