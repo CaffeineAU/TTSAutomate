@@ -125,5 +125,16 @@ namespace TTSAutomate.Commands
                 new KeyGesture(Key.PageDown, ModifierKeys.Control)
             }
     );
+
+        public static readonly RoutedUICommand ShowSettingsCommand = new RoutedUICommand
+    (
+            "ShowSettingsCommand",
+            "ShowSettingsCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.F12)
+            }
+    );
     }
 }

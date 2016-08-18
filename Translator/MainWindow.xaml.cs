@@ -161,6 +161,8 @@ namespace TTSAutomate
         }
 
         public BitmapImage HeaderImage { get; private set; }
+        public BitmapImage SettingsImage { get; private set; }
+
         public static MediaPlayer media = new MediaPlayer();
         private int InitialPhraseItems = 499;
         private static bool LoadedWindow = false;
@@ -173,6 +175,7 @@ namespace TTSAutomate
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
             HeaderImage = LoadImage("speech-bubble.png");
+            SettingsImage = LoadImage("settings.png");
 
             List<PhraseItem> initialitems = new List<PhraseItem>();
             for (int i = 0; i < InitialPhraseItems; i++)
@@ -823,6 +826,31 @@ namespace TTSAutomate
             }
         }
 
+        private void ShowSettingsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void ShowSettingsCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            ConfigWindow cw = new ConfigWindow();
+            cw.Owner = this;
+            cw.SelectedIvonaRegion = cw.IvonaRegions.First(n=> n.RegionName == Properties.Settings.Default.IvonaRegion);
+            cw.SetOutputDirectory = Properties.Settings.Default.SetOutputDirectory;
+            cw.EncodeToWav = Properties.Settings.Default.EncodeToWav;
+            cw.ReOpenPSV = Properties.Settings.Default.ReopenLastPSVFile;
+            cw.RememberLanguageSettings = Properties.Settings.Default.RememberLanguageSettings;
+            cw.ShowDialog();
+            if (cw.Result)
+            {
+                Properties.Settings.Default.IvonaRegion = cw.SelectedIvonaRegion.RegionName;
+                Properties.Settings.Default.SetOutputDirectory = cw.SetOutputDirectory;
+                Properties.Settings.Default.EncodeToWav = cw.EncodeToWav;
+                Properties.Settings.Default.ReopenLastPSVFile = cw.ReOpenPSV;
+                Properties.Settings.Default.RememberLanguageSettings = cw.RememberLanguageSettings;
+                Properties.Settings.Default.Save();
+            }
+        }
     }
 
     public class PhraseItem : INotifyPropertyChanged

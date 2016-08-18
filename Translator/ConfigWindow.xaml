@@ -1,0 +1,43 @@
+﻿<Window x:Class="TTSAutomate.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TTSAutomate"
+        mc:Ignorable="d"
+        Title="Configure..." Height="400" Width="600" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Image Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="90"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
+            <GroupBox  Margin="5" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
+                <StackPanel>
+                    <CheckBox Margin="5" Content="Re-open last PSV file" IsChecked="{Binding ReOpenPSV}"/>
+                    <CheckBox Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory}"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox  Margin="5" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
+                <StackPanel>
+                    <CheckBox Margin="5" Content="Encode MP3 files to WAV" IsChecked="{Binding EncodeToWav}"/>
+                    <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding RememberLanguageSettings}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Margin="5" Content="Ivona Region"/>
+                        <ComboBox  Margin="5" ItemsSource="{Binding IvonaRegions}" SelectedItem="{Binding SelectedIvonaRegion}"/>
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        <Button Grid.Row="2" Grid.Column="2" Content="OK" Margin="5" Click="OKButton_Click" />
+        <Button Grid.Row="2" Grid.Column="3" Content="Cancel" Margin="5" Click="CancelButton_Click"  />
+    </Grid>
+</Window>

@@ -50,5 +50,65 @@ namespace TTSAutomate.Properties {
                 this["LastOutputDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReopenLastPSVFile {
+            get {
+                return ((bool)(this["ReopenLastPSVFile"]));
+            }
+            set {
+                this["ReopenLastPSVFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SetOutputDirectory {
+            get {
+                return ((bool)(this["SetOutputDirectory"]));
+            }
+            set {
+                this["SetOutputDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RememberLanguageSettings {
+            get {
+                return ((bool)(this["RememberLanguageSettings"]));
+            }
+            set {
+                this["RememberLanguageSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EncodeToWav {
+            get {
+                return ((bool)(this["EncodeToWav"]));
+            }
+            set {
+                this["EncodeToWav"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("eu-west-1")]
+        public string IvonaRegion {
+            get {
+                return ((string)(this["IvonaRegion"]));
+            }
+            set {
+                this["IvonaRegion"] = value;
+            }
+        }
     }
 }
