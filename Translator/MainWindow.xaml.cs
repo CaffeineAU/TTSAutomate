@@ -216,6 +216,7 @@ namespace TTSAutomate
             WorkerFinished = true;
             DownloadProgress = DownloadCount;
             TaskbarItemInfo.ProgressValue = 1.0;
+            WordsListView.Focus();
             //TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
         }
@@ -242,7 +243,6 @@ namespace TTSAutomate
 
         private void DownloaderWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            int i = 0;
             try
             {
                 foreach (var item in PhraseItems)
@@ -258,6 +258,7 @@ namespace TTSAutomate
                         }
                         else
                         {
+                            e.Result = true;
                             break;
                         }
                     }
@@ -267,7 +268,7 @@ namespace TTSAutomate
             {
                 MessageBox.Show("Couldn't download audio\r\n\r\n" + Ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            while (PhraseItems.Count(n => n.DownloadComplete) < PhraseItems.Count)
+            while (PhraseItems.Count(n => n.DownloadComplete) < PhraseItems.Count(n=> !String.IsNullOrEmpty(n.Phrase)))
             {
                 if (!DownloaderWorker.CancellationPending)
                 {

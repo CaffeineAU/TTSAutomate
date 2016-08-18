@@ -82,10 +82,12 @@ namespace TTSAutomate
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
                         {
-                            FileStream fs = new FileStream(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), FileMode.Create);
-                            using (var writer = new LameMP3FileWriter(fs, wav.WaveFormat, 128))
+                            using (FileStream fs = new FileStream(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), FileMode.Create))
                             {
-                                wav.CopyTo(writer);
+                                using (var writer = new LameMP3FileWriter(fs, wav.WaveFormat, 128))
+                                {
+                                    wav.CopyTo(writer);
+                                }
                             }
                         }
                         ms.Seek(0, SeekOrigin.Begin);
