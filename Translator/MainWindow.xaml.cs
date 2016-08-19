@@ -344,7 +344,7 @@ namespace TTSAutomate
 
             if (((dep as DataGridRow).DataContext as PhraseItem).DownloadComplete)
             {
-                PlayAudio(((Button)sender).CommandParameter);
+                PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, ((Button)sender).CommandParameter), false);
             }
             else
             {
@@ -355,29 +355,13 @@ namespace TTSAutomate
             }
         }
 
-        private void PlayAudio(object file)
-        {
-            PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, file), false);
-        }
-
         public static void PlayAudioFullPath(string file, Boolean? deleteAfterPlay = false)
         {
             if (LoadedWindow)
             {
                 if (Application.Current.Dispatcher.CheckAccess())
                 {
-                    media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
-                    media.Volume = 1;
-                    media.Play();
-                    media.MediaEnded += delegate
-                    {
-                        media.Close();
-                        if (deleteAfterPlay.Value == true)
-                        {
-                            File.Delete(file);
-                        }
-
-                    };
+                    PlayAudio(file, deleteAfterPlay);
                 }
                 else
                 {
@@ -385,29 +369,36 @@ namespace TTSAutomate
                       DispatcherPriority.Background,
                       new Action(() =>
                       {
-                          media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
-                          media.Volume = 1;
-                          media.Play();
-                          media.MediaEnded += delegate
-                          {
-                              media.Close();
-                              if (deleteAfterPlay.Value == true)
-                              {
-                                  File.Delete(file);
-                              }
-
-                          };
+                          PlayAudio(file, deleteAfterPlay);
                       }));
                 }
             }
         }
 
+        private static void PlayAudio(string file, bool? deleteAfterPlay)
+        {
+            media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
+            media.Volume = 1;
+            media.Play();
+            media.MediaEnded += delegate
+            {
+                media.Close();
+                if (deleteAfterPlay.Value == true)
+                {
+                    File.Delete(file);
+                }
+
+            };
+        }
+
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var item in PhraseItems)
-            {
-                item.DownloadComplete = false;
-            }
+            PhraseItems.ToList().ForEach(n => n.DownloadComplete = false);
+
+            //foreach (var item in PhraseItems)
+            //{
+            //    item.DownloadComplete = false;
+            //}
         }
 
         private void WordsListView_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -823,6 +814,13 @@ namespace TTSAutomate
 
         private void EngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (LoadedWindow)
+            {
+                Properties.Settings.Default.LastTTSDiscreteVolume = SelectedEngine.SelectedDiscreteVolume;
+                Properties.Settings.Default.LastTTSDiscreteSpeed = SelectedEngine.SelectedDiscreteSpeed;
+                Properties.Settings.Default.LastTTSVoice= SelectedEngine.SelectedVoice.Name;
+
+            }
             foreach (var item in PhraseItems)
             {
                 item.DownloadComplete = false;

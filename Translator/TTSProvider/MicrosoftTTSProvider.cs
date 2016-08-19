@@ -43,28 +43,15 @@ namespace TTSAutomate
                 }
             }).Start();
 
-            //BackgroundWorker loadVoicesWorker = new BackgroundWorker();
-            //loadVoicesWorker.DoWork += delegate
-            //{
-            //    foreach (var v in speechSynth.GetInstalledVoices().Select(v => v.VoiceInfo))
-            //    {
-            //        AvailableVoices.Add(new Voice { Name = v.Name, Gender = v.Gender.ToString(), Language = v.Culture.DisplayName });
-            //    }
-            //    SelectedVoice = AvailableVoices[0];
-            //};
-            //loadVoicesWorker.RunWorkerAsync();
-
             for (int i = -10; i <= 10; i++)
             {
                 AvailableSpeeds.Add(i.ToString());
-
             }
             SelectedDiscreteSpeed = "0";
 
             for (int i = 0; i <= 100; i++)
             {
                 AvailableVolumes.Add(i.ToString());
-
             }
             SelectedDiscreteVolume = "100";
         }
