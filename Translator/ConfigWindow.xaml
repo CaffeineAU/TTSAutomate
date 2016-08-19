@@ -37,6 +37,6 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <Button Grid.Row="2" Grid.Column="2" Content="Close" Margin="5" Click="OKButton_Click" />
+        <Button IsDefault="True" IsCancel="True" Grid.Row="2" Grid.Column="2" Content="Close" Margin="5" Click="OKButton_Click" />
     </Grid>
 </Window>
