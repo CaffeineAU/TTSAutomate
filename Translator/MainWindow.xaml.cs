@@ -421,7 +421,7 @@ namespace TTSAutomate
         private void LoadPhraseFile(String filename)
         {
             PhraseItems.Clear();
-            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.+)\|(?<Phrase>.+)\b");
+            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.*)\|(?<Phrase>[.-[\s]]*)\s*");
 
             List<PhraseItem> items = new List<PhraseItem>();
 
@@ -474,7 +474,7 @@ namespace TTSAutomate
             var dlg = new System.Windows.Forms.OpenFileDialog();
             if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile ))
             {
-            dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.LastPhraseFile);
+                dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.LastPhraseFile);
 
             }
             dlg.FileName = Properties.Settings.Default.LastPhraseFile;
@@ -634,7 +634,7 @@ namespace TTSAutomate
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 SavePhraseFile(dlg.FileName);
-                Properties.Settings.Default.LastPhraseFile = Path.GetDirectoryName(dlg.FileName);
+                Properties.Settings.Default.LastPhraseFile = dlg.FileName;
             }
             return result == System.Windows.Forms.DialogResult.OK;
         }
@@ -683,7 +683,8 @@ namespace TTSAutomate
             int rowsToAdd = WordsListView.SelectedItems.Count;
             for (int i = 0; i < rowsToAdd; i++)
             {
-                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[0] as PhraseItem), new PhraseItem());
+                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[0] as PhraseItem), Properties.Settings.Default.CopyFolderWhenInsertingLines ? new PhraseItem { Folder = PhraseItems[PhraseItems.IndexOf(WordsListView.SelectedItems[0] as PhraseItem) - 1].Folder } : new PhraseItem());
+                NeedToSave = true;
             }
         }
 
@@ -697,7 +698,9 @@ namespace TTSAutomate
             int rowsToAdd = WordsListView.SelectedItems.Count;
             for (int i = 0; i < rowsToAdd; i++)
             {
-                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[WordsListView.SelectedItems.Count - 1] as PhraseItem) + 1, new PhraseItem());
+                PhraseItems.Insert(PhraseItems.IndexOf(WordsListView.SelectedItems[WordsListView.SelectedItems.Count - 1] as PhraseItem) + 1, Properties.Settings.Default.CopyFolderWhenInsertingLines ? new PhraseItem { Folder = (WordsListView.SelectedItems[WordsListView.SelectedItems.Count - 1] as PhraseItem).Folder } : new PhraseItem());
+                NeedToSave = true;
+
             }
         }
 
@@ -713,6 +716,7 @@ namespace TTSAutomate
                 if (PhraseItems.IndexOf(item) > 0)
                 {
                     PhraseItems.Move(PhraseItems.IndexOf(item), PhraseItems.IndexOf(item) - 1);
+                    NeedToSave = true;
                 }
             }
         }
@@ -730,6 +734,8 @@ namespace TTSAutomate
                 {
                     Logger.Log(String.Format("Moving {0} to {1}", PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1));
                     PhraseItems.Move(PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1);
+                    NeedToSave = true;
+
                 }
             }
         }
@@ -846,6 +852,16 @@ namespace TTSAutomate
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedRowCount = WordsListView.SelectedItems.Count;
+            if (SelectedRowCount == 1 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
+            {
+                int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
+                while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >=0){ rowselected--; } // traverse upwards
+                if (rowselected >=0)
+                {
+                    (e.AddedItems[0] as PhraseItem).Folder = PhraseItems[rowselected].Folder;
+                    NeedToSave = true;
+                }
+            }
         }
 
         private void Window_GotFocus(object sender, RoutedEventArgs e)

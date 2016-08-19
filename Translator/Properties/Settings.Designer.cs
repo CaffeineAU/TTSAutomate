@@ -204,5 +204,33 @@ namespace TTSAutomate.Properties {
                 this["LastTTSNumericSpeed"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CopyFolderWhenInsertingLines {
+            get {
+                return ((bool)(this["CopyFolderWhenInsertingLines"]));
+            }
+            set {
+                this["CopyFolderWhenInsertingLines"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CopyFolderWhenSelectingEmptyRow {
+            get {
+                return ((bool)(this["CopyFolderWhenSelectingEmptyRow"]));
+            }
+            set {
+                this["CopyFolderWhenSelectingEmptyRow"] = value;
+            }
+        }
     }
 }

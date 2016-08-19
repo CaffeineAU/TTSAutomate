@@ -24,6 +24,8 @@
                 <StackPanel>
                     <CheckBox Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
                     <CheckBox Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=SetOutputDirectory}"/>
+                    <CheckBox Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenInsertingLines}"/>
+                    <CheckBox Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenSelectingEmptyRow}"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox  Margin="5" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >

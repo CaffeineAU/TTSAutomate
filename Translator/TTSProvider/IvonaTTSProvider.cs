@@ -24,17 +24,24 @@ namespace TTSAutomate
             BackgroundWorker loadVoicesWorker = new BackgroundWorker();
             loadVoicesWorker.DoWork += delegate
             {
-                AvailableVoices = IvonaListVoices().Voices;
-                SelectedVoice = AvailableVoices[0];
-                if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                try
                 {
-                    SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                    AvailableVoices = IvonaListVoices().Voices;
+                    if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                    {
+                        SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                    }
+                    else
+                    {
+                        SelectedVoice = AvailableVoices[0];
+                    }
+
                 }
-                else
+                catch (Exception)
                 {
-                    SelectedVoice = AvailableVoices[0];
-                }
-            };
+                    //Couldn't load voices :(
+                    //throw;
+                }            };
             loadVoicesWorker.RunWorkerAsync();
 
             AvailableSpeeds.AddRange(new String[] { "x-slow", "slow", "medium", "fast", "x-fast" });

@@ -55,10 +55,10 @@
                 </DataTemplate>
             </DataGrid.RowHeaderTemplate>
             <DataGrid.Columns>
-                <DataGridTextColumn  Header="Folder" Binding="{Binding Folder}" />
-                <DataGridTextColumn  Header="Filename" Binding="{Binding FileName}" />
-                <DataGridTextColumn  Header="Phrase to Speak" Binding="{Binding Phrase}"/>
-                <DataGridTemplateColumn Header="Play">
+                <DataGridTextColumn  Header="Folder" Binding="{Binding Folder}" CanUserSort="False" />
+                <DataGridTextColumn  Header="Filename" Binding="{Binding FileName}" CanUserSort="False" />
+                <DataGridTextColumn  Header="Phrase to Speak" Binding="{Binding Phrase}" CanUserSort="False"/>
+                <DataGridTemplateColumn Header="Play" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Click="PlayButton_Click" CommandParameter="{Binding FullPathAndFile}" >
