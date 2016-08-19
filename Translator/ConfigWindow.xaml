@@ -28,7 +28,7 @@
             </GroupBox>
             <GroupBox  Margin="5" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
                 <StackPanel>
-                    <CheckBox Margin="5" Content="Encode MP3 files to WAV" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
+                    <CheckBox Margin="5" Content="Encode MP3 files to WAV" Visibility="Collapsed" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
                     <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
                     <StackPanel Orientation="Horizontal">
                         <Label  Margin="5" Content="Ivona Region"/>
