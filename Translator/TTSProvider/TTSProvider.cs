@@ -124,7 +124,13 @@ namespace TTSAutomate
             set
             {
                 selectedVoice = value;
-                PlayMessage(String.Format("{0} selected", SelectedVoice.Name));
+                if (MainWindow.LoadedWindow)
+                {
+                    PlayMessage(String.Format("{0} selected", SelectedVoice.Name));
+                    Properties.Settings.Default.LastTTSVoice= SelectedVoice.Name;
+
+                }
+
                 OnPropertyChanged("SelectedVoice");
             }
         }
@@ -164,6 +170,10 @@ namespace TTSAutomate
             {
                 selectedDiscreteSpeed = value;
                 PlayMessage(String.Format("{0}", SelectedDiscreteSpeed));
+                if (!initialLoad)
+                {
+                    Properties.Settings.Default.LastTTSDiscreteSpeed = SelectedDiscreteSpeed;
+                }
                 OnPropertyChanged("SelectedDiscreteSpeed");
             }
         }
@@ -177,6 +187,10 @@ namespace TTSAutomate
             {
                 selectedNumericSpeed = value;
                 PlayMessage(String.Format("{0}", SelectedNumericSpeed));
+                if (!initialLoad)
+                {
+                    Properties.Settings.Default.LastTTSNumericSpeed = SelectedNumericSpeed;
+                }
                 OnPropertyChanged("SelectedNumericSpeed");
             }
         }
@@ -202,6 +216,10 @@ namespace TTSAutomate
             {
                 selectedDiscreteVolume = value;
                 PlayMessage(String.Format("{0}", SelectedDiscreteVolume));
+                if (!initialLoad)
+                {
+                    Properties.Settings.Default.LastTTSDiscreteVolume = SelectedDiscreteVolume;
+                }
                 OnPropertyChanged("SelectedDiscreteVolume");
             }
         }
@@ -215,6 +233,10 @@ namespace TTSAutomate
             {
                 selectedNumericVolume = value;
                 PlayMessage(String.Format("{0}", SelectedNumericVolume));
+                if (!initialLoad)
+                {
+                    Properties.Settings.Default.LastTTSNumericVolume = SelectedNumericVolume;
+                }
                 OnPropertyChanged("SelectedNumericVolume");
             }
         }

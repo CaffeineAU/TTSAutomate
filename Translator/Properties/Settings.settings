@@ -8,20 +8,38 @@
     <Setting Name="LastOutputDirectory" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ReopenLastPSVFile" Type="System.Boolean" Scope="User">
+    <Setting Name="ReopenLastPSVFile" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SetOutputDirectory" Type="System.Boolean" Scope="User">
+    <Setting Name="SetOutputDirectory" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="RememberLanguageSettings" Type="System.Boolean" Scope="User">
+    <Setting Name="RememberLanguageSettings" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EncodeToWav" Type="System.Boolean" Scope="User">
+    <Setting Name="EncodeToWav" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IvonaRegion" Type="System.String" Scope="User">
+    <Setting Name="IvonaRegion" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">eu-west-1</Value>
+    </Setting>
+    <Setting Name="LastTTSProvider" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ivona Text To Speech</Value>
+    </Setting>
+    <Setting Name="LastTTSVoice" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Salli</Value>
+    </Setting>
+    <Setting Name="LastTTSDiscreteVolume" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">medium</Value>
+    </Setting>
+    <Setting Name="LastTTSDiscreteSpeed" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">medium</Value>
+    </Setting>
+    <Setting Name="LastTTSNumericVolume" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="LastTTSNumericSpeed" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

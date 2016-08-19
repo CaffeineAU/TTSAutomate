@@ -23,55 +23,14 @@ namespace TTSAutomate
         
         public BitmapImage HeaderImage { get; private set; }
 
-        private Boolean reOpenPSV;
 
-        public Boolean ReOpenPSV
-        {
-            get { return reOpenPSV; }
-            set { reOpenPSV = value; }
-        }
+        private List<String> ivonaRegions = new List<String>();
 
-        private Boolean setOutputDirectory;
-
-        public Boolean SetOutputDirectory
-        {
-            get { return setOutputDirectory; }
-            set { setOutputDirectory = value; }
-        }
-
-        private Boolean encodeToWav;
-
-        public Boolean EncodeToWav
-        {
-            get { return encodeToWav; }
-            set { encodeToWav = value; }
-        }
-
-        private Boolean rememberLanguageSettings;
-
-        public Boolean RememberLanguageSettings
-        {
-            get { return rememberLanguageSettings; }
-            set { rememberLanguageSettings = value; }
-        }
-
-        private IvonaRegion selectedIvonaRegion;
-
-        public IvonaRegion SelectedIvonaRegion
-        {
-            get { return selectedIvonaRegion; }
-            set { selectedIvonaRegion = value; }
-        }
-
-        private List<IvonaRegion> ivonaRegions = new List<IvonaRegion>();
-
-        public List<IvonaRegion> IvonaRegions
+        public List<String> IvonaRegions
         {
             get { return ivonaRegions; }
             set { ivonaRegions = value; }
         }
-
-        public Boolean Result { get; private set; }
 
         public ConfigWindow()
         {
@@ -79,10 +38,9 @@ namespace TTSAutomate
             this.DataContext = this;
             HeaderImage = MainWindow.LoadImage("settings.png");
 
-            IvonaRegions.Add(new IvonaRegion { RegionName = "eu-west-1", Description = "EU, Dublin" });
-            IvonaRegions.Add(new IvonaRegion { RegionName = "us-east-1", Description = "US East, N. Virginia" });
-            IvonaRegions.Add(new IvonaRegion { RegionName = "us-west-2", Description = "US West, Oregon" });
-            Result = false;
+            IvonaRegions.Add("eu-west-1");
+            IvonaRegions.Add("us-east-1");
+            IvonaRegions.Add("us-west-2");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -93,13 +51,6 @@ namespace TTSAutomate
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            Result = true;
-            Close();
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            Result = false;
             Close();
         }
     }

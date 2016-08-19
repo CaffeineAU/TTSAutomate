@@ -71,6 +71,7 @@ namespace TTSAutomate
             set
             {
                 selectedEngine = value;
+                Properties.Settings.Default.LastTTSProvider = SelectedEngine.Name;
                 OnPropertyChanged("SelectedEngine");
             }
         }
@@ -165,7 +166,7 @@ namespace TTSAutomate
 
         public static MediaPlayer media = new MediaPlayer();
         private int InitialPhraseItems = 499;
-        private static bool LoadedWindow = false;
+        public static bool LoadedWindow = false;
 
         public MainWindow()
         {
@@ -195,7 +196,6 @@ namespace TTSAutomate
             //}
             //TTSEngines.Add(new TTSProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
 
-            SelectedEngine = TTSEngines[0];
 
             Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
@@ -204,6 +204,39 @@ namespace TTSAutomate
             DownloaderWorker.WorkerSupportsCancellation = true;
             DownloaderWorker.RunWorkerCompleted += DownloaderWorker_RunWorkerCompleted;
             DownloaderWorker.ProgressChanged += DownloaderWorker_ProgressChanged;
+
+            if (Properties.Settings.Default.SetOutputDirectory)
+            {
+                OutputDirectoryName = Properties.Settings.Default.LastOutputDirectory;
+            }
+            if (Properties.Settings.Default.ReopenLastPSVFile)
+            {
+                if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile))
+                {
+                    if (File.Exists(Properties.Settings.Default.LastPhraseFile))
+                    {
+                        LoadPhraseFile(Properties.Settings.Default.LastPhraseFile);
+                        PhraseFileName = Properties.Settings.Default.LastPhraseFile;
+                        NeedToSave = false;
+                    }
+
+                }
+            }
+            if (Properties.Settings.Default.RememberLanguageSettings)
+            {
+                SelectedEngine = TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider);
+                SelectedEngine.SelectedDiscreteVolume = Properties.Settings.Default.LastTTSDiscreteVolume;
+                SelectedEngine.SelectedDiscreteSpeed = Properties.Settings.Default.LastTTSDiscreteSpeed;
+                SelectedEngine.SelectedNumericVolume = Convert.ToInt32(Properties.Settings.Default.LastTTSNumericVolume);
+                SelectedEngine.SelectedNumericSpeed = Convert.ToInt32(Properties.Settings.Default.LastTTSNumericSpeed);
+
+            }
+            else
+            {
+                SelectedEngine = TTSEngines[0];
+                SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
+
+            }
 
             this.DataContext = this;
         }
@@ -835,21 +868,7 @@ namespace TTSAutomate
         {
             ConfigWindow cw = new ConfigWindow();
             cw.Owner = this;
-            cw.SelectedIvonaRegion = cw.IvonaRegions.First(n=> n.RegionName == Properties.Settings.Default.IvonaRegion);
-            cw.SetOutputDirectory = Properties.Settings.Default.SetOutputDirectory;
-            cw.EncodeToWav = Properties.Settings.Default.EncodeToWav;
-            cw.ReOpenPSV = Properties.Settings.Default.ReopenLastPSVFile;
-            cw.RememberLanguageSettings = Properties.Settings.Default.RememberLanguageSettings;
             cw.ShowDialog();
-            if (cw.Result)
-            {
-                Properties.Settings.Default.IvonaRegion = cw.SelectedIvonaRegion.RegionName;
-                Properties.Settings.Default.SetOutputDirectory = cw.SetOutputDirectory;
-                Properties.Settings.Default.EncodeToWav = cw.EncodeToWav;
-                Properties.Settings.Default.ReopenLastPSVFile = cw.ReOpenPSV;
-                Properties.Settings.Default.RememberLanguageSettings = cw.RememberLanguageSettings;
-                Properties.Settings.Default.Save();
-            }
         }
     }
 

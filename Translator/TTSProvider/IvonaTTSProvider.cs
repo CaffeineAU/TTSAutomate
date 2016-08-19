@@ -26,6 +26,14 @@ namespace TTSAutomate
             {
                 AvailableVoices = IvonaListVoices().Voices;
                 SelectedVoice = AvailableVoices[0];
+                if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                {
+                    SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                }
+                else
+                {
+                    SelectedVoice = AvailableVoices[0];
+                }
             };
             loadVoicesWorker.RunWorkerAsync();
 
@@ -107,16 +115,16 @@ namespace TTSAutomate
         {
             var date = DateTime.UtcNow;
 
-            const string algorithm = "AWS4-HMAC-SHA256";
-            const string regionName = "eu-west-1";
-            const string serviceName = "tts";
-            const string method = "POST";
-            const string canonicalUri = "/CreateSpeech";
-            const string canonicalQueryString = "";
-            const string contentType = "application/json";
+            string algorithm = "AWS4-HMAC-SHA256";
+            string regionName = Properties.Settings.Default.IvonaRegion;
+            string serviceName = "tts";
+            string method = "POST";
+            string canonicalUri = "/CreateSpeech";
+            string canonicalQueryString = "";
+            string contentType = "application/json";
 
 
-            const string host = serviceName + "." + regionName + ".ivonacloud.com";
+            string host = serviceName + "." + regionName + ".ivonacloud.com";
 
             var obj = new
             {
@@ -226,19 +234,19 @@ namespace TTSAutomate
             return new byte[0];
         }
 
-        public static SupportedVoices IvonaListVoices()
+        public SupportedVoices IvonaListVoices()
         {
             var date = DateTime.UtcNow;
 
-            const string algorithm = "AWS4-HMAC-SHA256";
-            const string regionName = "eu-west-1";
-            const string serviceName = "tts";
-            const string method = "POST";
-            const string canonicalUri = "/ListVoices";
-            const string canonicalQueryString = "";
-            const string contentType = "application/json";
+            string algorithm = "AWS4-HMAC-SHA256";
+            string regionName = Properties.Settings.Default.IvonaRegion;
+            string serviceName = "tts";
+            string method = "POST";
+            string canonicalUri = "/ListVoices";
+            string canonicalQueryString = "";
+            string contentType = "application/json";
 
-            const string host = serviceName + "." + regionName + ".ivonacloud.com";
+            string host = serviceName + "." + regionName + ".ivonacloud.com";
 
             var obj = new
             {
@@ -363,14 +371,5 @@ namespace TTSAutomate
         public List<Voice> Voices { get; set; }
     }
 
-    public class IvonaRegion
-    {
-        public String Description { get; set; }
-        public String RegionName { get; set; }
 
-        public override string ToString()
-        {
-            return String.Format("{0} ({1})", RegionName, Description);
-        }
-    }
 }
