@@ -20,17 +20,24 @@ namespace TTSAutomate
     public partial class ConfigWindow : Window, INotifyPropertyChanged
     {
 
+        bool initialLoad = true;
         
         public BitmapImage HeaderImage { get; private set; }
 
+        private int myVar;
 
-        private List<String> ivonaRegions = new List<String>();
-
-        public List<String> IvonaRegions
+        public int MyProperty
         {
-            get { return ivonaRegions; }
-            set { ivonaRegions = value; }
+            get { return myVar; }
+            set { myVar = value; }
         }
+
+
+        public List<String> IvonaRegions { get; set; }
+
+        public List<int> SampleRates { get; set; }
+
+        public List<int> BitsPerSamples { get; set; }
 
         public ConfigWindow()
         {
@@ -38,9 +45,24 @@ namespace TTSAutomate
             this.DataContext = this;
             HeaderImage = MainWindow.LoadImage("settings.png");
 
+            IvonaRegions = new List<string>();
             IvonaRegions.Add("eu-west-1");
             IvonaRegions.Add("us-east-1");
             IvonaRegions.Add("us-west-2");
+
+            SampleRates = new List<int>();
+            SampleRates.Add(8000);
+            SampleRates.Add(11025);
+            SampleRates.Add(16000);
+            SampleRates.Add(22050);
+            SampleRates.Add(44100);
+            SampleRates.Add(48000);
+
+            BitsPerSamples = new List<int>();
+            BitsPerSamples.Add(8);
+            BitsPerSamples.Add(16);
+            BitsPerSamples.Add(24);
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -52,6 +74,19 @@ namespace TTSAutomate
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!initialLoad)
+            {
+                (Owner as MainWindow).SetItemsAsDirty();
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            initialLoad = false;
         }
     }
 

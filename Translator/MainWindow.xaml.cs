@@ -224,7 +224,17 @@ namespace TTSAutomate
             }
             if (Properties.Settings.Default.RememberLanguageSettings)
             {
-                SelectedEngine = TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider);
+                if (TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider)!=null)
+                {
+                    SelectedEngine = TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider);
+
+                }
+                else
+                {
+                    SelectedEngine = TTSEngines[0];
+                    SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
+
+                }
                 SelectedEngine.SelectedDiscreteVolume = Properties.Settings.Default.LastTTSDiscreteVolume;
                 SelectedEngine.SelectedDiscreteSpeed = Properties.Settings.Default.LastTTSDiscreteSpeed;
                 SelectedEngine.SelectedNumericVolume = Convert.ToInt32(Properties.Settings.Default.LastTTSNumericVolume);
@@ -344,7 +354,7 @@ namespace TTSAutomate
 
             if (((dep as DataGridRow).DataContext as PhraseItem).DownloadComplete)
             {
-                PlayAudioFullPath(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, ((Button)sender).CommandParameter), false);
+                PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, ((Button)sender).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), false);
             }
             else
             {
@@ -393,12 +403,13 @@ namespace TTSAutomate
 
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PhraseItems.ToList().ForEach(n => n.DownloadComplete = false);
+            SetItemsAsDirty();
 
-            //foreach (var item in PhraseItems)
-            //{
-            //    item.DownloadComplete = false;
-            //}
+        }
+
+        public void SetItemsAsDirty()
+        {
+            PhraseItems.ToList().ForEach(n => n.DownloadComplete = false);
         }
 
         private void WordsListView_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -421,7 +432,7 @@ namespace TTSAutomate
         private void LoadPhraseFile(String filename)
         {
             PhraseItems.Clear();
-            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.*)\|(?<Phrase>[.-[\s]]*)\s*");
+            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
 
             List<PhraseItem> items = new List<PhraseItem>();
 
@@ -541,10 +552,7 @@ namespace TTSAutomate
                 {
                     OutputDirectoryName = dlg.FileName;
                     Properties.Settings.Default.LastOutputDirectory = dlg.FileName;
-                    foreach (var item in PhraseItems)
-                    {
-                        item.DownloadComplete = false;
-                    }
+                    SetItemsAsDirty();
                 }
             }
             catch  // Are we on windows XP? then we must use the old folder browser dialog
@@ -568,10 +576,7 @@ namespace TTSAutomate
                 {
                     OutputDirectoryName = dlg.SelectedPath;
                     Properties.Settings.Default.LastOutputDirectory = dlg.SelectedPath;
-                    foreach (var item in PhraseItems)
-                    {
-                        item.DownloadComplete = false;
-                    }
+                    SetItemsAsDirty();
 
                 }
 
@@ -615,7 +620,7 @@ namespace TTSAutomate
 
         private bool IsPhraseEmpty(PhraseItem item)
         {
-            return String.IsNullOrEmpty(item.Folder) && String.IsNullOrEmpty(item.FileName) && String.IsNullOrEmpty(item.Phrase);
+            return  String.IsNullOrEmpty(item.Phrase);
         }
 
         private void SaveAsPhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -827,26 +832,17 @@ namespace TTSAutomate
                 Properties.Settings.Default.LastTTSVoice= SelectedEngine.SelectedVoice.Name;
 
             }
-            foreach (var item in PhraseItems)
-            {
-                item.DownloadComplete = false;
-            }
+            SetItemsAsDirty();
         }
 
         private void SpeechRateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            foreach (var item in PhraseItems)
-            {
-                item.DownloadComplete = false;
-            }
+            SetItemsAsDirty();
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            foreach (var item in PhraseItems)
-            {
-                item.DownloadComplete = false;
-            }
+            SetItemsAsDirty();
         }
 
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

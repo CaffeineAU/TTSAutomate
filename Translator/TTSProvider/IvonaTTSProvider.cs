@@ -41,7 +41,8 @@ namespace TTSAutomate
                 {
                     //Couldn't load voices :(
                     //throw;
-                }            };
+                }
+            };
             loadVoicesWorker.RunWorkerAsync();
 
             AvailableSpeeds.AddRange(new String[] { "x-slow", "slow", "medium", "fast", "x-fast" });
@@ -51,26 +52,14 @@ namespace TTSAutomate
             SelectedDiscreteVolume = "medium";
         }
 
-        public override void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadItem(PhraseItem item, string folder)
         {
             try
             {
                 new Task(() =>
                 {
                     File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                    if (convertToWav.Value == true)
-                    {
-                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
-                        {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
-                        }
-                    }
-                    item.DownloadComplete = true;
+                    ConvertToWav(item, folder, false);
                 }).Start();
 
             }
@@ -81,27 +70,14 @@ namespace TTSAutomate
             }
         }
 
-        public override void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
             try
             {
                 new Task(() =>
                 {
                     File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                    if (convertToWav.Value == true)
-                    {
-                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
-                        {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
-                        }
-                    }
-                    item.DownloadComplete = true;
-                    MainWindow.PlayAudioFullPath(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
+                    ConvertToWav(item, folder, true);
                 }).Start();
 
             }
@@ -224,20 +200,28 @@ namespace TTSAutomate
                 newStream.Flush();
             }
 
-            var response = (HttpWebResponse)webRequest.GetResponse();
-
-            using (Stream responseStream = response.GetResponseStream())
+            try
             {
-                if (responseStream != null)
+                var response = (HttpWebResponse)webRequest.GetResponse();
+
+                using (Stream responseStream = response.GetResponseStream())
                 {
-                    using (var memoryStream = new MemoryStream())
+                    if (responseStream != null)
                     {
-                        responseStream.CopyTo(memoryStream);
-                        return memoryStream.ToArray();
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            responseStream.CopyTo(memoryStream);
+                            return memoryStream.ToArray();
+                        }
                     }
                 }
-            }
 
+            }
+            catch (Exception)
+            {
+
+
+            }
             return new byte[0];
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -18,6 +19,7 @@ namespace TTSAutomate
         public TTSProvider()
         {
             System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
+
         }
 
         public enum Class
@@ -25,6 +27,7 @@ namespace TTSAutomate
             Local,
             Web,
         }
+
 
         private Boolean hasVoices = false;
 
@@ -85,6 +88,27 @@ namespace TTSAutomate
                 OnPropertyChanged("HasDiscreteVolume");
             }
         }
+
+        protected static void ConvertToWav(PhraseItem item, string folder, bool play)
+        {
+            if (Properties.Settings.Default.EncodeToWav == true)
+            {
+                using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+                {
+                    using (var resampler = new MediaFoundationResampler(mp3, new NAudio.Wave.WaveFormat(Properties.Settings.Default.WavSampleRate, Properties.Settings.Default.WavBitsPerSample, 1)))
+                    {
+                        resampler.ResamplerQuality = 60;
+                        WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
+                    }
+                }
+            }
+            if (play)
+            {
+                MainWindow.PlayAudioFullPath(String.Format("{0}\\{3}\\{1}\\{2}.{3}", folder, item.Folder, item.FileName, Properties.Settings.Default.EncodeToWav? "wav":"mp3"));
+            }
+            item.DownloadComplete = true;
+        }
+
 
 
         public string Name { get; set; }
@@ -241,9 +265,9 @@ namespace TTSAutomate
             }
         }
 
-        public abstract void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav = true);
+        public abstract void DownloadItem(PhraseItem item, string folder);
 
-        public abstract void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav = true);
+        public abstract void DownloadAndPlayItem(PhraseItem item, string folder);
 
         public abstract void Play(PhraseItem item);
 

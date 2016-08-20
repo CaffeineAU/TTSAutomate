@@ -232,5 +232,33 @@ namespace TTSAutomate.Properties {
                 this["CopyFolderWhenSelectingEmptyRow"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16000")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int WavSampleRate {
+            get {
+                return ((int)(this["WavSampleRate"]));
+            }
+            set {
+                this["WavSampleRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int WavBitsPerSample {
+            get {
+                return ((int)(this["WavBitsPerSample"]));
+            }
+            set {
+                this["WavBitsPerSample"] = value;
+            }
+        }
     }
 }

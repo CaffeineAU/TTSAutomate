@@ -56,7 +56,7 @@ namespace TTSAutomate
             SelectedDiscreteVolume = "100";
         }
 
-        public override void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadItem(PhraseItem item, string folder)
         {
             try
             {
@@ -87,15 +87,9 @@ namespace TTSAutomate
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
                         {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(wav, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
+                            ConvertToWav(item, folder, false);
                         }
                     }
-                    item.DownloadComplete = true;
                 }).Start();
             }
             catch (Exception Ex)
@@ -104,7 +98,7 @@ namespace TTSAutomate
             }
         }
 
-        public override void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
             try
             {
@@ -135,16 +129,9 @@ namespace TTSAutomate
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
                         {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(wav, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
+                            ConvertToWav(item, folder, true);
                         }
                     }
-                    item.DownloadComplete = true;
-                    MainWindow.PlayAudioFullPath(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
                 }).Start();
             }
             catch (Exception Ex)

@@ -54,7 +54,7 @@ namespace TTSAutomate
             SelectedDiscreteSpeed = "medium";
         }
 
-        public override void DownloadItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadItem(PhraseItem item, string folder)
         {
             try
             {
@@ -64,19 +64,7 @@ namespace TTSAutomate
                     {
                         wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    if (convertToWav.Value == true)
-                    {
-                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
-                        {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
-                        }
-                    }
-                    item.DownloadComplete = true;
+                    ConvertToWav(item, folder, false);
                 }).Start();
             }
             catch(Exception Ex)
@@ -102,7 +90,7 @@ namespace TTSAutomate
                     return 0;            }
         }
 
-        public override void DownloadAndPlayItem(PhraseItem item, string folder, Boolean? convertToWav)
+        public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
             try
             {
@@ -112,20 +100,7 @@ namespace TTSAutomate
                     {
                         wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    if (convertToWav.Value == true)
-                    {
-                        using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
-                        {
-                            var newFormat = new WaveFormat(16000, 1);
-                            using (var resampler = new MediaFoundationResampler(mp3, newFormat))
-                            {
-                                resampler.ResamplerQuality = 60;
-                                WaveFileWriter.CreateWaveFile(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName), resampler);
-                            }
-                        }
-                    }
-                    item.DownloadComplete = true;
-                    MainWindow.PlayAudioFullPath(String.Format("{0}\\wav\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
+                    ConvertToWav(item, folder, true);
                 }).Start();
             }
             catch (Exception Ex)

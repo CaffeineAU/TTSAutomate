@@ -6,7 +6,7 @@
         xmlns:properties="clr-namespace:TTSAutomate.Properties"
         xmlns:local="clr-namespace:TTSAutomate"
         mc:Ignorable="d"
-        Title="Configure..." Height="400" Width="600" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+        Title="Configure..." Height="400" Width="600" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
@@ -33,7 +33,14 @@
                     <CheckBox Margin="5" Content="Encode MP3 files to WAV" Visibility="Collapsed" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
                     <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
                     <StackPanel Orientation="Horizontal">
-                        <Label  Margin="5" Content="Ivona Region"/>
+                    <CheckBox Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
+                        <Label  Margin="5" Content="Sample Rate"/>
+                        <ComboBox  Margin="5" ItemsSource="{Binding SampleRates}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <Label  Margin="5" Content="Bits per sample"/>
+                        <ComboBox  Margin="5" ItemsSource="{Binding BitsPerSamples}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavBitsPerSample}" SelectionChanged="ComboBox_SelectionChanged"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label  Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left"/>
                         <ComboBox  Margin="5" ItemsSource="{Binding IvonaRegions}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
                     </StackPanel>
                 </StackPanel>
