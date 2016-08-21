@@ -799,9 +799,11 @@ namespace TTSAutomate
                     }
                 }
             }
-            if (e.Key == Key.Right && !((DependencyObject)e.OriginalSource is TextBox))
+            if ((e.Key == Key.Right || e.Key == Key.Tab )&& !((DependencyObject)e.OriginalSource is TextBox))
             {
                 DependencyObject dep = (DependencyObject)e.OriginalSource;
+                DependencyObject currentRow = dep;
+                DependencyObject nextRow = dep;
                 DataGridCell cell = dep as DataGridCell;
                 cell.IsSelected = false;
                 DependencyObject nextRowCell;
@@ -810,14 +812,42 @@ namespace TTSAutomate
                 if (nextRowCell == null || (nextRowCell as DataGridCell).Column.Header.ToString() == "Play")
                 {
                     nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
-                    nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Down);
 
                     while ((nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left) != null)
                     {
                         nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
                     }
+                    while ((currentRow != null) && !(currentRow is DataGridRow) && !(currentRow is System.Windows.Controls.Primitives.DataGridColumnHeader))
+                    {
+                        currentRow = VisualTreeHelper.GetParent(currentRow);
+                    }
+
+                    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Down);
+                    nextRow = VisualTreeHelper.GetParent(nextRowCell);
+                    nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
+                    nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
+                    while ((nextRow != null) && !(nextRow is DataGridRow) && !(nextRow is System.Windows.Controls.Primitives.DataGridColumnHeader))
+                    {
+                        nextRow = VisualTreeHelper.GetParent(nextRow);
+                    }
+
+                    SelectedRowCount = WordsListView.SelectedItems.Count;
+                    if (Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty(((nextRow as DataGridRow).Item as PhraseItem).Folder))
+                    {
+                    nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
+                        int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
+                        while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
+                        if (rowselected >= 0)
+                        {
+                            (((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem).Folder = PhraseItems[rowselected].Folder;
+                            NeedToSave = true;
+                        }
+                    }
+
                     WordsListView.CurrentCell = new DataGridCellInfo(nextRowCell as DataGridCell);
                     (nextRowCell as DataGridCell).IsSelected = true;
+
+
                     e.Handled = true;
                 }
             }
