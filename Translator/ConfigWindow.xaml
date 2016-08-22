@@ -9,16 +9,16 @@
         Title="Configure..." Height="400" Width="600" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <Image Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="90"/>
+        <Image Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
         <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
             <GroupBox  Margin="5" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
                 <StackPanel>
@@ -33,7 +33,7 @@
                     <CheckBox Margin="5" Content="Encode MP3 files to WAV" Visibility="Collapsed" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
                     <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
                     <StackPanel Orientation="Horizontal">
-                    <CheckBox Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
+                    <CheckBox Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
                         <Label  Margin="5" Content="Sample Rate"/>
                         <ComboBox  Margin="5" ItemsSource="{Binding SampleRates}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
                         <Label  Margin="5" Content="Bits per sample"/>
