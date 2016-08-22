@@ -84,6 +84,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
     <Compile Include="TTSProvider\FromTextToSpeechTTSProvider.cs" />
+    <Compile Include="TTSProvider\BingTTSProvider.cs" />
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
     <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
     <Compile Include="TTSProvider\IvonaTTSProvider.cs" />

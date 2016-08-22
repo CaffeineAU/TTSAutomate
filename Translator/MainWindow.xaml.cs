@@ -189,6 +189,7 @@ namespace TTSAutomate
             TTSEngines.Add(new IvonaTTSProvider());
             TTSEngines.Add(new GoogleTTSProvider());
             TTSEngines.Add(new MicrosoftTTSProvider());
+            TTSEngines.Add(new BingTTSProvider());
             TTSEngines.Add(new FromTextToSpeechTTSProvider());
             //foreach (var voice in ssss.GetInstalledVoices())
             //{

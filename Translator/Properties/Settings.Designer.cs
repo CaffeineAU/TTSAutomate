@@ -260,5 +260,20 @@ namespace TTSAutomate.Properties {
                 this["WavBitsPerSample"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("mtstkn=4cgtvd0CJdF%2FSFWkmxNzQba9K1XhI2Gm24waNSWUY4SjtrHDjQ1%2Bw1oAkUtw%2F6Ew;MUI" +
+            "DB=2B66DE567E226CED09D6D72F7FA46D77; ")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string BingHeaderString {
+            get {
+                return ((string)(this["BingHeaderString"]));
+            }
+            set {
+                this["BingHeaderString"] = value;
+            }
+        }
     }
 }

@@ -13,12 +13,11 @@ using System.Web.Script.Serialization;
 
 namespace TTSAutomate
 {
-    class GoogleTTSProvider : TTSProvider
+    class BingTTSProvider : TTSProvider
     {
-
-        public GoogleTTSProvider()
+        public BingTTSProvider()
         {
-            Name = "Google Text To Speech";
+            Name = "Bing Text To Speech";
             ProviderClass = Class.Web;
             HasVoices = true;
             BackgroundWorker loadVoicesWorker = new BackgroundWorker();
@@ -27,7 +26,9 @@ namespace TTSAutomate
                 List<CultureInfo> cultures = new List<CultureInfo>();
                 cultures.AddRange(CultureInfo.GetCultures(CultureTypes.SpecificCultures));
                 cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
-                AvailableVoices = cultures.Select(x => new Voice() { Name = x.DisplayName, Language = x.Name }).ToList();
+                AvailableVoices = cultures.Select(x => new Voice() { Name = x.DisplayName + " (Male)", Language = x.Name, Gender = "male" }).ToList();
+                AvailableVoices.AddRange(cultures.Select(x => new Voice() { Name = x.DisplayName + " (Female)", Language = x.Name, Gender = "female" }).ToList());
+                AvailableVoices.Sort((x, y) => x.Name.CompareTo(y.Name));
                 SelectedVoice = AvailableVoices[0];
                 if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
                 {
@@ -50,7 +51,8 @@ namespace TTSAutomate
                 {
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
+                        wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
+                        wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
                     ConvertToWav(item, folder, false);
                 }).Start();
@@ -71,7 +73,8 @@ namespace TTSAutomate
                 {
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
+                        wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
+                        wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
                     ConvertToWav(item, folder, true);
                 }).Start();
@@ -88,8 +91,16 @@ namespace TTSAutomate
         {
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
-                MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                try
+                {
+                    wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
+                    wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                    MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                }
+                catch
+                {
+
+                }
             }
         }
     }
