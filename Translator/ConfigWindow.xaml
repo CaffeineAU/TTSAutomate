@@ -35,9 +35,10 @@
                     <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
                     <StackPanel Orientation="Horizontal">
                     <CheckBox Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
-                        <Label  Margin="5" Content="Sample Rate"/>
-                        <ComboBox  Margin="5" ItemsSource="{Binding SampleRates}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
-                        <Label  Margin="5" Content="Bits per sample"/>
+                        <Label  Margin="20,5,0,5" Content="Sample Rate"/>
+                        <ComboBox  Margin="0,5" ItemsSource="{Binding SampleRates}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <Label  Margin="0,5" Content="Hz       Bits per sample"/>
+                        <ComboBox  Margin="0,5" ItemsSource="{Binding BitsPerSamples}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavBitsPerSample}" SelectionChanged="ComboBox_SelectionChanged"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -45,7 +46,7 @@
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="120"/>
-                        <ComboBox  Margin="5" ItemsSource="{Binding IvonaRegions}" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
+                        <ComboBox  Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Label  Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="120"/>

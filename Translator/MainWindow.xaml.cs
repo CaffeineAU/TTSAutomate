@@ -719,13 +719,16 @@ namespace TTSAutomate
 
         private void MoveRowsUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            foreach (PhraseItem item in WordsListView.SelectedItems)
+            List<int> indices = new List<int>();
+            foreach (var item in WordsListView.SelectedItems)
             {
-                if (PhraseItems.IndexOf(item) > 0)
-                {
-                    PhraseItems.Move(PhraseItems.IndexOf(item), PhraseItems.IndexOf(item) - 1);
+                indices.Add(PhraseItems.IndexOf(item as PhraseItem));
+            }
+            indices.Sort();
+            foreach (int index in indices)
+            {
+                    PhraseItems.Move(index, index - 1);
                     NeedToSave = true;
-                }
             }
         }
 
@@ -736,15 +739,17 @@ namespace TTSAutomate
 
         private void MoveRowsDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            for (int i = WordsListView.SelectedItems.Count-1; i >= 0; i--)
+            List<int> indices = new List<int>();
+            foreach (var item in WordsListView.SelectedItems)
             {
-                if (PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) < PhraseItems.Count - 1)
-                {
-                    Logger.Log(String.Format("Moving {0} to {1}", PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1));
-                    PhraseItems.Move(PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem), PhraseItems.IndexOf(WordsListView.SelectedItems[i] as PhraseItem) + 1);
-                    NeedToSave = true;
-
-                }
+                indices.Add(PhraseItems.IndexOf(item as PhraseItem));
+            }
+            indices.Sort();
+            indices.Reverse();
+            foreach (int index in indices)
+            {
+                PhraseItems.Move(index, index + 1);
+                NeedToSave = true;
             }
         }
 
@@ -810,11 +815,15 @@ namespace TTSAutomate
                 DataGridCell cell = dep as DataGridCell;
                 cell.IsSelected = false;
                 DependencyObject nextRowCell;
-                nextRowCell = cell.PredictFocus(FocusNavigationDirection.Right);
-
-                if (nextRowCell == null || (!(nextRowCell is Button)&&(nextRowCell as DataGridCell).Column.Header.ToString() == "Play"))
+                if (cell.Column.Header.ToString() == "Play" || cell.Column.Header.ToString() == "Phrase to Speak")
                 {
-                    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
+
+                //}
+                nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
+
+                //if (nextRowCell == null || (!(nextRowCell is Button)&&(nextRowCell as DataGridCell).Column.Header.ToString() == "Play"))
+                //{
+                //    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
 
                     while ((nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left) != null)
                     {
@@ -837,7 +846,10 @@ namespace TTSAutomate
                     SelectedRowCount = WordsListView.SelectedItems.Count;
                     if (Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty(((nextRow as DataGridRow).Item as PhraseItem).Folder))
                     {
-                    nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
+                        if (cell.Column.Header.ToString() != "Play")
+                        {
+                            nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
+                        }
                         int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
                         while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
                         if (rowselected >= 0)
@@ -881,7 +893,7 @@ namespace TTSAutomate
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedRowCount = WordsListView.SelectedItems.Count;
-            if (SelectedRowCount == 1 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
+            if (SelectedRowCount == 1 && e.AddedItems.Count > 0 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
             {
                 int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
                 while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >=0){ rowselected--; } // traverse upwards
