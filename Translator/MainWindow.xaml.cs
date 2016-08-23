@@ -818,12 +818,15 @@ namespace TTSAutomate
                 if (cell.Column.Header.ToString() == "Play" || cell.Column.Header.ToString() == "Phrase to Speak")
                 {
 
-                //}
-                nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
+                    //}
+                    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
 
-                //if (nextRowCell == null || (!(nextRowCell is Button)&&(nextRowCell as DataGridCell).Column.Header.ToString() == "Play"))
-                //{
-                //    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
+                    while (!(nextRowCell is DataGridCell))
+                    {
+                        nextRowCell = VisualTreeHelper.GetParent(nextRowCell);
+
+                    }
+                    //    nextRowCell = cell.PredictFocus(FocusNavigationDirection.Left);
 
                     while ((nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left) != null)
                     {
@@ -838,6 +841,11 @@ namespace TTSAutomate
                     nextRow = VisualTreeHelper.GetParent(nextRowCell);
                     nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
                     nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
+                    if (cell.Column.Header.ToString() == "Play")
+                    {
+                        nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Left);
+
+                    }
                     while ((nextRow != null) && !(nextRow is DataGridRow) && !(nextRow is System.Windows.Controls.Primitives.DataGridColumnHeader))
                     {
                         nextRow = VisualTreeHelper.GetParent(nextRow);
@@ -846,10 +854,10 @@ namespace TTSAutomate
                     SelectedRowCount = WordsListView.SelectedItems.Count;
                     if (Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty(((nextRow as DataGridRow).Item as PhraseItem).Folder))
                     {
-                        if (cell.Column.Header.ToString() != "Play")
-                        {
+                        //if (cell.Column.Header.ToString() != "Play")
+                        //{
                             nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
-                        }
+                        //}
                         int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
                         while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
                         if (rowselected >= 0)

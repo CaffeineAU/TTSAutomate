@@ -53,6 +53,7 @@
                                         <Setter Property="Content" Value="Play" />
                                         <Setter Property="IsEnabled" Value="False" />
                                         <Setter Property="Visibility" Value="Visible" />
+                                        <Setter Property="Focusable" Value="False"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding DownloadComplete}" Value="False">
                                                 <Setter Property="Content" Value="Preview" />
