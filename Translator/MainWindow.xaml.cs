@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using System.Windows.Shell;
 using System.Threading;
 using System.Windows.Controls.Primitives;
+using System.Diagnostics;
 
 namespace TTSAutomate
 {
@@ -102,8 +103,6 @@ namespace TTSAutomate
             {
                 phraseFileName = value;
                 OnPropertyChanged("PhraseFileName");
-                CheckFolderForVoices();
-
             }
         }
 
@@ -116,7 +115,6 @@ namespace TTSAutomate
             {
                 outputDirectoryName = value;
                 OnPropertyChanged("OutputDirectoryName");
-                CheckFolderForVoices();
             }
         }
 
@@ -221,7 +219,7 @@ namespace TTSAutomate
             }
             if (Properties.Settings.Default.RememberLanguageSettings)
             {
-                if (TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider)!=null)
+                if (TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider) != null)
                 {
                     SelectedEngine = TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider);
 
@@ -245,25 +243,46 @@ namespace TTSAutomate
 
             }
 
+
             this.DataContext = this;
         }
 
         private void CheckFolderForVoices()
         {
-            if (LoadedWindow && SelectedEngine.SelectedVoice != null)
+            if (LoadedWindow && SelectedEngine != null)
             {
-                String comment = String.Format("{0}, {1}, {2}, {3}", SelectedEngine.Name, SelectedEngine.SelectedVoice.Name, SelectedEngine.SelectedDiscreteSpeed, SelectedEngine.SelectedDiscreteVolume);
-                foreach (var item in PhraseItems)
+                if (SelectedEngine.SelectedVoice != null)
                 {
-                    if (File.Exists(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+
+                    String comment = String.Format("{0}, {1}, {2}, {3}", SelectedEngine.Name, SelectedEngine.SelectedVoice.Name, SelectedEngine.SelectedDiscreteSpeed, SelectedEngine.SelectedDiscreteVolume);
+                    foreach (var item in PhraseItems)
                     {
-                        TagLib.File file = TagLib.File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
-                        if (file.Tag.Title == item.Phrase && file.Tag.Comment == comment)
+                        string filename = String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName);
+                        if (File.Exists(filename))
                         {
-                            item.DownloadComplete = true;
+                            if (new System.IO.FileInfo(filename).Length > 0)
+                            {
+
+                                try
+                                {
+                                    using (TagLib.File file = TagLib.File.Create(new TagLib.File.LocalFileAbstraction(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName))))
+                                    {
+                                        if (file.Tag.Title == item.Phrase && file.Tag.Comment == comment)
+                                        {
+                                            item.DownloadComplete = true;
+                                            OnPropertyChanged("PhraseItems");
+                                        }
+                                    }
+                                }
+                                catch (TagLib.CorruptFileException ex)
+                                {
+                                    Debug.WriteLine("File {1} Exception", ex, item.Phrase);
+                                }
+                            }
                         }
                     }
                 }
+                //WordsListView.Focus();
             }
         }
 
@@ -271,7 +290,7 @@ namespace TTSAutomate
         private void DownloaderWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             DownloadProgress = e.ProgressPercentage;
-            TaskbarItemInfo.ProgressValue = (double)(e.ProgressPercentage)/(double)(DownloadCount);
+            TaskbarItemInfo.ProgressValue = (double)(e.ProgressPercentage) / (double)(DownloadCount);
         }
 
         private void DownloaderWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -331,7 +350,7 @@ namespace TTSAutomate
             {
                 MessageBox.Show("Couldn't download audio\r\n\r\n" + Ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            while (PhraseItems.Count(n => n.DownloadComplete) < PhraseItems.Count(n=> !String.IsNullOrEmpty(n.Phrase)))
+            while (PhraseItems.Count(n => n.DownloadComplete) < PhraseItems.Count(n => !String.IsNullOrEmpty(n.Phrase)))
             {
                 if (!DownloaderWorker.CancellationPending)
                 {
@@ -358,7 +377,7 @@ namespace TTSAutomate
             {
                 SelectedEngine.DownloadItem(item, OutputDirectoryName);
             }
-            item.DownloadComplete = true;
+            //item.DownloadComplete = true;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -422,13 +441,13 @@ namespace TTSAutomate
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetItemsAsDirty();
-            CheckFolderForVoices();
-
         }
 
         public void SetItemsAsDirty()
         {
             PhraseItems.ToList().ForEach(n => n.DownloadComplete = false);
+            CheckFolderForVoices();
+
         }
 
         private void WordsListView_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -476,6 +495,7 @@ namespace TTSAutomate
                 }
             }
             PhraseItems = new ObservableCollection<PhraseItem>(items);
+            CheckFolderForVoices();
         }
 
         private void SavePhraseFileCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -502,7 +522,7 @@ namespace TTSAutomate
             }
 
             var dlg = new System.Windows.Forms.OpenFileDialog();
-            if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile ))
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile))
             {
                 dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.LastPhraseFile);
 
@@ -596,7 +616,6 @@ namespace TTSAutomate
                     OutputDirectoryName = dlg.SelectedPath;
                     Properties.Settings.Default.LastOutputDirectory = dlg.SelectedPath;
                     SetItemsAsDirty();
-
                 }
 
             }
@@ -639,7 +658,7 @@ namespace TTSAutomate
 
         private bool IsPhraseEmpty(PhraseItem item)
         {
-            return  String.IsNullOrEmpty(item.Phrase);
+            return String.IsNullOrEmpty(item.Phrase);
         }
 
         private void SaveAsPhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -743,8 +762,8 @@ namespace TTSAutomate
             indices.Sort();
             foreach (int index in indices)
             {
-                    PhraseItems.Move(index, index - 1);
-                    NeedToSave = true;
+                PhraseItems.Move(index, index - 1);
+                NeedToSave = true;
             }
         }
 
@@ -849,7 +868,7 @@ namespace TTSAutomate
                     }
                 }
             }
-            if ((e.Key == Key.Right || e.Key == Key.Tab ) && !((DependencyObject)e.OriginalSource is TextBox) && !((DependencyObject)e.OriginalSource is Button))
+            if ((e.Key == Key.Right || e.Key == Key.Tab) && !((DependencyObject)e.OriginalSource is TextBox) && !((DependencyObject)e.OriginalSource is Button))
             {
                 DependencyObject dep = (DependencyObject)e.OriginalSource;
                 DependencyObject currentRow = dep;
@@ -898,7 +917,7 @@ namespace TTSAutomate
                     {
                         //if (cell.Column.Header.ToString() != "Play")
                         //{
-                            nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
+                        nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
                         //}
                         int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
                         while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
@@ -924,7 +943,7 @@ namespace TTSAutomate
             {
                 Properties.Settings.Default.LastTTSDiscreteVolume = SelectedEngine.SelectedDiscreteVolume;
                 Properties.Settings.Default.LastTTSDiscreteSpeed = SelectedEngine.SelectedDiscreteSpeed;
-                Properties.Settings.Default.LastTTSVoice= SelectedEngine.SelectedVoice.Name;
+                Properties.Settings.Default.LastTTSVoice = SelectedEngine.SelectedVoice.Name;
 
             }
             SetItemsAsDirty();
@@ -933,14 +952,12 @@ namespace TTSAutomate
         private void SpeechRateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             SetItemsAsDirty();
-            CheckFolderForVoices();
 
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             SetItemsAsDirty();
-            CheckFolderForVoices();
 
         }
 
@@ -950,8 +967,8 @@ namespace TTSAutomate
             if (SelectedRowCount == 1 && e.AddedItems.Count > 0 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
             {
                 int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
-                while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >=0){ rowselected--; } // traverse upwards
-                if (rowselected >=0)
+                while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
+                if (rowselected >= 0)
                 {
                     (e.AddedItems[0] as PhraseItem).Folder = PhraseItems[rowselected].Folder;
                     NeedToSave = true;
@@ -1026,7 +1043,9 @@ namespace TTSAutomate
         public String Phrase
         {
             get { return phrase; }
-            set { phrase = value;
+            set
+            {
+                phrase = value;
                 OnPropertyChanged("Phrase");
             }
         }
@@ -1107,7 +1126,7 @@ namespace TTSAutomate
                         dataGrid.LoadingRow -= loadedRowHandler;
                         return;
                     }
-                    ea.Row.Header = ea.Row.GetIndex()+1;
+                    ea.Row.Header = ea.Row.GetIndex() + 1;
                 };
                 dataGrid.LoadingRow += loadedRowHandler;
 
@@ -1120,7 +1139,7 @@ namespace TTSAutomate
                         return;
                     }
                     GetVisualChildCollection<DataGridRow>(dataGrid).
-                        ForEach(d => d.Header = d.GetIndex()+1);
+                        ForEach(d => d.Header = d.GetIndex() + 1);
                 };
                 dataGrid.ItemContainerGenerator.ItemsChanged += itemsChangedHandler;
             }

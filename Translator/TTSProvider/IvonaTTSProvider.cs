@@ -194,14 +194,14 @@ namespace TTSAutomate
             webRequest.Headers.Add("x-amz-content-sha256", hashedRequestPayload);
             webRequest.ContentLength = requestPayload.Length;
 
-            using (Stream newStream = webRequest.GetRequestStream())
-            {
-                newStream.Write(ToBytes(requestPayload), 0, requestPayload.Length);
-                newStream.Flush();
-            }
 
             try
             {
+                using (Stream newStream = webRequest.GetRequestStream())
+                {
+                    newStream.Write(ToBytes(requestPayload), 0, requestPayload.Length);
+                    newStream.Flush();
+                }
                 var response = (HttpWebResponse)webRequest.GetResponse();
 
                 using (Stream responseStream = response.GetResponseStream())
