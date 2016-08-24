@@ -131,6 +131,7 @@ namespace TTSAutomate
         }
 
         private int downloadCount = 0;
+        private int alreadyDownloaded = 0;
 
         public int DownloadCount
         {
@@ -354,7 +355,7 @@ namespace TTSAutomate
             {
                 if (!DownloaderWorker.CancellationPending)
                 {
-                    DownloaderWorker.ReportProgress(PhraseItems.Count(n => n.DownloadComplete));
+                    DownloaderWorker.ReportProgress(PhraseItems.Count(n => n.DownloadComplete) - alreadyDownloaded);
                     Thread.Sleep(100);
                 }
                 else
@@ -701,6 +702,7 @@ namespace TTSAutomate
                 TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
 
                 DownloadCount = PhraseItems.Count(n => (n.DownloadComplete == false && !IsPhraseEmpty(n)));
+                alreadyDownloaded = PhraseItems.Count(n => (n.DownloadComplete == true));
             }
         }
         private void StopDownloadingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
