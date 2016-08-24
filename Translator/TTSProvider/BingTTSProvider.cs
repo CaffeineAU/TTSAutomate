@@ -54,7 +54,7 @@ namespace TTSAutomate
                         wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
                         wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    ConvertToWav(item, folder, false);
+                    ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
 
             }
@@ -76,7 +76,7 @@ namespace TTSAutomate
                         wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
                         wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    ConvertToWav(item, folder, true);
+                    ConvertToWav(item, folder, true, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
 
             }

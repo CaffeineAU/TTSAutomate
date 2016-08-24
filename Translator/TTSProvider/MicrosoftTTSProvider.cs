@@ -87,7 +87,7 @@ namespace TTSAutomate
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
                         {
-                            ConvertToWav(item, folder, false);
+                            ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                         }
                     }
                 }).Start();
@@ -129,7 +129,7 @@ namespace TTSAutomate
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
                         {
-                            ConvertToWav(item, folder, true);
+                            ConvertToWav(item, folder, true, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                         }
                     }
                 }).Start();

@@ -2,32 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using NAudio.Wave;
-using System.Data;
 using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Speech;
-using System.Collections.Specialized;
 using System.Windows.Threading;
-using NAudio.Wave.SampleProviders;
 using System.Windows.Shell;
 using System.Threading;
 using System.Windows.Controls.Primitives;
-using System.Windows.Automation.Peers;
 
 namespace TTSAutomate
 {
@@ -75,6 +63,8 @@ namespace TTSAutomate
                 selectedEngine = value;
                 Properties.Settings.Default.LastTTSProvider = SelectedEngine.Name;
                 OnPropertyChanged("SelectedEngine");
+                CheckFolderForVoices();
+
             }
         }
 
@@ -112,6 +102,8 @@ namespace TTSAutomate
             {
                 phraseFileName = value;
                 OnPropertyChanged("PhraseFileName");
+                CheckFolderForVoices();
+
             }
         }
 
@@ -124,6 +116,7 @@ namespace TTSAutomate
             {
                 outputDirectoryName = value;
                 OnPropertyChanged("OutputDirectoryName");
+                CheckFolderForVoices();
             }
         }
 
@@ -254,6 +247,26 @@ namespace TTSAutomate
 
             this.DataContext = this;
         }
+
+        private void CheckFolderForVoices()
+        {
+            if (LoadedWindow && SelectedEngine.SelectedVoice != null)
+            {
+                String comment = String.Format("{0}, {1}, {2}, {3}", SelectedEngine.Name, SelectedEngine.SelectedVoice.Name, SelectedEngine.SelectedDiscreteSpeed, SelectedEngine.SelectedDiscreteVolume);
+                foreach (var item in PhraseItems)
+                {
+                    if (File.Exists(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName)))
+                    {
+                        TagLib.File file = TagLib.File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", OutputDirectoryName, item.Folder, item.FileName));
+                        if (file.Tag.Title == item.Phrase && file.Tag.Comment == comment)
+                        {
+                            item.DownloadComplete = true;
+                        }
+                    }
+                }
+            }
+        }
+
 
         private void DownloaderWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -409,6 +422,7 @@ namespace TTSAutomate
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetItemsAsDirty();
+            CheckFolderForVoices();
 
         }
 
@@ -919,11 +933,15 @@ namespace TTSAutomate
         private void SpeechRateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             SetItemsAsDirty();
+            CheckFolderForVoices();
+
         }
 
         private void VolumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             SetItemsAsDirty();
+            CheckFolderForVoices();
+
         }
 
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -944,6 +962,7 @@ namespace TTSAutomate
         private void Window_GotFocus(object sender, RoutedEventArgs e)
         {
             LoadedWindow = true;
+            CheckFolderForVoices();
             foreach (var item in TTSEngines)
             {
                 item.initialLoad = false;

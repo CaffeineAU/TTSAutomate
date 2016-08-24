@@ -64,7 +64,7 @@ namespace TTSAutomate
                     {
                         wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    ConvertToWav(item, folder, false);
+                    ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
             }
             catch(Exception Ex)
@@ -100,7 +100,7 @@ namespace TTSAutomate
                     {
                         wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
                     }
-                    ConvertToWav(item, folder, true);
+                    ConvertToWav(item, folder, true, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
             }
             catch (Exception Ex)

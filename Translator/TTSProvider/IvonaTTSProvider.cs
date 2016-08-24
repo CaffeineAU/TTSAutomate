@@ -59,7 +59,7 @@ namespace TTSAutomate
                 new Task(() =>
                 {
                     File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                    ConvertToWav(item, folder, false);
+                    ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
 
             }
@@ -77,7 +77,7 @@ namespace TTSAutomate
                 new Task(() =>
                 {
                     File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-                    ConvertToWav(item, folder, true);
+                    ConvertToWav(item, folder, true, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
 
             }

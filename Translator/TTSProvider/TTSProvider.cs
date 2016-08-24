@@ -89,12 +89,19 @@ namespace TTSAutomate
             }
         }
 
-        protected static void ConvertToWav(PhraseItem item, string folder, bool play)
+        protected static void ConvertToWav(PhraseItem item, string folder, bool play, string [] details)
         {
+            //Engine Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume
+            TagLib.File file = TagLib.File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName));
+            file.Tag.Title = item.Phrase;
+            file.Tag.Comment = String.Format("{0}, {1}, {2}, {3}", details[0], details[1], details[2], details[3]);
+            file.Save();
+
             if (Properties.Settings.Default.EncodeToWav == true)
             {
                 using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                 {
+
                     using (var resampler = new MediaFoundationResampler(mp3, new NAudio.Wave.WaveFormat(Properties.Settings.Default.WavSampleRate, Properties.Settings.Default.WavBitsPerSample, 1)))
                     {
                         resampler.ResamplerQuality = 60;
