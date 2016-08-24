@@ -27,6 +27,7 @@ using NAudio.Wave.SampleProviders;
 using System.Windows.Shell;
 using System.Threading;
 using System.Windows.Controls.Primitives;
+using System.Windows.Automation.Peers;
 
 namespace TTSAutomate
 {
@@ -344,6 +345,7 @@ namespace TTSAutomate
             {
                 SelectedEngine.DownloadItem(item, OutputDirectoryName);
             }
+            item.DownloadComplete = true;
         }
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
@@ -417,7 +419,7 @@ namespace TTSAutomate
 
         private void WordsListView_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            if (e.EditAction == DataGridEditAction.Commit)
+            if (e.EditAction == DataGridEditAction.Commit && (e.Column.Header.ToString() != "Play"))
             {
                 int rowIndex = e.Row.GetIndex();
                 if (!isManualEditCommit)
@@ -802,6 +804,32 @@ namespace TTSAutomate
                         else
                         {
                             WordsListView.BeginEdit();
+                        }
+                        e.Handled = true;
+                    }
+                    else
+                    {
+                        DependencyObject row = dep;
+
+                        while (!(row is DataGridRow))
+                        {
+                            row = VisualTreeHelper.GetParent(row);
+                        }
+
+                        if (((row as DataGridRow).DataContext as PhraseItem).DownloadComplete)
+                        {
+                            while (!(dep is Button))
+                            {
+                                dep = VisualTreeHelper.GetChild(dep, 0);
+                            }
+                            PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, (dep as Button).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), false);
+                        }
+                        else
+                        {
+                            if (!IsPhraseEmpty((row as DataGridRow).DataContext as PhraseItem))
+                            {
+                                DownloadItem((row as DataGridRow).DataContext as PhraseItem, true);
+                            }
                         }
                         e.Handled = true;
                     }
