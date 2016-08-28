@@ -31,8 +31,27 @@ namespace TTSAutomate
         private bool isManualEditCommit;
 
         private Boolean needToSave = true;
-        private Boolean keepPlaying = true;
+
+        private Boolean keepPlaying = false;
+
+        public Boolean KeepPlaying
+        {
+            get { return keepPlaying; }
+            set { keepPlaying = value;
+                OnPropertyChanged("KeepPlaying");
+            }
+        }
+
         private Boolean isPlaying = false;
+
+        public Boolean IsPlaying
+        {
+            get { return isPlaying; }
+            set { isPlaying = value;
+                OnPropertyChanged("IsPlaying");
+            }
+        }
+
 
         private static Queue<PlayItem> playQueue = new Queue<PlayItem>();
 
@@ -197,16 +216,14 @@ namespace TTSAutomate
             media.MediaEnded += delegate
             {
                 media.Close();
-                if (keepPlaying)
+                if (KeepPlaying)
                 {
                     PlayQueuedItems();
-
                 }
-                //if (deleteAfterPlay.Value == true)
-                //{
-                //    File.Delete(file);
-                //}
-
+                else
+                {
+                    IsPlaying = false;
+                }
             };
 
 
@@ -473,7 +490,7 @@ namespace TTSAutomate
         {
             if (PlayQueue.Count > 0)
             {
-                isPlaying = true;
+                IsPlaying = true;
                 PlayItem item = PlayQueue.Dequeue();
                 PlayAudio(item, false);
                 if (item.ShowAsPlaying)
@@ -481,6 +498,10 @@ namespace TTSAutomate
                     WordsListView.ScrollIntoView(WordsListView.SelectedItems[0]);
                     WordsListView.SelectedItems.Remove(WordsListView.Items[item.PhraseIndex]);
                 }
+            }
+            else
+            {
+                IsPlaying = false;
             }
 
         }
@@ -843,40 +864,6 @@ namespace TTSAutomate
             }
         }
 
-        private void PlaySelectedCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = PlayableRowCount > 0 && !isPlaying;
-        }
-
-        private void PlaySelectedCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            foreach (PhraseItem item in WordsListView.SelectedItems)
-            {
-                if (item.DownloadComplete)
-                {
-                    PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
-
-                }
-            }
-            PlayQueuedItems();
-
-        }
-
-        private void PlayAllCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = PhraseItems.Count(n => n.DownloadComplete) > 0 && !isPlaying;
-        }
-
-        private void PlayAllCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            foreach (PhraseItem item in PhraseItems.Where(n => n.DownloadComplete))
-            {
-                PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
-                WordsListView.SelectedItems.Add(item);
-            }
-            PlayQueuedItems();
-        }
-
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
@@ -1103,38 +1090,74 @@ namespace TTSAutomate
             cw.ShowDialog();
         }
 
+        private void PlaySelectedCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = PlayableRowCount > 0 && !IsPlaying;
+        }
+
+        private void PlaySelectedCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in WordsListView.SelectedItems)
+            {
+                if (item.DownloadComplete)
+                {
+                    PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
+
+                }
+            }
+            KeepPlaying = true;
+            PlayQueuedItems();
+
+        }
+
+        private void PlayAllCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = PhraseItems.Count(n => n.DownloadComplete) > 0 && !IsPlaying;
+        }
+
+        private void PlayAllCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in PhraseItems.Where(n => n.DownloadComplete))
+            {
+                PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
+                WordsListView.SelectedItems.Add(item);
+            }
+            KeepPlaying = true;
+            PlayQueuedItems();
+        }
+
 
         private void PausePlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = isPlaying && keepPlaying;
+            e.CanExecute = IsPlaying && KeepPlaying;
         }
 
         private void PausePlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            keepPlaying = false;
+            KeepPlaying = false;
         }
 
         private void ResumePlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !keepPlaying && isPlaying;
+            e.CanExecute = !KeepPlaying && IsPlaying;
         }
 
         private void ResumePlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            keepPlaying = true;
+            KeepPlaying = true;
             PlayQueuedItems();
         }
 
 
         private void StopPlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = isPlaying;
+            e.CanExecute = IsPlaying;
         }
 
         private void StopPlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             PlayQueue.Clear();
-            isPlaying = false;
+            IsPlaying = false;
         }
 
     }

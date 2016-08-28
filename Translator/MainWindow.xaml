@@ -41,7 +41,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="300"/>
+            <RowDefinition Height="350"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <DataGrid x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" SelectionChanged="WordsListView_SelectionChanged" local:DataGridBehavior.DisplayRowNumber="True" >
