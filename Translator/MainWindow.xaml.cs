@@ -502,6 +502,7 @@ namespace TTSAutomate
             else
             {
                 IsPlaying = false;
+                WordsListView.Focus();
             }
 
         }
