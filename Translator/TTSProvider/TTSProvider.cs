@@ -22,6 +22,8 @@ namespace TTSAutomate
 
         }
 
+
+
         public enum Class
         {
             Local,
@@ -167,7 +169,6 @@ namespace TTSAutomate
                 {
                     PlayMessage(String.Format("{0} selected", SelectedVoice.Name));
                     Properties.Settings.Default.LastTTSVoice= SelectedVoice.Name;
-
                 }
 
                 OnPropertyChanged("SelectedVoice");

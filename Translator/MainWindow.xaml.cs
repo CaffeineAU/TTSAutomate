@@ -17,6 +17,7 @@ using System.Windows.Shell;
 using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace TTSAutomate
 {
@@ -30,6 +31,21 @@ namespace TTSAutomate
         private bool isManualEditCommit;
 
         private Boolean needToSave = true;
+        private Boolean keepPlaying = true;
+        private Boolean isPlaying = false;
+
+        private static Queue<PlayItem> playQueue = new Queue<PlayItem>();
+
+        public static Queue<PlayItem> PlayQueue
+        {
+            get { return playQueue; }
+            set
+            {
+                playQueue = value;
+            }
+        }
+
+
 
         public Boolean NeedToSave
         {
@@ -78,6 +94,18 @@ namespace TTSAutomate
             {
                 selectedRowCount = value;
                 OnPropertyChanged("SelectedRowCount");
+            }
+        }
+
+        private int playableRowCount;
+
+        public int PlayableRowCount
+        {
+            get { return playableRowCount; }
+            set
+            {
+                playableRowCount = value;
+                OnPropertyChanged("PlayableRowCount");
             }
         }
 
@@ -165,6 +193,22 @@ namespace TTSAutomate
         public MainWindow()
         {
             InitializeComponent();
+
+            media.MediaEnded += delegate
+            {
+                media.Close();
+                if (keepPlaying)
+                {
+                    PlayQueuedItems();
+
+                }
+                //if (deleteAfterPlay.Value == true)
+                //{
+                //    File.Delete(file);
+                //}
+
+            };
+
 
             //NAudio.MediaFoundation.MediaFoundationApi.Startup();
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
@@ -409,7 +453,8 @@ namespace TTSAutomate
             {
                 if (Application.Current.Dispatcher.CheckAccess())
                 {
-                    PlayAudio(file, deleteAfterPlay);
+                    PlayAudio(new PlayItem { Filename = file, ShowAsPlaying = false });
+                    //PlayAudio(file, deleteAfterPlay);
                 }
                 else
                 {
@@ -417,26 +462,34 @@ namespace TTSAutomate
                       DispatcherPriority.Background,
                       new Action(() =>
                       {
-                          PlayAudio(file, deleteAfterPlay);
-                      }));
+                      PlayAudio(new PlayItem { Filename = file, ShowAsPlaying = false });
+                    //PlayAudio(file, deleteAfterPlay);
+                }));
                 }
             }
         }
 
-        private static void PlayAudio(string file, bool? deleteAfterPlay)
+        public void PlayQueuedItems()
         {
-            media.Open(new Uri(file, UriKind.RelativeOrAbsolute));
+            if (PlayQueue.Count > 0)
+            {
+                isPlaying = true;
+                PlayItem item = PlayQueue.Dequeue();
+                PlayAudio(item, false);
+                if (item.ShowAsPlaying)
+                {
+                    WordsListView.ScrollIntoView(WordsListView.SelectedItems[0]);
+                    WordsListView.SelectedItems.Remove(WordsListView.Items[item.PhraseIndex]);
+                }
+            }
+
+        }
+
+        private static void PlayAudio(PlayItem item, bool? deleteAfterPlay = false)
+        {
+            media.Open(new Uri(item.Filename, UriKind.RelativeOrAbsolute));
             media.Volume = 1;
             media.Play();
-            media.MediaEnded += delegate
-            {
-                media.Close();
-                if (deleteAfterPlay.Value == true)
-                {
-                    File.Delete(file);
-                }
-
-            };
         }
 
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -790,6 +843,41 @@ namespace TTSAutomate
             }
         }
 
+        private void PlaySelectedCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = PlayableRowCount > 0 && !isPlaying;
+        }
+
+        private void PlaySelectedCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in WordsListView.SelectedItems)
+            {
+                if (item.DownloadComplete)
+                {
+                    PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
+
+                }
+            }
+            PlayQueuedItems();
+
+        }
+
+        private void PlayAllCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = PhraseItems.Count(n => n.DownloadComplete) > 0 && !isPlaying;
+        }
+
+        private void PlayAllCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            foreach (PhraseItem item in PhraseItems.Where(n => n.DownloadComplete))
+            {
+                PlayQueue.Enqueue(new PlayItem { Filename = String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, item.FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), PhraseIndex = PhraseItems.IndexOf(item), ShowAsPlaying = true });
+                WordsListView.SelectedItems.Add(item);
+            }
+            PlayQueuedItems();
+        }
+
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
 
@@ -915,6 +1003,8 @@ namespace TTSAutomate
                     }
 
                     SelectedRowCount = WordsListView.SelectedItems.Count;
+                    GetPlayableRowCount();
+
                     if (Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty(((nextRow as DataGridRow).Item as PhraseItem).Folder))
                     {
                         //if (cell.Column.Header.ToString() != "Play")
@@ -966,6 +1056,7 @@ namespace TTSAutomate
         private void WordsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedRowCount = WordsListView.SelectedItems.Count;
+            GetPlayableRowCount();
             if (SelectedRowCount == 1 && e.AddedItems.Count > 0 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
             {
                 int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
@@ -974,6 +1065,18 @@ namespace TTSAutomate
                 {
                     (e.AddedItems[0] as PhraseItem).Folder = PhraseItems[rowselected].Folder;
                     NeedToSave = true;
+                }
+            }
+        }
+
+        private void GetPlayableRowCount()
+        {
+            PlayableRowCount = 0;
+            foreach (var item in WordsListView.SelectedItems)
+            {
+                if ((item as PhraseItem).DownloadComplete)
+                {
+                    PlayableRowCount++;
                 }
             }
         }
@@ -1000,7 +1103,49 @@ namespace TTSAutomate
             cw.ShowDialog();
         }
 
+
+        private void PausePlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = isPlaying && keepPlaying;
+        }
+
+        private void PausePlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            keepPlaying = false;
+        }
+
+        private void ResumePlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !keepPlaying && isPlaying;
+        }
+
+        private void ResumePlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            keepPlaying = true;
+            PlayQueuedItems();
+        }
+
+
+        private void StopPlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = isPlaying;
+        }
+
+        private void StopPlayingCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            PlayQueue.Clear();
+            isPlaying = false;
+        }
+
     }
+
+    public class PlayItem
+    {
+        public string Filename { get; set; }
+        public bool ShowAsPlaying { get; set; }
+        public int PhraseIndex { get; set; }
+    }
+
 
     public class PhraseItem : INotifyPropertyChanged
     {

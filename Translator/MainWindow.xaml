@@ -20,6 +20,11 @@
         <CommandBinding Command="self:CustomCommands.MoveRowsUpCommand" CanExecute="MoveRowsUpCommand_CanExecute" Executed="MoveRowsUpCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.MoveRowsDownCommand" CanExecute="MoveRowsDownCommand_CanExecute" Executed="MoveRowsDownCommand_Executed" />
         <CommandBinding Command="self:CustomCommands.ShowSettingsCommand" CanExecute="ShowSettingsCommand_CanExecute" Executed="ShowSettingsCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.PlayAllCommand" CanExecute="PlayAllCommand_CanExecute" Executed="PlayAllCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.PlaySelectedCommand" CanExecute="PlaySelectedCommand_CanExecute" Executed="PlaySelectedCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.PausePlayingCommand" CanExecute="PausePlayingCommand_CanExecute" Executed="PausePlayingCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.ResumePlayingCommand" CanExecute="ResumePlayingCommand_CanExecute" Executed="ResumePlayingCommand_Executed" />
+        <CommandBinding Command="self:CustomCommands.StopPlayingCommand" CanExecute="StopPlayingCommand_CanExecute" Executed="StopPlayingCommand_Executed" />
     </Window.CommandBindings>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo/>
@@ -219,6 +224,15 @@
             <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Move {0} rows(s) down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsDownCommand"/>
             <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
             <Button  Content="{Binding SelectedRowCount}" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
+            <StackPanel Orientation="Horizontal">
+                <Button  Content="{Binding PlayableRowCount}" ContentStringFormat="Play {0} voice(s)" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="115"  Margin="5" Command="self:CustomCommands.PlaySelectedCommand"/>
+                <Button  Content="Play All" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="75"  Margin="5" Command="self:CustomCommands.PlayAllCommand"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button  Content="Pause" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60"  Margin="5" Command="self:CustomCommands.PausePlayingCommand"/>
+                <Button  Content="Resume" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60"  Margin="5" Command="self:CustomCommands.ResumePlayingCommand"/>
+                <Button  Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60"  Margin="5" Command="self:CustomCommands.StopPlayingCommand"/>
+            </StackPanel>
             <Button Margin="5" HorizontalAlignment="Stretch" Command="self:CustomCommands.ShowSettingsCommand">
                 <StackPanel Orientation="Horizontal">
                     <Image  Source="{Binding SettingsImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="30"/>

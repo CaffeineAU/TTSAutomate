@@ -136,5 +136,55 @@ namespace TTSAutomate.Commands
                 new KeyGesture(Key.F12)
             }
     );
+        public static readonly RoutedUICommand PlayAllCommand = new RoutedUICommand
+    (
+            "PlayAllCommand",
+            "PlayAllCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.A, ModifierKeys.Alt)
+            }
+    );
+        public static readonly RoutedUICommand PlaySelectedCommand = new RoutedUICommand
+    (
+            "PlaySelectedCommand",
+            "PlaySelectedCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.P, ModifierKeys.Alt)
+            }
+    );
+        public static readonly RoutedUICommand PausePlayingCommand = new RoutedUICommand
+    (
+            "PausePlayingCommand",
+            "PausePlayingCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.U, ModifierKeys.Control)
+            }
+    );
+        public static readonly RoutedUICommand ResumePlayingCommand = new RoutedUICommand
+    (
+            "ResumePlayingCommand",
+            "ResumePlayingCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.I, ModifierKeys.Control)
+            }
+    );
+        public static readonly RoutedUICommand StopPlayingCommand = new RoutedUICommand
+    (
+            "StopPlayingCommand",
+            "StopPlayingCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.S, ModifierKeys.Alt)
+            }
+    );
     }
 }
