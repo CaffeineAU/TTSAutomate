@@ -82,7 +82,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.A, ModifierKeys.Control)
+                new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand InsertRowsAboveCommand = new RoutedUICommand
@@ -92,7 +92,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.Up, ModifierKeys.Control)
+                new KeyGesture(Key.Insert, ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand InsertRowsBelowCommand = new RoutedUICommand
@@ -102,7 +102,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.Down, ModifierKeys.Control)
+                new KeyGesture(Key.Insert, ModifierKeys.Control | ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand MoveRowsUpCommand = new RoutedUICommand
@@ -112,7 +112,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.PageUp, ModifierKeys.Control)
+                new KeyGesture(Key.PageUp,ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand MoveRowsDownCommand = new RoutedUICommand
@@ -122,7 +122,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.PageDown, ModifierKeys.Control)
+                new KeyGesture(Key.PageDown, ModifierKeys.Alt)
             }
     );
 
@@ -163,7 +163,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.U, ModifierKeys.Control)
+                new KeyGesture(Key.U, ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand ResumePlayingCommand = new RoutedUICommand
@@ -173,7 +173,7 @@ namespace TTSAutomate.Commands
             typeof(CustomCommands),
             new InputGestureCollection()
             {
-                new KeyGesture(Key.I, ModifierKeys.Control)
+                new KeyGesture(Key.I, ModifierKeys.Alt)
             }
     );
         public static readonly RoutedUICommand StopPlayingCommand = new RoutedUICommand

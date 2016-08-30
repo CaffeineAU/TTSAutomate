@@ -220,10 +220,6 @@ namespace TTSAutomate
                 {
                     PlayQueuedItems();
                 }
-                else
-                {
-                    IsPlaying = false;
-                }
             };
 
 
@@ -643,8 +639,18 @@ namespace TTSAutomate
                 }
             }
             PhraseFileName = "New Phrase File";
+
+            List<PhraseItem> initialitems = new List<PhraseItem>();
+            for (int i = 0; i < InitialPhraseItems; i++)
+            {
+                initialitems.Add(new PhraseItem { Phrase = "" });
+            }
+
+            PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
+
+
             filenameSelected = false;
-            NeedToSave = false;
+            NeedToSave = true;
         }
 
         private void BrowseOutputDirectoryCommand_Executed(object sender, ExecutedRoutedEventArgs e)
