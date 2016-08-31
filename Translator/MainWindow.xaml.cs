@@ -1054,7 +1054,7 @@ namespace TTSAutomate
             if (SelectedRowCount == 1 && e.AddedItems.Count > 0 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
             {
                 int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
-                while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
+                while (rowselected >= 0 &&String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
                 if (rowselected >= 0)
                 {
                     (e.AddedItems[0] as PhraseItem).Folder = PhraseItems[rowselected].Folder;
