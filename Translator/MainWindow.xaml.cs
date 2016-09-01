@@ -1006,7 +1006,7 @@ namespace TTSAutomate
                         nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
                         //}
                         int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
-                        while (String.IsNullOrEmpty(PhraseItems[rowselected].Folder) && rowselected >= 0) { rowselected--; } // traverse upwards
+                        while (rowselected >= 0&&String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
                         if (rowselected >= 0)
                         {
                             (((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem).Folder = PhraseItems[rowselected].Folder;
