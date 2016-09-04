@@ -1,4 +1,7 @@
 # TTSAutomate
+
+## _Download the tool [here](https://github.com/CaffeineAU/TTSAutomate/releases/latest)_
+
 A tool to generate Audio files from text strings in WAV and MP3 format, using various TTS engines as the source
 
 # A quick usage guide:
