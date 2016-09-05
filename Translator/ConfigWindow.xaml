@@ -7,11 +7,10 @@
         xmlns:properties="clr-namespace:TTSAutomate.Properties"
         xmlns:local="clr-namespace:TTSAutomate"
         mc:Ignorable="d"
-        Title="Configure..." Height="500
-        " Width="700" Background="#FF4692D1" Icon="pack://siteoforigin:,,,/speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+        Title="Configure..." Height="530" Width="800" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid x:Uid="Grid_1">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Uid="ColumnDefinition_1" Width="80"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_1" Width="90"/>
             <ColumnDefinition x:Uid="ColumnDefinition_2" Width="*"/>
             <ColumnDefinition x:Uid="ColumnDefinition_3" Width="100"/>
         </Grid.ColumnDefinitions>
@@ -25,8 +24,9 @@
             <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_2">
                     <StackPanel x:Uid="StackPanel_6" Orientation="Horizontal">
-                        <Label  x:Uid="Language" Margin="0,5,5,5" Content="Program Language" HorizontalContentAlignment="Left" Width="120"/>
-                        <ComboBox  x:Uid="ComboBox_3" Margin="5" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
+                        <Label  x:Uid="Language" Margin="0,0,0,0" Content="Program Language" HorizontalContentAlignment="Left" Width="150"/>
+                        <ComboBox  x:Uid="ComboBox_3" Margin="0" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
+                        <Label  x:Uid="Warning" Margin="0,0,0,0" Content="Setting takes effect on program restart" HorizontalContentAlignment="Left" />
                     </StackPanel>
                     <CheckBox x:Uid="ReOpenPSV" Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
                     <CheckBox x:Uid="SetOutputDirectory" Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory, Source={x:Static properties:Settings.Default}}"/>
@@ -49,12 +49,12 @@
             <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10" Header="TTS specific options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_5">
                     <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
-                        <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="120"/>
+                        <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="150"/>
                         <ComboBox  x:Uid="ComboBox_4" Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
                     </StackPanel>
                     <StackPanel x:Uid="StackPanel_7" Orientation="Horizontal">
-                        <Label  x:Uid="BingString" Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="120"/>
-                        <TextBox  x:Uid="TextBox_1" Margin="5" Text="{Binding  Source={x:Static properties:Settings.Default}, Path=BingHeaderString}" HorizontalAlignment="Stretch" Width="435" Height="48" TextWrapping="Wrap"/>
+                        <Label  x:Uid="BingString" Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="150"/>
+                        <TextBox  x:Uid="TextBox_1" Margin="5" Text="{Binding  Source={x:Static properties:Settings.Default}, Path=BingHeaderString}" HorizontalAlignment="Stretch" Width="490" Height="54" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>

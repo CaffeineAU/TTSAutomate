@@ -60,7 +60,20 @@ namespace TTSAutomate
             InitializeComponent();
 
             List<CultureInfo> cultures = new List<CultureInfo>();
-            cultures.AddRange(CultureInfo.GetCultures(CultureTypes.SpecificCultures));
+            System.IO.FileInfo fi = new System.IO.FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(fi.Directory.FullName);
+            foreach (var folder in  di.GetDirectories())
+            {
+                try
+                {
+                    cultures.Add(new CultureInfo(folder.Name));
+
+                }
+                catch
+                {
+
+                }            }
+
             cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 
             LanguageOptions = cultures.Select(x => x.DisplayName).ToList();

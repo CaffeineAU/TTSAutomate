@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:TTSAutomate"
         xmlns:self="clr-namespace:TTSAutomate.Commands"
         mc:Ignorable="d"
-        Title="TTSAutomate" Height="800" Width="1000" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus" Loaded="Window_GotFocus">
+        Title="TTSAutomate" Height="800" Width="1200" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus" Loaded="Window_GotFocus">
     <Window.CommandBindings>
         <CommandBinding x:Uid="BrowsePhraseFileCommand" Command="self:CustomCommands.BrowsePhraseFileCommand" Executed="BrowsePhraseFileCommand_Executed" />
         <CommandBinding x:Uid="CreatePhraseFileCommand" Command="self:CustomCommands.CreatePhraseFileCommand" Executed="CreatePhraseFileCommand_Executed" />
@@ -33,10 +33,10 @@
     <Grid x:Uid="Grid_1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Uid="ColumnDefinition_1" Width="90"/>
-            <ColumnDefinition x:Uid="ColumnDefinition_2" Width="90"/>
-            <ColumnDefinition x:Uid="ColumnDefinition_3" Width="60"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_2" Width="130"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_3" Width="90"/>
             <ColumnDefinition x:Uid="ColumnDefinition_4" Width="*"/>
-            <ColumnDefinition x:Uid="ColumnDefinition_5" Width="210"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_5" Width="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition x:Uid="RowDefinition_1" Height="40"/>
@@ -225,15 +225,24 @@
             <Button  x:Uid="MoveRowsDown" Content="{Binding SelectedRowCount}" ToolTip="Alt PageDown" ContentStringFormat="Move {0} rows(s) down" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.MoveRowsDownCommand"/>
             <Button  x:Uid="InsertRowsAbove" Content="{Binding SelectedRowCount}" ToolTip="Alt Insert" ContentStringFormat="Insert {0} rows(s) above" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsAboveCommand"/>
             <Button  x:Uid="InsertRowsBelow" Content="{Binding SelectedRowCount}" ToolTip="Ctrl Alt Insert" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
-            <StackPanel x:Uid="StackPanel_3" Orientation="Horizontal">
-                <Button  x:Uid="PlayableRowCount" Content="{Binding PlayableRowCount}" ContentStringFormat="Play {0} voice(s)" ToolTip="Alt P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="115"  Margin="5" Command="self:CustomCommands.PlaySelectedCommand"/>
-                <Button  x:Uid="PlayAll" Content="Play All" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="Alt A" Width="75"  Margin="5" Command="self:CustomCommands.PlayAllCommand"/>
-            </StackPanel>
-            <StackPanel x:Uid="StackPanel_4" Orientation="Horizontal">
-                <Button  x:Uid="PausePlaying" Content="Pause" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60" ToolTip="Alt U"  Margin="5" Command="self:CustomCommands.PausePlayingCommand"/>
-                <Button  x:Uid="ResumePlaying" Content="Resume" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60" ToolTip="Alt I"  Margin="5" Command="self:CustomCommands.ResumePlayingCommand"/>
-                <Button  x:Uid="StopPlaying" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="60" ToolTip="Alt S"  Margin="5" Command="self:CustomCommands.StopPlayingCommand"/>
-            </StackPanel>
+            <Grid x:Uid="ButtonGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Uid="ColumnDefinition_1" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
+                </Grid.ColumnDefinitions>
+                <Button  x:Uid="PlayableRowCount" Content="{Binding PlayableRowCount}" ContentStringFormat="Play {0} voice(s)" ToolTip="Alt P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0" Margin="5" Command="self:CustomCommands.PlaySelectedCommand"/>
+                <Button  x:Uid="PlayAll" Content="Play All" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="Alt A" Grid.Column="1"  Margin="5" Command="self:CustomCommands.PlayAllCommand"/>
+            </Grid>
+            <Grid x:Uid="ButtonGrid2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Uid="ColumnDefinition_1" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
+                </Grid.ColumnDefinitions>
+                <Button  x:Uid="PausePlaying" Content="Pause" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0" ToolTip="Alt U"  Margin="5" Command="self:CustomCommands.PausePlayingCommand"/>
+                <Button  x:Uid="ResumePlaying" Content="Resume" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" ToolTip="Alt I"  Margin="5" Command="self:CustomCommands.ResumePlayingCommand"/>
+                <Button  x:Uid="StopPlaying" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="2" ToolTip="Alt S"  Margin="5" Command="self:CustomCommands.StopPlayingCommand"/>
+            </Grid>
             <Button x:Uid="ShowSettings" Margin="5" HorizontalAlignment="Stretch" ToolTip="F12"  Command="self:CustomCommands.ShowSettingsCommand">
                 <StackPanel x:Uid="StackPanel_5" Orientation="Horizontal">
                     <Image  x:Uid="Image_1" Source="{Binding SettingsImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="30"/>

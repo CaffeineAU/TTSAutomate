@@ -16,11 +16,15 @@ namespace TTSAutomate
     public partial class App : Application
     {
 
-        CultureInfo ci = new CultureInfo("en-AU");
         public App()
         {
-            Thread.CurrentThread.CurrentCulture = ci;
-            Thread.CurrentThread.CurrentUICulture = ci;
+            if (!String.IsNullOrEmpty(TTSAutomate.Properties.Settings.Default.SelectedCulture))
+            {
+                CultureInfo ci = CultureInfo.GetCultures(CultureTypes.AllCultures).First(n => n.DisplayName == TTSAutomate.Properties.Settings.Default.SelectedCulture);
+                Thread.CurrentThread.CurrentCulture = ci;
+                Thread.CurrentThread.CurrentUICulture = ci;
+
+            }
         }
 
     }
