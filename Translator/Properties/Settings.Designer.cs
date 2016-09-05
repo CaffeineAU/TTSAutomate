@@ -275,5 +275,18 @@ namespace TTSAutomate.Properties {
                 this["BingHeaderString"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-AU")]
+        public string SelectedCulture {
+            get {
+                return ((string)(this["SelectedCulture"]));
+            }
+            set {
+                this["SelectedCulture"] = value;
+            }
+        }
     }
 }

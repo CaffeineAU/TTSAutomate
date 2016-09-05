@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -33,6 +34,21 @@ namespace TTSAutomate
         }
 
 
+        private List<String> languageOptions = new List<String>();
+
+        public List<String> LanguageOptions
+        {
+            get { return languageOptions; }
+            set
+            {
+                languageOptions = value;
+                OnPropertyChanged("LanguageOptions");
+            }
+        }
+
+
+
+
         public List<String> IvonaRegions { get; set; }
 
         public List<int> SampleRates { get; set; }
@@ -42,6 +58,14 @@ namespace TTSAutomate
         public ConfigWindow()
         {
             InitializeComponent();
+
+            List<CultureInfo> cultures = new List<CultureInfo>();
+            cultures.AddRange(CultureInfo.GetCultures(CultureTypes.SpecificCultures));
+            cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
+
+            LanguageOptions = cultures.Select(x => x.DisplayName).ToList();
+
+
             this.DataContext = this;
             HeaderImage = MainWindow.LoadImage("settings.png");
 

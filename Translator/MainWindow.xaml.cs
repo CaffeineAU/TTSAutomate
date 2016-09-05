@@ -18,6 +18,9 @@ using System.Threading;
 using System.Windows.Controls.Primitives;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Text;
+using System.Globalization;
+using System.Windows.Markup;
 
 namespace TTSAutomate
 {
@@ -211,6 +214,8 @@ namespace TTSAutomate
 
         public MainWindow()
         {
+            //MessageBox.Show(Thread.CurrentThread.CurrentCulture.DisplayName);
+
             InitializeComponent();
 
             media.MediaEnded += delegate
@@ -553,10 +558,10 @@ namespace TTSAutomate
 
             int j = 0;
 
-            using (System.IO.StreamReader file = new StreamReader(new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite)))
-            {
-                string contents = file.ReadToEnd();
-
+            //using (System.IO.StreamReader file = new StreamReader(new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite), true))
+            //{
+            //    string contents = file.ReadToEnd();
+                string contents = File.ReadAllText(filename, Encoding.Default);
                 foreach (Match match in r.Matches(contents))
                 {
                     if (j >= items.Count)
@@ -565,7 +570,7 @@ namespace TTSAutomate
                     }
                     items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
                 }
-            }
+            //}
             PhraseItems = new ObservableCollection<PhraseItem>(items);
             CheckFolderForVoices();
         }

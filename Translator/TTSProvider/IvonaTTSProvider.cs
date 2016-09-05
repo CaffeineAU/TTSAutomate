@@ -113,7 +113,7 @@ namespace TTSAutomate
             {
                 Input = new
                 {
-                    Data = Encoding.UTF8.GetString(Encoding.Default.GetBytes(text)),
+                    Data = text,// Encoding.UTF8.GetString(Encoding.Default.GetBytes(text)),
                     Type = "text/plain"
                 },
                 OutputFormat = new
@@ -217,7 +217,7 @@ namespace TTSAutomate
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
 

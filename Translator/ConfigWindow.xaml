@@ -1,4 +1,5 @@
-﻿<Window x:Class="TTSAutomate.ConfigWindow"
+﻿<Window x:Uid="ConfigWindowTitle" x:Class="TTSAutomate.ConfigWindow"
+        xml:lang="en-US"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,54 +8,57 @@
         xmlns:local="clr-namespace:TTSAutomate"
         mc:Ignorable="d"
         Title="Configure..." Height="500
-        " Width="700" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
-    <Grid>
+        " Width="700" Background="#FF4692D1" Icon="pack://siteoforigin:,,,/speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <Grid x:Uid="Grid_1">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_1" Width="80"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_2" Width="*"/>
+            <ColumnDefinition x:Uid="ColumnDefinition_3" Width="100"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition x:Uid="RowDefinition_1" Height="80"/>
+            <RowDefinition x:Uid="RowDefinition_2" Height="*"/>
+            <RowDefinition x:Uid="RowDefinition_3" Height="60"/>
         </Grid.RowDefinitions>
-        <Image Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
-        <StackPanel Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
-            <GroupBox  Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
-                <StackPanel>
-                    <CheckBox Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
-                    <CheckBox Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory, Source={x:Static properties:Settings.Default}}"/>
-                    <CheckBox Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenInsertingLines}"/>
-                    <CheckBox Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenSelectingEmptyRow}"/>
+        <Image x:Uid="Image_1" Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
+        <StackPanel x:Uid="StackPanel_1" Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
+            <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
+                <StackPanel x:Uid="StackPanel_2">
+                    <StackPanel x:Uid="StackPanel_6" Orientation="Horizontal">
+                        <Label  x:Uid="Language" Margin="0,5,5,5" Content="Program Language" HorizontalContentAlignment="Left" Width="120"/>
+                        <ComboBox  x:Uid="ComboBox_3" Margin="5" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
+                    </StackPanel>
+                    <CheckBox x:Uid="ReOpenPSV" Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
+                    <CheckBox x:Uid="SetOutputDirectory" Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory, Source={x:Static properties:Settings.Default}}"/>
+                    <CheckBox x:Uid="CopyWhenInserting" Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenInsertingLines}"/>
+                    <CheckBox x:Uid="CopyWhenSelecting" Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenSelectingEmptyRow}"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox  Margin="5,0" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
-                <StackPanel>
-                    <CheckBox Margin="5" Content="Encode MP3 files to WAV" Visibility="Collapsed" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
-                    <CheckBox Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
-                    <StackPanel Orientation="Horizontal">
-                    <CheckBox Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
-                        <Label  Margin="20,5,0,5" Content="Sample Rate"/>
-                        <ComboBox  Margin="0,5" ItemsSource="{Binding SampleRates}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
-                        <Label  Margin="0,5" Content="Hz       Bits per sample"/>
-                        <ComboBox  Margin="0,5" ItemsSource="{Binding BitsPerSamples}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavBitsPerSample}" SelectionChanged="ComboBox_SelectionChanged"/>
+            <GroupBox  x:Uid="VoiceOptions" Margin="5,0" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
+                <StackPanel x:Uid="StackPanel_3">
+                    <CheckBox x:Uid="RememberLanguageSettings" Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
+                    <StackPanel x:Uid="StackPanel_4" Orientation="Horizontal">
+                        <CheckBox x:Uid="EncodeMP3ToWAV" Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
+                        <Label  x:Uid="SampleRate" Margin="20,5,0,5" Content="Sample Rate"/>
+                        <ComboBox  x:Uid="ComboBox_1" Margin="0,5" ItemsSource="{Binding SampleRates}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <Label  x:Uid="HzAndBitsPerSample" Margin="0,5" Content="Hz       Bits per sample"/>
+                        <ComboBox  x:Uid="ComboBox_2" Margin="0,5" ItemsSource="{Binding BitsPerSamples}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavBitsPerSample}" SelectionChanged="ComboBox_SelectionChanged"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox  Margin="5,0" Padding="10" Header="TTS specific options" BorderBrush="#FF4692D1" >
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label  Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="120"/>
-                        <ComboBox  Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
+            <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10" Header="TTS specific options" BorderBrush="#FF4692D1" >
+                <StackPanel x:Uid="StackPanel_5">
+                    <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
+                        <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="120"/>
+                        <ComboBox  x:Uid="ComboBox_4" Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label  Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="120"/>
-                        <TextBox  Margin="5" Text="{Binding  Source={x:Static properties:Settings.Default}, Path=BingHeaderString}" HorizontalAlignment="Stretch" Width="435" Height="48" TextWrapping="Wrap"/>
+                    <StackPanel x:Uid="StackPanel_7" Orientation="Horizontal">
+                        <Label  x:Uid="BingString" Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="120"/>
+                        <TextBox  x:Uid="TextBox_1" Margin="5" Text="{Binding  Source={x:Static properties:Settings.Default}, Path=BingHeaderString}" HorizontalAlignment="Stretch" Width="435" Height="48" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-        <Button IsDefault="True" IsCancel="True" Grid.Row="2" Grid.Column="2" Content="Close" Margin="5" Click="OKButton_Click" />
+        <Button x:Uid="Close" IsDefault="True" IsCancel="True" Grid.Row="2" Grid.Column="2" Content="Close" Margin="5" Click="OKButton_Click" />
     </Grid>
 </Window>
