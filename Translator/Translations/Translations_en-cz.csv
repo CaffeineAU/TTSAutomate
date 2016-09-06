@@ -1,0 +1,61 @@
+Id,Original string,Pøeklad do èeštiny
+1,Configure...,Konfigurace
+2,Program options,Volby programu
+3,Program Language,Volba jazyka
+4,Re-open last PSV file,Opìt otevøít poslední soubor PSV
+5,Set output directory to last output directory,Znovu použít poslední výstupní adresáø
+6,Copy previous folder when inserting rows,Zkopíruj pøedchozí adresáø když vložíš øádky
+7,Copy previous folder when selecting empty row,Zkopíruj pøedchozí adresáø když zvolíš prázdné øádky
+8,Voice options,Volba hlasu
+9,Remember language settings,Zapamatovat si nastavení jazyka
+10,Encode MP3 to WAV,Pøevést z MP3 do Wav
+11,Sample Rate,Rychlost vzorkování
+12,Hz       Bits per sample,Hz         bitù na vzorek
+13,TTS specific options,Speciální nastavení TTS
+14,Ivona Region,IRegion Ivony
+15,Bing Header String,Bing hlavièka
+16,Close,Zavøít
+17,TTSAutomate,TTSAutomat
+18,Phrase File,Soubor hlášek
+19,Output Directory,Výstupní adresáø
+20,Open Phrase File...,Otevøi soubor s hláškami...
+21,Ctrl O,Ctrl O
+22,Select Output Directory...,Zvol výstupní adresáø...
+23,Ctrl P,Ctrl P
+24,Create new Phrase File,Vytvoø nové hlášení
+25,Ctrl N,Ctrl N
+26,TTS Provider,TTS-Provider
+27,Voice,Hlas
+28,Speech rate: {0},Rychlost: {0}
+29,Speech rate:,Rychlost: {0}
+30,Volume: {0},Hlasitost: {0}
+31,Volume: ,Hlasitost:
+32,Alt PageUp,Alt PageUp
+33,Move {0} rows(s) up,Pøesuò {0} øádek(ky) nahoru
+34,Alt PageDown,Alt PageDown
+35,Move {0} rows(s) down,Pøesuò {0} øádek(ky) dolù
+36,Alt Insert,Alt Insert
+37,Insert {0} rows(s) above,Vlož {0} øádek(kù) nad
+38,Ctrl Alt Insert,Ctrl Alt Insert
+39,Insert {0} rows(s) below,Vlož {0} øádek(kù) pod
+40,Play {0} voice(s),Pøehraj {0} hlášení
+41,Alt P,Alt P
+42,Play All,Pøehraj vše
+43,Alt A,Alt A
+44,Pause,Pauza
+45,Alt U,Alt U
+46,Resume,Dále
+47,Alt I,Alt I
+48,Stop,Halt,Stop
+49,Alt S,Alt S,Alt S
+50,#StackPanel_5;,#StackPanel_5;,#StackPanel_5;
+51,F12,F12,F12
+52,Settings...,Einstellungen…,Nastavení...
+53,Save Phrase File,Ansagedatei speichern,Uložit soubor hlášek
+54,Ctrl S,Strg S,Ctrl S
+55,Save Phrase File As...,Ansagedatei speichern als…,Uložit soubor hlášek jako...
+56,Ctrl Alt S,Strg Alt S,Ctrl Alt S
+57,Stop!,Stop!,
+58,Ctrl H,Strg H,
+59,Go!,Start!,
+60,Ctrl G,Strg G,
