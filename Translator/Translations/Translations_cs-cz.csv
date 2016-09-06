@@ -1,0 +1,61 @@
+1	ttsautomate.exe	configwindow.baml	ConfigWindowTitle	Konfigurace ...
+2	ttsautomate.exe	configwindow.baml	ProgramOptions	možnosti programu
+3	ttsautomate.exe	configwindow.baml	Language	Program Language
+4	ttsautomate.exe	configwindow.baml	ReOpenPSV	Znovu otevrít poslední PSV souboru
+5	ttsautomate.exe	configwindow.baml	SetOutputDirectory	Nastavit výstupní adresár na poslední výstupní adresár	
+6	ttsautomate.exe	configwindow.baml	CopyWhenInserting	Kopírovat predchozí složky pri vkládání rádku	
+7	ttsautomate.exe	configwindow.baml	CopyWhenSelecting	Kopírovat predchozí složky pri výberu prázdný rádek	
+8	ttsautomate.exe	configwindow.baml	VoiceOptions	možnosti hlasové
+9	ttsautomate.exe	configwindow.baml	RememberLanguageSettings	Zapamatovat nastavení jazyka	
+10	ttsautomate.exe	configwindow.baml	EncodeMP3ToWAV	Enkódování MP3 do WAV
+11	ttsautomate.exe	configwindow.baml	SampleRate	Vzorkovací frekvence
+12	ttsautomate.exe	configwindow.baml	HzAndBitsPerSample	Hz bitu na vzorek
+13	ttsautomate.exe	configwindow.baml	TTSOptions	TTS specifické možnosti
+14	ttsautomate.exe	configwindow.baml	IvonaRegion	Ivona Kraj
+15	ttsautomate.exe	configwindow.baml	BingString	Bing Header String
+16	ttsautomate.exe	configwindow.baml	Close	Zavrít
+17	ttsautomate.exe	mainwindow.baml	WindowTitle	TTSAutomate
+18	ttsautomate.exe	mainwindow.baml	PhraseFilename	fráze File
+19	ttsautomate.exe	mainwindow.baml	OutputDirectory	výstup Directory
+20	ttsautomate.exe	mainwindow.baml	OpenPhraseFile	Otevrená fráze soubor ...
+21	ttsautomate.exe	mainwindow.baml	OpenPhraseFile	Ctrl O
+22	ttsautomate.exe	mainwindow.baml	SelectOutputDirectory	Vyberte výstupní adresár ...
+23	ttsautomate.exe	mainwindow.baml	SelectOutputDirectory	Ctrl P
+24	ttsautomate.exe	mainwindow.baml	CreateNewPhraseFile	Vytvorit novou frázi soubor
+25	ttsautomate.exe	mainwindow.baml	CreateNewPhraseFile	Ctrl N
+26	ttsautomate.exe	mainwindow.baml	TTSProvider	TTS Provider
+27	ttsautomate.exe	mainwindow.baml	Voice	hlas
+28	ttsautomate.exe	mainwindow.baml	SelectedNumericSpeed	Rychlost reci: {0}
+29	ttsautomate.exe	mainwindow.baml	SelectedDiscreteSpeed	Rychlost reci:
+30	ttsautomate.exe	mainwindow.baml	SelectedNumericVolume	Objem: {0}
+31	ttsautomate.exe	mainwindow.baml	SelectedDiscreteVolume	Hlasitost:
+32	ttsautomate.exe	mainwindow.baml	MoveRowsUp	alt PageUp
+33	ttsautomate.exe	mainwindow.baml	MoveRowsUp	Presun {0} rádku (y) nahoru
+34	ttsautomate.exe	mainwindow.baml	MoveRowsDown	alt PageDown
+35	ttsautomate.exe	mainwindow.baml	MoveRowsDown	Presun {0} rádku (y) dolu
+36	ttsautomate.exe	mainwindow.baml	InsertRowsAbove	alt Insert
+37	ttsautomate.exe	mainwindow.baml	InsertRowsAbove	Vložte {0} rádku (y) výše
+38	ttsautomate.exe	mainwindow.baml	InsertRowsBelow	Ctrl Alt Insert
+39	ttsautomate.exe	mainwindow.baml	InsertRowsBelow	Vložte {0} rádku (a) dole
+40	ttsautomate.exe	mainwindow.baml	PlayableRowCount	Hrát {0} hlas (y)
+41	ttsautomate.exe	mainwindow.baml	PlayableRowCount	alt P
+42	ttsautomate.exe	mainwindow.baml	PlayAll	Hrát vše
+43	ttsautomate.exe	mainwindow.baml	PlayAll	alt
+44	ttsautomate.exe	mainwindow.baml	PausePlaying	pauza
+45	ttsautomate.exe	mainwindow.baml	PausePlaying	alt U
+46	ttsautomate.exe	mainwindow.baml	ResumePlaying	Životopis
+47	ttsautomate.exe	mainwindow.baml	ResumePlaying	alt I
+48	ttsautomate.exe	mainwindow.baml	StopPlaying	Stop
+49	ttsautomate.exe	mainwindow.baml	StopPlaying	alt S
+50	ttsautomate.exe	mainwindow.baml	ShowSettings	# StackPanel_5;
+51	ttsautomate.exe	mainwindow.baml	ShowSettings	F12
+52	ttsautomate.exe	mainwindow.baml	SettingsButton	Nastavení ...
+53	ttsautomate.exe	mainwindow.baml	SavePhraseFile	Uložení fráze Soubor
+54	ttsautomate.exe	mainwindow.baml	SavePhraseFile	Ctrl S
+55	ttsautomate.exe	mainwindow.baml	SavePhraseFileAs	Uložení vety soubor jako ...
+56	ttsautomate.exe	mainwindow.baml	SavePhraseFileAs	Ctrl Alt S
+57	ttsautomate.exe	mainwindow.baml	StopDownloading	Stop!
+58	ttsautomate.exe	mainwindow.baml	StopDownloading	Ctrl H
+59	ttsautomate.exe	mainwindow.baml	StartDownloading	Jít!
+60	ttsautomate.exe	mainwindow.baml	StartDownloading	Ctrl G
+61	ttsautomate.exe	configwindow.baml	Warning	Nastavení se projeví po restartu programu

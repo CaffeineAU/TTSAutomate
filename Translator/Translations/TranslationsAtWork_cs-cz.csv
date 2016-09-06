@@ -1,0 +1,62 @@
+﻿Id,Original string,Translation
+1,Configure...,Konfigurace ...
+2,Program options,možnosti programu
+3,Program Language,Program Language
+4,Re-open last PSV file,Znovu otevrít poslední PSV souboru
+5,Set output directory to last output directory,Nastavit výstupní adresár na poslední výstupní adresár
+6,Copy previous folder when inserting rows,Kopírovat predchozí složky pri vkládání rádku
+7,Copy previous folder when selecting empty row,Kopírovat predchozí složky pri výberu prázdný rádek
+8,Voice options,možnosti hlasové
+9,Remember language settings,Zapamatovat nastavení jazyka
+10,Encode MP3 to WAV,Enkódování MP3 do WAV
+11,Sample Rate,Vzorkovací frekvence
+12,Hz       Bits per sample,Hz        bitů na vzorek
+13,TTS specific options,TTS specifické možnosti
+14,Ivona Region,Ivona Kraj
+15,Bing Header String,Bing Header String
+16,Close,Zavrít
+17,TTSAutomate,TTSAutomate
+18,Phrase File,fráze File
+19,Output Directory,výstup Directory
+20,Open Phrase File...,Otevrená fráze soubor ...
+21,Ctrl O,Ctrl O
+22,Select Output Directory...,Vyberte výstupní adresár ...
+23,Ctrl P,Ctrl P
+24,Create new Phrase File,Vytvorit novou frázi soubor
+25,Ctrl N,Ctrl N
+26,TTS Provider,TTS Provider
+27,Voice,hlas
+28,Speech rate: {0},Rychlost reci: {0}
+29,Speech rate:,Rychlost reci:
+30,Volume: {0},Objem: {0}
+31,"Volume: ",Hlasitost:
+32,Alt PageUp,alt PageUp
+33,Move {0} rows(s) up,Presun {0} rádku (y) nahoru
+34,Alt PageDown,alt PageDown
+35,Move {0} rows(s) down,Presun {0} rádku (y) dolu
+36,Alt Insert,alt Insert
+37,Insert {0} rows(s) above,Vložte {0} rádku (y) výše
+38,Ctrl Alt Insert,Ctrl Alt Insert
+39,Insert {0} rows(s) below,Vložte {0} rádku (a) dole
+40,Play {0} voice(s),Hrát {0} hlas (y)
+41,Alt P,alt P
+42,Play All,Hrát vše
+43,Alt A,alt
+44,Pause,pauza
+45,Alt U,alt U
+46,Resume,Životopis
+47,Alt I,alt I
+48,Stop,Stop
+49,Alt S,alt S
+50,#StackPanel_5;,# StackPanel_5;
+51,F12,F12
+52,Settings...,Nastavení ...
+53,Save Phrase File,Uložení fráze Soubor
+54,Ctrl S,Ctrl S
+55,Save Phrase File As...,Uložení vety soubor jako ...
+56,Ctrl Alt S,Ctrl Alt S
+57,Stop!,Stop!
+58,Ctrl H,Ctrl H
+59,Go!,Jít!
+60,Ctrl G,Ctrl G
+61,Setting takes effect on program restart,Nastavení se projeví po restartu programu

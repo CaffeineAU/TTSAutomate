@@ -1,0 +1,62 @@
+﻿Id,Original string,Translation
+1,Configure...,Configurar ...
+2,Program options,opções do programa
+3,Program Language,programa de Idiomas
+4,Re-open last PSV file,Re-aberto último arquivo PSV
+5,Set output directory to last output directory,Definir diretório de saída para a última diretório de saída
+6,Copy previous folder when inserting rows,Copie a pasta anterior
+7,Copy previous folder when selecting empty row,Copie a pasta anterior ao selecionar linha vazia
+8,Voice options,opções de voz
+9,Remember language settings,Lembre-se de configurações de idioma
+10,Encode MP3 to WAV,Encode MP3 para WAV
+11,Sample Rate,Taxa de amostragem
+12,Hz       Bits per sample,Hz       Bits por amostra
+13,TTS specific options,opções específicas TTS
+14,Ivona Region,Ivona Região
+15,Bing Header String,Bing cabeçalho de Cordas
+16,Close,Fechar
+17,TTSAutomate,TTSAutomate
+18,Phrase File,Arquivo frase
+19,Output Directory,Diretório de saída
+20,Open Phrase File...,Open File Frase ...
+21,Ctrl O,Ctrl O
+22,Select Output Directory...,Selecione Diretório de saída ...
+23,Ctrl P,Ctrl P
+24,Create new Phrase File,Criar novo Arquivo Frase
+25,Ctrl N,Ctrl N
+26,TTS Provider,Provedor de TTS
+27,Voice,voz
+28,Speech rate: {0},velocidade de fala: {0}
+29,Speech rate:,velocidade de fala:
+30,Volume: {0},Volume: {0}
+31,"Volume: ",Volume:
+32,Alt PageUp,Alt PageUp
+33,Move {0} rows(s) up,Mover {0} linhas (s) até
+34,Alt PageDown,Alt PageDown
+35,Move {0} rows(s) down,Mover {0} linhas (s) para baixo
+36,Alt Insert,Alt Insert
+37,Insert {0} rows(s) above,Inserir {0} linhas (s) acima
+38,Ctrl Alt Insert,Ctrl Alt Insert
+39,Insert {0} rows(s) below,Inserir {0} linhas (s) abaixo
+40,Play {0} voice(s),Jogar {0} de voz (s)
+41,Alt P,Alt P
+42,Play All,Jogar todos
+43,Alt A,Alt A
+44,Pause,Pausa
+45,Alt U,Alt U
+46,Resume,Currículo
+47,Alt I,Alt I
+48,Stop,Pare
+49,Alt S,Alt S
+50,#StackPanel_5;,# StackPanel_5;
+51,F12,F12
+52,Settings...,Configurações...
+53,Save Phrase File,Salve Frase Arquivo
+54,Ctrl S,Ctrl S
+55,Save Phrase File As...,Salvar Arquivo Frases como ...
+56,Ctrl Alt S,Ctrl Alt S
+57,Stop!,Pare!
+58,Ctrl H,Ctrl H
+59,Go!,Ir!
+60,Ctrl G,Ctrl G
+61,Setting takes effect on program restart,Configuração tem efeito na reinicialização do programa
