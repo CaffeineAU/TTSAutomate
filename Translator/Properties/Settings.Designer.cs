@@ -279,11 +279,11 @@ namespace TTSAutomate.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("(Default)")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string SelectedCulture {
+        public global::System.Globalization.CultureInfo SelectedCulture {
             get {
-                return ((string)(this["SelectedCulture"]));
+                return ((global::System.Globalization.CultureInfo)(this["SelectedCulture"]));
             }
             set {
                 this["SelectedCulture"] = value;

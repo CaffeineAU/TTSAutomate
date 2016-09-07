@@ -1,0 +1,61 @@
+Id,Original string,Translation Slovak / Slovenèina
+1,Configure..., Konfigurácia
+2,Program options, Monosti programu
+3,Program Language, Jazyk programu
+4,Re-open last PSV file, Znovu otvori poslednı PSV súbor
+5,Set output directory to last output directory, Nastavi vıstupnı adresár ako naposledy
+6,Copy previous folder when inserting rows, Kopírova predošlı adresár pri vloení riadkov
+7,Copy previous folder when selecting empty row, Kopírova predošlı adresár pri navolení prázdneho riadku
+8,Voice options, Monosti zvuku
+9,Remember language settings,Pamäta si jazykové nastavenie
+10,Encode MP3 to WAV, Prekódova MP3 na WAV
+11,Sample Rate,Vzorkovacia frekvencia
+12,Hz       Bits per sample,Hz      Bitov na vzorku
+13,TTS specific options, Špecifické monosti TTS
+14,Ivona Region, Ivona región
+15,Bing Header String, Hlavièka reazca Bing
+16,Close, Zavrie
+17,TTSAutomate,TTS Automat
+18,Phrase File,Súbor s frázami
+19,Output Directory,Vıstupnı adresár
+20,Open Phrase File...,Otvori súbor s frázami...
+21,Ctrl O,Ctrl O
+22,Select Output Directory...,Zvoli vıstupnı adresár...
+23,Ctrl P,Ctrl P
+24,Create new Phrase File,Vytvori novı súbor s frázami
+25,Ctrl N,Ctrl N
+26,TTS Provider,Poskytovate¾ TTS
+27,Voice,Hlas
+28,Speech rate: {0},Rıchlos hlasu: {0}
+29,Speech rate:,Rıchlos hlasu:
+30,Volume: {0},Hlasitos: {0}
+31,Volume: ,Hlasitos:
+32,Alt PageUp,Alt PgUp
+33,Move {0} rows(s) up,Posunú {0} riadok/riadkov hore
+34,Alt PageDown,Alt PgDn
+35,Move {0} rows(s) down,Posunú {0} riadok/riadkov dolu
+36,Alt Insert,Alt Ins
+37,Insert {0} rows(s) above,Vloi {0} riadok/riadkov nad
+38,Ctrl Alt Insert,Ctrl Alt Ins
+39,Insert {0} rows(s) below,Vloi {0} riadok/riadkov pod
+40,Play {0} voice(s),Prehra {0} hlas/hlasov
+41,Alt P,Alt P
+42,Play All,Prehra všetko
+43,Alt A,Alt A
+44,Pause,Pauza
+45,Alt U,Alt U
+46,Resume,Súhrn
+47,Alt I,Alt I
+48,Stop,Stop
+49,Alt S,Alt S
+50,#StackPanel_5;,#Panel_zásobníka_5;
+51,F12,F12
+52,Settings...,
+53,Save Phrase File,
+54,Ctrl S,
+55,Save Phrase File As...,
+56,Ctrl Alt S,
+57,Stop!,
+58,Ctrl H,
+59,Go!,
+60,Ctrl G,

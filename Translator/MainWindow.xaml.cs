@@ -214,8 +214,6 @@ namespace TTSAutomate
 
         public MainWindow()
         {
-            //MessageBox.Show(Thread.CurrentThread.CurrentCulture.DisplayName);
-
             InitializeComponent();
 
             media.MediaEnded += delegate
@@ -227,8 +225,6 @@ namespace TTSAutomate
                 }
             };
 
-
-            //NAudio.MediaFoundation.MediaFoundationApi.Startup();
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
             HeaderImage = LoadImage("speech-bubble.png");
@@ -247,12 +243,6 @@ namespace TTSAutomate
             TTSEngines.Add(new MicrosoftTTSProvider());
             TTSEngines.Add(new BingTTSProvider());
             TTSEngines.Add(new FromTextToSpeechTTSProvider());
-            //foreach (var voice in ssss.GetInstalledVoices())
-            //{
-            //    TTSEngines.Add(new TTSProvider { Name = voice.VoiceInfo.Name, ProviderType = VoiceProvider.Provider.Microsoft, ProviderClass = VoiceProvider.Class.Local });
-            //}
-            //TTSEngines.Add(new TTSProvider { Name = "fromtexttospeech.com", ProviderType = VoiceProvider.Provider.wwwfromtexttospeechcom, ProviderClass = VoiceProvider.Class.Web });
-
 
             Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 

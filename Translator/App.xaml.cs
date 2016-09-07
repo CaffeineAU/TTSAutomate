@@ -18,9 +18,9 @@ namespace TTSAutomate
 
         public App()
         {
-            if (!String.IsNullOrEmpty(TTSAutomate.Properties.Settings.Default.SelectedCulture))
+            if ((TTSAutomate.Properties.Settings.Default.SelectedCulture)!=null)
             {
-                CultureInfo ci = CultureInfo.GetCultures(CultureTypes.AllCultures).First(n => n.DisplayName == TTSAutomate.Properties.Settings.Default.SelectedCulture);
+                CultureInfo ci = TTSAutomate.Properties.Settings.Default.SelectedCulture;
                 Thread.CurrentThread.CurrentCulture = ci;
                 Thread.CurrentThread.CurrentUICulture = ci;
 

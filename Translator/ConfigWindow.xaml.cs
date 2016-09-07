@@ -34,9 +34,9 @@ namespace TTSAutomate
         }
 
 
-        private List<String> languageOptions = new List<String>();
+        private List<CultureInfo> languageOptions = new List<CultureInfo>();
 
-        public List<String> LanguageOptions
+        public List<CultureInfo> LanguageOptions
         {
             get { return languageOptions; }
             set
@@ -45,6 +45,21 @@ namespace TTSAutomate
                 OnPropertyChanged("LanguageOptions");
             }
         }
+
+        //private CultureInfo selectedCulture = TTSAutomate.Properties.Settings.Default.SelectedCulture;
+
+        //public CultureInfo SelectedCulture
+        //{
+        //    get { return selectedCulture; }
+        //    set
+        //    {
+        //        selectedCulture = value;
+        //        TTSAutomate.Properties.Settings.Default.SelectedCulture = selectedCulture;
+        //        MessageBox.Show("Selected " + SelectedCulture.DisplayName);
+        //        OnPropertyChanged("SelectedCulture");
+        //    }
+        //}
+
 
 
 
@@ -72,11 +87,12 @@ namespace TTSAutomate
                 catch
                 {
 
-                }            }
+                }
+            }
 
-            cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
+            //cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
 
-            LanguageOptions = cultures.Select(x => x.DisplayName).ToList();
+            LanguageOptions = cultures;
 
 
             this.DataContext = this;
@@ -110,6 +126,7 @@ namespace TTSAutomate
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
+            //Clipboard.SetText(TTSAutomate.Properties.Settings.Default.SelectedCulture.NativeName);
             Close();
         }
 

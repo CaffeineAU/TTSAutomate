@@ -25,7 +25,7 @@
                 <StackPanel x:Uid="StackPanel_2">
                     <StackPanel x:Uid="StackPanel_6" Orientation="Horizontal">
                         <Label  x:Uid="Language" Margin="0,0,0,0" Content="Program Language" HorizontalContentAlignment="Left" Width="150"/>
-                        <ComboBox  x:Uid="ComboBox_3" Margin="0" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
+                        <ComboBox  x:Uid="ComboBox_3" Margin="0" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" DisplayMemberPath="DisplayName" SelectedItem="{Binding Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
                         <Label  x:Uid="Warning" Margin="0,0,0,0" Content="Setting takes effect on program restart" HorizontalContentAlignment="Left" />
                     </StackPanel>
                     <CheckBox x:Uid="ReOpenPSV" Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
