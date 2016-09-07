@@ -227,17 +227,17 @@
             <Button  x:Uid="InsertRowsBelow" Content="{Binding SelectedRowCount}" ToolTip="Ctrl Alt Insert" ContentStringFormat="Insert {0} rows(s) below" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"   Margin="5" Command="self:CustomCommands.InsertRowsBelowCommand"/>
             <Grid x:Uid="ButtonGrid">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Uid="ColumnDefinition_1" SharedSizeGroup="Buttons"/>
-                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_6" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_7" SharedSizeGroup="Buttons"/>
                 </Grid.ColumnDefinitions>
                 <Button  x:Uid="PlayableRowCount" Content="{Binding PlayableRowCount}" ContentStringFormat="Play {0} voice(s)" ToolTip="Alt P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0" Margin="5" Command="self:CustomCommands.PlaySelectedCommand"/>
                 <Button  x:Uid="PlayAll" Content="Play All" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="Alt A" Grid.Column="1"  Margin="5" Command="self:CustomCommands.PlayAllCommand"/>
             </Grid>
             <Grid x:Uid="ButtonGrid2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Uid="ColumnDefinition_1" SharedSizeGroup="Buttons"/>
-                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
-                    <ColumnDefinition x:Uid="ColumnDefinition_2" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_8" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_9" SharedSizeGroup="Buttons"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_10" SharedSizeGroup="Buttons"/>
                 </Grid.ColumnDefinitions>
                 <Button  x:Uid="PausePlaying" Content="Pause" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="0" ToolTip="Alt U"  Margin="5" Command="self:CustomCommands.PausePlayingCommand"/>
                 <Button  x:Uid="ResumePlaying" Content="Resume" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" ToolTip="Alt I"  Margin="5" Command="self:CustomCommands.ResumePlayingCommand"/>

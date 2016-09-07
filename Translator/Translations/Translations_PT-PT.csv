@@ -1,0 +1,62 @@
+Id,Original string,Translation
+1,Configure...,Configurar...
+2,Program options,Opções do Programa
+3,Program Language,Linguagem do Programa
+4,Re-open last PSV file,Abrir o último ficheiro PSV
+5,Set output directory to last output directory,Utilizar a última directoria seleccionada
+6,Copy previous folder when inserting rows,Copiar pasta anterior quando inserir novas linhas
+7,Copy previous folder when selecting empty row,Copiar pasta anterior quando seleccionar uma linha vazia
+8,Voice options,Opções de voz
+9,Remember language settings,Lembrar configuração da linguagem
+10,Encode MP3 to WAV,Converter de MP3 para WAV
+11,Sample Rate,Taxa de amostragem
+12,Hz       Bits per sample,Hz      Bits por amostra
+13,TTS specific options,Opções específicas de TTS
+14,Ivona Region,Região Ivona
+15,Bing Header String,Bing Header String
+16,Close,Fechar
+17,TTSAutomate,TTSAutomate
+18,Phrase File, Localização do ficheiro “PSV”
+19,Output Directory,Localização dos ficheiros de audio
+20,Open Phrase File...,Abrir Ficheiro “PSV”
+21,Ctrl O,Ctrl O
+22,Select Output Directory...,Seleccionar Pasta
+23,Ctrl P,Ctrl P
+24,Create new Phrase File,Criar Novo Ficheiro
+25,Ctrl N,Ctrl N
+26,TTS Provider,Origem do serviço TTS
+27,Voice,Voz
+28,Speech rate: {0},Velocidade da Fala: {0}
+29,Speech rate:,Velocidade da Fala
+30,Volume: {0},Volume: {0}
+31,Volume: ,Volume: 
+32,Alt PageUp,Alt PageUp
+33,Move {0} rows(s) up,Mover {0} Linha(s) para cima
+34,Alt PageDown,Alt PageDown
+35,Move {0} rows(s) down,Mover {0} Linhas(s) para baixo
+36,Alt Insert,Alt Insert
+37,Insert {0} rows(s) above,Inserir {0} Linhas(s) em cima
+38,Ctrl Alt Insert,Ctrl Alt Insert
+39,Insert {0} rows(s) below,Inserir {0} Linhas(s) em baixo
+40,Play {0} voice(s),Ouvir {0} Voz(es)
+41,Alt P,Alt P
+42,Play All,Ouvir Tudo
+43,Alt A,Alt A
+44,Pause,Pausa
+45,Alt U,Alt U
+46,Resume,Resumir
+47,Alt I,Alt I
+48,Stop,Parar
+49,Alt S,Alt S
+50,#StackPanel_5,#StackPanel_5
+51,F12,F12
+52,Settings...,Configuração...
+53,Save Phrase File,Salvar Ficheiro “PSV”
+54,Ctrl S,Ctrl S
+55,Save Phrase File As...,Salvar Ficheiro “PSV” Como...
+56,Ctrl Alt S,Ctrl Alt S
+57,Stop!,Parar!
+58,Ctrl H,Ctrl H
+59,Go!,Criar!
+60,Ctrl G,Ctrl G
+61,Setting takes effect on program restart,Configuração tem efeito após reinicialização do programa.
