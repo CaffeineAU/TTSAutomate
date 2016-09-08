@@ -4,6 +4,15 @@
 
 A tool to generate Audio files from text strings in WAV and MP3 format, using various TTS engines as the source
 
+Now supports multiple languages (if there's a language you'd like supported, and you can assist with translation, please let me know):
+
+* Czech
+* English
+* French
+* German
+* Portuguese
+* Slovak
+
 # A quick usage guide:
 
 * Select Open Phrase File (Ctrl-O) to open an existing psv file, or enter new phrases directly into the blank lines
