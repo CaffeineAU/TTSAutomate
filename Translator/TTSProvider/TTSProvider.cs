@@ -18,8 +18,6 @@ namespace TTSAutomate
         public Boolean initialLoad = true;
         public TTSProvider()
         {
-            System.IO.Directory.CreateDirectory(String.Format("{0}\\mp3", Path.GetTempPath()));
-
         }
 
 
@@ -168,7 +166,7 @@ namespace TTSAutomate
                 if (MainWindow.LoadedWindow)
                 {
                     PlayMessage(String.Format("{0} selected", SelectedVoice.Name));
-                    Properties.Settings.Default.LastTTSVoice= SelectedVoice.Name;
+                    Properties.Settings.Default.LastTTSVoice = SelectedVoice.Name;
                 }
 
                 OnPropertyChanged("SelectedVoice");
@@ -184,9 +182,6 @@ namespace TTSAutomate
                     Play(new PhraseItem { Phrase = String.Format("{0}", messageToPlay), FileName = filename, Folder = "." });
                 }).Start();
             }
-            //message = messageToPlay;
-            //PlayTimer.Start();
-
         }
 
         private List<String> availableSpeeds = new List<string>();

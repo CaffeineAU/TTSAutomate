@@ -21,6 +21,8 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Globalization;
 using System.Windows.Markup;
+using System.IO.Packaging;
+using NAudio.Wave;
 
 namespace TTSAutomate
 {
@@ -444,7 +446,7 @@ namespace TTSAutomate
 
             if (((dep as DataGridRow).DataContext as PhraseItem).DownloadComplete)
             {
-                PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, ((Button)sender).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), false);
+                PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, ((Button)sender).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
             }
             else
             {
@@ -455,7 +457,7 @@ namespace TTSAutomate
             }
         }
 
-        public static void PlayAudioFullPath(string file, Boolean? deleteAfterPlay = false)
+        public static void PlayAudioFullPath(string file)
         {
             if (LoadedWindow)
             {
@@ -503,6 +505,26 @@ namespace TTSAutomate
             media.Open(new Uri(item.Filename, UriKind.RelativeOrAbsolute));
             media.Volume = 1;
             media.Play();
+        }
+
+        public static void PlayAudioStream(byte[] bytes)
+        {
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                ms.Position = 0;
+                using (WaveStream blockAlignedStream = new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(new Mp3FileReader(ms))))
+                {
+                    using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
+                    {
+                        waveOut.Init(blockAlignedStream);
+                        waveOut.Play();
+                        while (waveOut.PlaybackState == PlaybackState.Playing)
+                        {
+                            System.Threading.Thread.Sleep(10);
+                        }
+                    }
+                }
+            }
         }
 
         private void VoiceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -934,7 +956,7 @@ namespace TTSAutomate
                             {
                                 dep = VisualTreeHelper.GetChild(dep, 0);
                             }
-                            PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, (dep as Button).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"), false);
+                            PlayAudioFullPath(String.Format("{0}\\{2}\\{1}.{2}", OutputDirectoryName, (dep as Button).CommandParameter, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
                         }
                         else
                         {

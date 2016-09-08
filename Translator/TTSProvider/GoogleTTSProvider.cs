@@ -28,7 +28,6 @@ namespace TTSAutomate
                 cultures.AddRange(CultureInfo.GetCultures(CultureTypes.SpecificCultures));
                 cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
                 AvailableVoices = cultures.Select(x => new Voice() { Name = x.DisplayName, Language = x.Name }).ToList();
-                SelectedVoice = AvailableVoices[0];
                 if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
                 {
                     SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
@@ -75,7 +74,6 @@ namespace TTSAutomate
                     }
                     ConvertToWav(item, folder, true, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
                 }).Start();
-
             }
             catch (Exception Ex)
             {
@@ -88,8 +86,7 @@ namespace TTSAutomate
         {
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadFile(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
-                MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                MainWindow.PlayAudioStream(wc.DownloadData(String.Format("http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q={0}&tl={1}", item.Phrase, SelectedVoice.Language)));
             }
         }
     }

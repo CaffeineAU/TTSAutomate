@@ -113,8 +113,7 @@ namespace TTSAutomate
         {
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadFile(GetDownloadURL(item.Phrase), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
-                MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                MainWindow.PlayAudioStream(wc.DownloadData(GetDownloadURL(item.Phrase)));
             }
         }
 

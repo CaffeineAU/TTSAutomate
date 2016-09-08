@@ -94,8 +94,7 @@ namespace TTSAutomate
                 try
                 {
                     wc.Headers.Add(HttpRequestHeader.Cookie, Properties.Settings.Default.BingHeaderString);
-                    wc.DownloadFile(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender), String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
-                    MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+                    MainWindow.PlayAudioStream(wc.DownloadData(String.Format("http://www.bing.com/translator/api/language/Speak?locale={1}&gender={2}&media=audio/mp3&text={0}", item.Phrase, SelectedVoice.Language, SelectedVoice.Gender)));
                 }
                 catch
                 {

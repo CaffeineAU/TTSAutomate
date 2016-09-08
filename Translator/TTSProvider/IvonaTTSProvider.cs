@@ -90,8 +90,9 @@ namespace TTSAutomate
 
         public override void Play(PhraseItem item)
         {
-            File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName), IvonaCreateSpeech(item.Phrase, SelectedVoice));
-            MainWindow.PlayAudioFullPath(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName));
+            byte[] mp3 = IvonaCreateSpeech(item.Phrase, SelectedVoice);
+            //File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName), );
+            MainWindow.PlayAudioStream(mp3);
         }
 
         public byte[] IvonaCreateSpeech(string text, Voice selectedVoice)
