@@ -24,25 +24,25 @@
             <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_2">
                     <StackPanel x:Uid="StackPanel_6" Orientation="Horizontal">
-                        <Label  x:Uid="Language" Margin="0,0,0,0" Content="Program Language" HorizontalContentAlignment="Left" Width="150"/>
-                        <ComboBox  x:Uid="ComboBox_3" Margin="0" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" DisplayMemberPath="DisplayName" SelectedItem="{Binding Source={x:Static properties:Settings.Default}, Path=SelectedCulture}"/>
-                        <Label  x:Uid="Warning" Margin="0,0,0,0" Content="Setting takes effect on program restart" HorizontalContentAlignment="Left" />
+                        <Label  x:Uid="Language" Margin="0,5,5,5" Content="Program Language" HorizontalContentAlignment="Left" Width="150"/>
+                        <ComboBox  x:Uid="ComboBox_3" Margin="0" ItemsSource="{Binding LanguageOptions}" VerticalContentAlignment="Center" DisplayMemberPath="NativeName" SelectedItem="{Binding SelectedCulture, Source={x:Static properties:Settings.Default}}"/>
+                        <Label  x:Uid="Warning" Margin="0,5,5,5" Content="Setting takes effect on program restart" HorizontalContentAlignment="Left" />
                     </StackPanel>
-                    <CheckBox x:Uid="ReOpenPSV" Margin="5" Content="Re-open last PSV file" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=ReopenLastPSVFile}"/>
+                    <CheckBox x:Uid="ReOpenPSV" Margin="5" Content="Re-open last PSV file" IsChecked="{Binding ReopenLastPSVFile, Source={x:Static properties:Settings.Default}}"/>
                     <CheckBox x:Uid="SetOutputDirectory" Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory, Source={x:Static properties:Settings.Default}}"/>
-                    <CheckBox x:Uid="CopyWhenInserting" Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenInsertingLines}"/>
-                    <CheckBox x:Uid="CopyWhenSelecting" Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=CopyFolderWhenSelectingEmptyRow}"/>
+                    <CheckBox x:Uid="CopyWhenInserting" Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding CopyFolderWhenInsertingLines, Source={x:Static properties:Settings.Default}}"/>
+                    <CheckBox x:Uid="CopyWhenSelecting" Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding CopyFolderWhenSelectingEmptyRow, Source={x:Static properties:Settings.Default}}"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox  x:Uid="VoiceOptions" Margin="5,0" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_3">
-                    <CheckBox x:Uid="RememberLanguageSettings" Margin="5" Content="Remember language settings" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=RememberLanguageSettings}"/>
+                    <CheckBox x:Uid="RememberLanguageSettings" Margin="5" Content="Remember language settings" IsChecked="{Binding RememberLanguageSettings, Source={x:Static properties:Settings.Default}}"/>
                     <StackPanel x:Uid="StackPanel_4" Orientation="Horizontal">
-                        <CheckBox x:Uid="EncodeMP3ToWAV" Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=EncodeToWav}"/>
+                        <CheckBox x:Uid="EncodeMP3ToWAV" Margin="5" Content="Encode MP3 to WAV" VerticalContentAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding EncodeToWav, Source={x:Static properties:Settings.Default}}"/>
                         <Label  x:Uid="SampleRate" Margin="20,5,0,5" Content="Sample Rate"/>
-                        <ComboBox  x:Uid="ComboBox_1" Margin="0,5" ItemsSource="{Binding SampleRates}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavSampleRate}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox  x:Uid="ComboBox_1" Margin="0,5" ItemsSource="{Binding SampleRates}" VerticalContentAlignment="Center" SelectedItem="{Binding WavSampleRate, Source={x:Static properties:Settings.Default}}" SelectionChanged="ComboBox_SelectionChanged"/>
                         <Label  x:Uid="HzAndBitsPerSample" Margin="0,5" Content="Hz       Bits per sample"/>
-                        <ComboBox  x:Uid="ComboBox_2" Margin="0,5" ItemsSource="{Binding BitsPerSamples}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=WavBitsPerSample}" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox  x:Uid="ComboBox_2" Margin="0,5" ItemsSource="{Binding BitsPerSamples}" VerticalContentAlignment="Center" SelectedItem="{Binding WavBitsPerSample, Source={x:Static properties:Settings.Default}}" SelectionChanged="ComboBox_SelectionChanged"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -50,11 +50,11 @@
                 <StackPanel x:Uid="StackPanel_5">
                     <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
                         <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="150"/>
-                        <ComboBox  x:Uid="ComboBox_4" Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding  Source={x:Static properties:Settings.Default}, Path=IvonaRegion}"/>
+                        <ComboBox  x:Uid="ComboBox_4" Margin="5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding IvonaRegion, Source={x:Static properties:Settings.Default}}"/>
                     </StackPanel>
                     <StackPanel x:Uid="StackPanel_7" Orientation="Horizontal">
                         <Label  x:Uid="BingString" Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="150"/>
-                        <TextBox  x:Uid="TextBox_1" Margin="5" Text="{Binding  Source={x:Static properties:Settings.Default}, Path=BingHeaderString}" HorizontalAlignment="Stretch" Width="490" Height="54" TextWrapping="Wrap"/>
+                        <TextBox  x:Uid="TextBox_1" Margin="5" Text="{Binding BingHeaderString, Source={x:Static properties:Settings.Default}}" HorizontalAlignment="Stretch" Width="490" Height="54" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
