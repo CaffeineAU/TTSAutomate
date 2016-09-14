@@ -559,7 +559,7 @@ namespace TTSAutomate
         private void LoadPhraseFile(String filename)
         {
             PhraseItems.Clear();
-            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
+            Regex r = new Regex(@"(?<Folder>.*)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
 
             List<PhraseItem> items = new List<PhraseItem>();
 
