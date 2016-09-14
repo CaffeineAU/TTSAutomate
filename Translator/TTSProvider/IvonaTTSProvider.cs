@@ -99,7 +99,15 @@ namespace TTSAutomate
         {
             var date = DateTime.UtcNow;
 
-            string algorithm = "AWS4-HMAC-SHA256";
+            String SSMLText = String.Format(@"
+<?xml version=""1.0""?>
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"">
+<p>
+<s>{0}</s>
+</p>
+</speak>
+",text);
+             string algorithm = "AWS4-HMAC-SHA256";
             string regionName = Properties.Settings.Default.IvonaRegion;
             string serviceName = "tts";
             string method = "POST";
@@ -114,8 +122,8 @@ namespace TTSAutomate
             {
                 Input = new
                 {
-                    Data = text,// Encoding.UTF8.GetString(Encoding.Default.GetBytes(text)),
-                    Type = "text/plain"
+                    Data = SSMLText,// Encoding.UTF8.GetString(Encoding.Default.GetBytes(text)),
+                    Type = "application/ssml+xml"
                 },
                 OutputFormat = new
                 {

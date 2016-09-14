@@ -58,6 +58,14 @@ namespace TTSAutomate
 
         public override void DownloadItem(PhraseItem item, string folder)
         {
+            String SSMLText = String.Format(@"<?xml version=""1.0""?>
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""en-US"">
+<p>
+<s>{0}</s>
+</p>
+</speak>
+", item.Phrase);
+
             try
             {
                 new Task(() =>
@@ -71,7 +79,7 @@ namespace TTSAutomate
                             synth.Volume = Int32.Parse(SelectedDiscreteVolume);
                             synth.Rate = Int32.Parse(SelectedDiscreteSpeed);
                             synth.SetOutputToWaveStream(ms);//.SetOutputToWaveFile(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
-                            synth.Speak(item.Phrase);
+                            synth.SpeakSsml(SSMLText);
                         }
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
@@ -100,6 +108,14 @@ namespace TTSAutomate
 
         public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
+            String SSMLText = String.Format(@"<?xml version=""1.0""?>
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""en-US"">
+<p>
+<s>{0}</s>
+</p>
+</speak>
+", item.Phrase);
+
             try
             {
                 new Task(() =>
@@ -113,7 +129,7 @@ namespace TTSAutomate
                             synth.Volume = Int32.Parse(SelectedDiscreteVolume);
                             synth.Rate = Int32.Parse(SelectedDiscreteSpeed);
                             synth.SetOutputToWaveStream(ms);//.SetOutputToWaveFile(String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName));
-                            synth.Speak(item.Phrase);
+                            synth.SpeakSsml(SSMLText);
                         }
                         ms.Seek(0, SeekOrigin.Begin);
                         using (WaveFileReader wav = new WaveFileReader(ms))// String.Format("{0}\\wav22050\\{1}\\{2}.wav", folder, item.Folder, item.FileName)))
