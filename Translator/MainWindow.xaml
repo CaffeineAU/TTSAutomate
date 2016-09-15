@@ -6,10 +6,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TTSAutomate"
         xmlns:self="clr-namespace:TTSAutomate.Commands"
+        xmlns:sys ="clr-namespace:System.Text;assembly=mscorlib"
         mc:Ignorable="d"
         Title="TTSAutomate" Height="800" Width="1200" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus" Loaded="Window_GotFocus">
     <Window.CommandBindings>
         <CommandBinding x:Uid="BrowsePhraseFileCommand" Command="self:CustomCommands.BrowsePhraseFileCommand" Executed="BrowsePhraseFileCommand_Executed" />
+        <CommandBinding x:Uid="BrowsePhraseFileNoShortcutCommand" Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand" Executed="BrowsePhraseFileCommand_Executed" />
         <CommandBinding x:Uid="CreatePhraseFileCommand" Command="self:CustomCommands.CreatePhraseFileCommand" Executed="CreatePhraseFileCommand_Executed" />
         <CommandBinding x:Uid="BrowseOutputDirectoryCommand" Command="self:CustomCommands.BrowseOutputDirectoryCommand" Executed="BrowseOutputDirectoryCommand_Executed" />
         <CommandBinding x:Uid="StartDownloadingCommand" Command="self:CustomCommands.StartDownloadingCommand" CanExecute="StartDownloadingCommand_CanExecute" Executed="StartDownloadingCommand_Executed" />
@@ -94,7 +96,17 @@
         <TextBox x:Uid="TextBox_2" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Path=OutputDirectoryName}" VerticalContentAlignment="Center" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" IsReadOnly="True"/>
         <ProgressBar x:Uid="ProgressBar_1" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Margin="5" Maximum="{Binding DownloadCount}" Value="{Binding DownloadProgress}"/>
         <StackPanel x:Uid="StackPanel_1" Grid.Column="4" HorizontalAlignment="Stretch"  Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="5" >
-            <Button  x:Uid="OpenPhraseFile" Content="Open Phrase File..." ToolTip="Ctrl O" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand"/>
+            <local:SplitButton  x:Uid="OpenPhraseFile" Content="Open Phrase File..." ToolTip="Ctrl O"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand">
+                <local:SplitButton.MenuItemsSource>
+                    <MenuItem Header="Open as Default encoding" CommandParameter="{x:Static sys:Encoding.Default}"  Command="self:CustomCommands.BrowsePhraseFileCommand"/>
+                    <MenuItem Header="Open as UTF-7" CommandParameter="{x:Static sys:Encoding.UTF7}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem Header="Open as UTF-8" CommandParameter="{x:Static sys:Encoding.UTF8}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem Header="Open as Unicode (UTF-16LE)" CommandParameter="{x:Static sys:Encoding.Unicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                </local:SplitButton.MenuItemsSource>
+            </local:SplitButton>
             <Button  x:Uid="SelectOutputDirectory" Content="Select Output Directory..." ToolTip="Ctrl P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand"/>
             <Button  x:Uid="CreateNewPhraseFile" Content="Create new Phrase File" ToolTip="Ctrl N" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.CreatePhraseFileCommand"/>
             <Label x:Uid="TTSProvider" Content="TTS Provider"/>

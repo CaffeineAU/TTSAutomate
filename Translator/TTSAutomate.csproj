@@ -95,6 +95,9 @@
     </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
+    <Compile Include="SplitButton.xaml.cs">
+      <DependentUpon>SplitButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TTSProvider\FromTextToSpeechTTSProvider.cs" />
     <Compile Include="TTSProvider\BingTTSProvider.cs" />
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
@@ -119,6 +122,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SplitButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
