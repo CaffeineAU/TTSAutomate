@@ -98,13 +98,13 @@
         <StackPanel x:Uid="StackPanel_1" Grid.Column="4" HorizontalAlignment="Stretch"  Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="5" >
             <local:SplitButton  x:Uid="OpenPhraseFile" Content="Open Phrase File..." ToolTip="Ctrl O"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand">
                 <local:SplitButton.MenuItemsSource>
-                    <MenuItem x:Uid="MenuItem_1" Header="Open as Default encoding" CommandParameter="{x:Static sys:Encoding.Default}"  Command="self:CustomCommands.BrowsePhraseFileCommand"/>
-                    <MenuItem x:Uid="MenuItem_2" Header="Open as UTF-7" CommandParameter="{x:Static sys:Encoding.UTF7}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="MenuItem_3" Header="Open as UTF-8" CommandParameter="{x:Static sys:Encoding.UTF8}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="MenuItem_4" Header="Open as Unicode (UTF-16LE)" CommandParameter="{x:Static sys:Encoding.Unicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="MenuItem_5" Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="MenuItem_6" Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="MenuItem_7" Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="DefaultEncodingMenu" Header="Open as Default encoding" CommandParameter="{x:Static sys:Encoding.Default}"  Command="self:CustomCommands.BrowsePhraseFileCommand"/>
+                    <MenuItem x:Uid="UTF7EncodingMenu" Header="Open as UTF-7" CommandParameter="{x:Static sys:Encoding.UTF7}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="UTF8EncodingMenu" Header="Open as UTF-8" CommandParameter="{x:Static sys:Encoding.UTF8}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="UTF16LEEncodingMenu" Header="Open as Unicode (UTF-16LE)" CommandParameter="{x:Static sys:Encoding.Unicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="UTF16BEEncodingMenu" Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="UTF32EncodingMenu" Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="ASCIIEncodingMenu" Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
                 </local:SplitButton.MenuItemsSource>
             </local:SplitButton>
             <Button  x:Uid="SelectOutputDirectory" Content="Select Output Directory..." ToolTip="Ctrl P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand"/>
