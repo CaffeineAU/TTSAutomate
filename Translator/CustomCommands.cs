@@ -21,6 +21,14 @@ namespace TTSAutomate.Commands
             }
     );
 
+        public static readonly RoutedUICommand BrowsePhraseFileNoShortcutCommand = new RoutedUICommand
+    (
+            "BrowsePhraseFileNoShortcutCommand",
+            "BrowsePhraseFileNoShortcutCommand",
+            typeof(CustomCommands),
+            null
+            );
+
         public static readonly RoutedUICommand CreatePhraseFileCommand = new RoutedUICommand
     (
             "CreatePhraseFileCommand",

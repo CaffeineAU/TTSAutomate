@@ -1,0 +1,45 @@
+﻿<UserControl x:Uid="UserControl_1" x:Class="TTSAutomate.SplitButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TTSAutomate"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="300" Loaded="SplitButton_OnLoaded">
+
+    <UserControl.Template>
+        <ControlTemplate x:Uid="ControlTemplate_1" TargetType="{x:Type UserControl}">
+            <Grid x:Uid="Grid_1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Uid="ColumnDefinition_1" Width="*"/>
+                    <ColumnDefinition x:Uid="ColumnDefinition_2" Width="40"/>
+                </Grid.ColumnDefinitions>
+                <Button 
+        x:Uid="mainButton" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}" Name="mainButton" ContextMenuService.Placement="Bottom" 
+        Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Grid.Column="0" Grid.ColumnSpan="2" >
+                    <Button.Content>
+                        <ContentPresenter x:Uid="ContentPresenter_1" Margin="{TemplateBinding Padding}"/>
+                    </Button.Content>
+                    <Button.ContextMenu>
+                        <ContextMenu x:Uid="buttonMenu" Name="buttonMenu" ItemsSource="{Binding Path=MenuItemsSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                    </Button.ContextMenu>
+                </Button>
+                <StackPanel x:Uid="StackPanel_1" Orientation="Horizontal" UseLayoutRounding="True" Grid.Column="1">
+                    <Rectangle x:Uid="Rectangle_1" Width="1" Fill="#111111" Margin="0,2" HorizontalAlignment="Right" />
+                    <Button x:Uid="Button_1" Click="OnArrowClick" HorizontalContentAlignment="Right" Width="40">
+                        <Button.Template>
+                            <ControlTemplate x:Uid="ControlTemplate_2" TargetType="Button">
+                                <Grid x:Uid="buttonGrid" Background="Transparent" Name="buttonGrid">
+                                    <ContentPresenter x:Uid="ContentPresenter_2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                        <Button.Content>
+                            <Path x:Uid="Path_1" Data="M 0,0 L 8,0 L 4,4 Z" Fill="{TemplateBinding Foreground}" Margin="4 0 3 0" VerticalAlignment="Center"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Template>
+</UserControl>

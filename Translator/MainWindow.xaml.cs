@@ -42,7 +42,9 @@ namespace TTSAutomate
         public Boolean KeepPlaying
         {
             get { return keepPlaying; }
-            set { keepPlaying = value;
+            set
+            {
+                keepPlaying = value;
                 OnPropertyChanged("KeepPlaying");
             }
         }
@@ -52,7 +54,9 @@ namespace TTSAutomate
         public Boolean IsPlaying
         {
             get { return isPlaying; }
-            set { isPlaying = value;
+            set
+            {
+                isPlaying = value;
                 OnPropertyChanged("IsPlaying");
             }
         }
@@ -264,7 +268,7 @@ namespace TTSAutomate
                 {
                     if (File.Exists(Properties.Settings.Default.LastPhraseFile))
                     {
-                        LoadPhraseFile(Properties.Settings.Default.LastPhraseFile);
+                        LoadPhraseFile(Properties.Settings.Default.LastPhraseFile, Encoding.Default);
                         PhraseFileName = Properties.Settings.Default.LastPhraseFile;
                         NeedToSave = false;
                         filenameSelected = true;
@@ -472,9 +476,9 @@ namespace TTSAutomate
                       DispatcherPriority.Background,
                       new Action(() =>
                       {
-                      PlayAudio(new PlayItem { Filename = file, ShowAsPlaying = false });
-                    //PlayAudio(file, deleteAfterPlay);
-                }));
+                          PlayAudio(new PlayItem { Filename = file, ShowAsPlaying = false });
+                          //PlayAudio(file, deleteAfterPlay);
+                      }));
                 }
             }
         }
@@ -556,10 +560,10 @@ namespace TTSAutomate
             }
         }
 
-        private void LoadPhraseFile(String filename)
+        private void LoadPhraseFile(String filename, System.Text.Encoding encoding)
         {
             PhraseItems.Clear();
-            Regex r = new Regex(@"(?<Folder>.+)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
+            Regex r = new Regex(@"(?<Folder>.*)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
 
             List<PhraseItem> items = new List<PhraseItem>();
 
@@ -573,18 +577,42 @@ namespace TTSAutomate
             //using (System.IO.StreamReader file = new StreamReader(new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite), true))
             //{
             //    string contents = file.ReadToEnd();
-                string contents = File.ReadAllText(filename, Encoding.Default);
-                foreach (Match match in r.Matches(contents))
+            string contents = File.ReadAllText(filename, encoding);// GetEncoding(filename));
+            foreach (Match match in r.Matches(contents))
+            {
+                if (j >= items.Count)
                 {
-                    if (j >= items.Count)
-                    {
-                        items.Add(new PhraseItem { Phrase = "" });
-                    }
-                    items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
+                    items.Add(new PhraseItem { Phrase = "" });
                 }
+                items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
+            }
             //}
             PhraseItems = new ObservableCollection<PhraseItem>(items);
             CheckFolderForVoices();
+        }
+
+        /// <summary>
+        /// Determines a text file's encoding by analyzing its byte order mark (BOM).
+        /// Defaults to ASCII when detection of the text file's endianness fails.
+        /// </summary>
+        /// <param name="filename">The text file to analyze.</param>
+        /// <returns>The detected encoding.</returns>
+        public static Encoding GetEncoding(string filename)
+        {
+            // Read the BOM
+            var bom = new byte[4];
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            {
+                file.Read(bom, 0, 4);
+            }
+
+            // Analyze the BOM
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+            if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+            if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+            if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+            if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
+            return Encoding.Default;
         }
 
         private void SavePhraseFileCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -610,6 +638,8 @@ namespace TTSAutomate
                 }
             }
 
+            System.Text.Encoding encoding = e.Parameter as System.Text.Encoding ?? System.Text.Encoding.Default;
+
             var dlg = new System.Windows.Forms.OpenFileDialog();
             if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile))
             {
@@ -618,14 +648,14 @@ namespace TTSAutomate
             }
             dlg.FileName = Properties.Settings.Default.LastPhraseFile;
 
-            dlg.Title = "Open a Phrase file";
+            dlg.Title = String.Format("Open a Phrase file as {0}", encoding.EncodingName);
             dlg.Filter = "Phrase Files (*.psv)|*.psv|All Files (*.*)|*.*";
             System.Windows.Forms.DialogResult result = dlg.ShowDialog();
 
             if (result == System.Windows.Forms.DialogResult.OK)
             {
                 PhraseFileName = dlg.FileName;
-                LoadPhraseFile(PhraseFileName);
+                LoadPhraseFile(PhraseFileName, encoding);
                 filenameSelected = true;
                 Properties.Settings.Default.LastPhraseFile = dlg.FileName; //Path.GetDirectoryName(dlg.FileName);
                 NeedToSave = false;
@@ -740,7 +770,7 @@ namespace TTSAutomate
 
         private void SavePhraseFile(string Filename)
         {
-            using (System.IO.StreamWriter file = new StreamWriter(new FileStream(Filename, FileMode.Create, FileAccess.Write)))
+            using (System.IO.StreamWriter file = new StreamWriter(new FileStream(Filename, FileMode.Create, FileAccess.Write), System.Text.Encoding.Default))
             {
                 foreach (var item in PhraseItems)
                 {
@@ -1023,7 +1053,7 @@ namespace TTSAutomate
                         nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
                         //}
                         int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
-                        while (rowselected >= 0&&String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
+                        while (rowselected >= 0 && String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
                         if (rowselected >= 0)
                         {
                             (((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem).Folder = PhraseItems[rowselected].Folder;
@@ -1071,7 +1101,7 @@ namespace TTSAutomate
             if (SelectedRowCount == 1 && e.AddedItems.Count > 0 && Properties.Settings.Default.CopyFolderWhenSelectingEmptyRow && String.IsNullOrEmpty((e.AddedItems[0] as PhraseItem).Folder))
             {
                 int rowselected = PhraseItems.IndexOf(e.AddedItems[0] as PhraseItem);
-                while (rowselected >= 0 &&String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
+                while (rowselected >= 0 && String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
                 if (rowselected >= 0)
                 {
                     (e.AddedItems[0] as PhraseItem).Folder = PhraseItems[rowselected].Folder;
