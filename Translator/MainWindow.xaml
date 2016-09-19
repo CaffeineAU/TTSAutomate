@@ -47,10 +47,42 @@
             <RowDefinition x:Uid="RowDefinition_4" Height="350"/>
             <RowDefinition x:Uid="RowDefinition_5" Height="60"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Uid="WordsListView" x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4" RowHeaderWidth="35" ItemsSource="{Binding Path=PhraseItems}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" SelectionChanged="WordsListView_SelectionChanged" local:DataGridBehavior.DisplayRowNumber="True" >
+        <DataGrid x:Uid="WordsListView" x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4" RowHeaderWidth="60" ItemsSource="{Binding Path=PhraseItems}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" SelectionChanged="WordsListView_SelectionChanged" local:DataGridBehavior.DisplayRowNumber="True" >
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ValidationErrorTemplate">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Image
+                   Source="pack://application:,,,/Exclamation.png"
+                   ToolTip="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=DataGridRow},Path=(Validation.Errors)[0].ErrorContent}" Margin="5,0" Width="24" Height="24" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+                    <Style.Triggers>
+                        <Trigger Property="Validation.HasError" Value="True">
+                            <Setter Property="Background" Value="Red"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
             <DataGrid.Columns>
                 <DataGridTextColumn  x:Uid="FolderColumn" Header="Folder" Binding="{Binding Folder}" CanUserSort="False" />
-                <DataGridTextColumn  x:Uid="FilenameColumn" Header="Filename" Binding="{Binding FileName}" CanUserSort="False" />
+                <DataGridTextColumn  x:Uid="FilenameColumn" Header="Filename" CanUserSort="False" EditingElementStyle="{StaticResource errorStyle}">
+                    <!--Binding="{Binding FileName}"-->
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="FileName" ValidatesOnDataErrors="True"  UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:FileNameValidationRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
                 <DataGridTextColumn  x:Uid="PhraseColumn" Header="Phrase to Speak" Binding="{Binding Phrase}" CanUserSort="False"/>
                 <DataGridTemplateColumn x:Uid="PlayButtonColumn" Header="Play" CanUserSort="False">
                     <DataGridTemplateColumn.CellTemplate>
@@ -255,7 +287,7 @@
                 <Button  x:Uid="ResumePlaying" Content="Resume" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="1" ToolTip="Alt I"  Margin="5" Command="self:CustomCommands.ResumePlayingCommand"/>
                 <Button  x:Uid="StopPlaying" Content="Stop" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="2" ToolTip="Alt S"  Margin="5" Command="self:CustomCommands.StopPlayingCommand"/>
             </Grid>
-            <Button x:Uid="ShowSettings" Margin="5" HorizontalAlignment="Stretch" ToolTip="F12"  Command="self:CustomCommands.ShowSettingsCommand">
+            <Button x:Uid="ShowSettings" Margin="5" HorizontalAlignment="Stretch" ToolTip="F12"  Command="self:CustomCommands.ShowSettingsCommand" >
                 <StackPanel x:Uid="StackPanel_5" Orientation="Horizontal">
                     <Image  x:Uid="Image_1" Source="{Binding SettingsImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="30"/>
                     <Label x:Uid="SettingsButton" Content="Settings..." VerticalAlignment="Center" />

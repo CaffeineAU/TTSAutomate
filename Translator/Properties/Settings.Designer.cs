@@ -289,5 +289,19 @@ namespace TTSAutomate.Properties {
                 this["SelectedCulture"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsProviderAttribute(typeof(PortableSettingsProvider))]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("255")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int MaximumFileNameLength {
+            get {
+                return ((int)(this["MaximumFileNameLength"]));
+            }
+            set {
+                this["MaximumFileNameLength"] = value;
+            }
+        }
     }
 }

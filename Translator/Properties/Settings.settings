@@ -59,5 +59,8 @@
     <Setting Name="SelectedCulture" Provider="PortableSettingsProvider" Roaming="true" Type="System.Globalization.CultureInfo" Scope="User">
       <Value Profile="(Default)">(Default)</Value>
     </Setting>
+    <Setting Name="MaximumFileNameLength" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">255</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

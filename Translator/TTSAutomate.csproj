@@ -164,6 +164,7 @@
     <Resource Include="speech-bubble.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Exclamation.png" />
     <Content Include="libmp3lame.32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

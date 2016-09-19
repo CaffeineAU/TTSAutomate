@@ -1115,7 +1115,7 @@ namespace TTSAutomate
             PlayableRowCount = 0;
             foreach (var item in WordsListView.SelectedItems)
             {
-                if ((item as PhraseItem).DownloadComplete)
+                if (!String.Equals(item.ToString(), "{NewItemPlaceholder}") && (item as PhraseItem).DownloadComplete)
                 {
                     PlayableRowCount++;
                 }
@@ -1142,6 +1142,7 @@ namespace TTSAutomate
             ConfigWindow cw = new ConfigWindow();
             cw.Owner = this;
             cw.ShowDialog();
+            WordsListView.Items.Refresh();
         }
 
         private void PlaySelectedCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -1214,6 +1215,28 @@ namespace TTSAutomate
             IsPlaying = false;
         }
 
+    }
+
+    public class FileNameValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value,
+            System.Globalization.CultureInfo cultureInfo)
+        {
+            if (value == null)
+            {
+                return ValidationResult.ValidResult;
+            }
+            String fileName  = value.ToString() ?? "";
+            if (value.ToString().Length > Properties.Settings.Default.MaximumFileNameLength)
+            {
+                return new ValidationResult(false,
+                    String.Format("Filename must be no longer than {0} characters", Properties.Settings.Default.MaximumFileNameLength));
+            }
+            else
+            {
+                return ValidationResult.ValidResult;
+            }
+        }
     }
 
     public class PlayItem
