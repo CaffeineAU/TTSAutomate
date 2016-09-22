@@ -23,7 +23,7 @@ namespace TTSAutomate
 
         bool initialLoad = true;
         
-        public BitmapImage HeaderImage { get; private set; }
+        //public BitmapImage HeaderImage { get; private set; }
 
         private int myVar;
 
@@ -96,7 +96,7 @@ namespace TTSAutomate
 
 
             this.DataContext = this;
-            HeaderImage = MainWindow.LoadImage("settings.png");
+            //HeaderImage = MainWindow.LoadImage("settings.png");
 
             IvonaRegions = new List<string>();
             IvonaRegions.Add("eu-west-1");

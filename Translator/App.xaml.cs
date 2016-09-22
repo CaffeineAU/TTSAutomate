@@ -18,6 +18,8 @@ namespace TTSAutomate
 
         public App()
         {
+
+            
             if ((TTSAutomate.Properties.Settings.Default.SelectedCulture)!=null)
             {
                 CultureInfo ci = TTSAutomate.Properties.Settings.Default.SelectedCulture;

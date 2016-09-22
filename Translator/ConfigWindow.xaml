@@ -19,7 +19,7 @@
             <RowDefinition x:Uid="RowDefinition_2" Height="*"/>
             <RowDefinition x:Uid="RowDefinition_3" Height="60"/>
         </Grid.RowDefinitions>
-        <Image x:Uid="Image_1" Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
+        <Image x:Uid="Image_1" Source="pack://application:,,,/settings.png" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
         <StackPanel x:Uid="StackPanel_1" Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
             <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_2">

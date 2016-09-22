@@ -289,14 +289,14 @@
             </Grid>
             <Button x:Uid="ShowSettings" Margin="5" HorizontalAlignment="Stretch" ToolTip="F12"  Command="self:CustomCommands.ShowSettingsCommand" >
                 <StackPanel x:Uid="StackPanel_5" Orientation="Horizontal">
-                    <Image  x:Uid="Image_1" Source="{Binding SettingsImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="30"/>
+                    <Image  x:Uid="Image_1" Source="pack://application:,,,/settings.png" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="30"/>
                     <Label x:Uid="SettingsButton" Content="Settings..." VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
             <Button  x:Uid="SavePhraseFile" Content="Save Phrase File" ToolTip="Ctrl S" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5" Command="self:CustomCommands.SavePhraseFileCommand"/>
         </StackPanel>
         <Button  x:Uid="SavePhraseFileAs" Content="Save Phrase File As..." HorizontalAlignment="Stretch" ToolTip="Ctrl Alt S"  VerticalAlignment="Stretch"  Grid.Column="4" Grid.Row="6" Margin="5" Command="self:CustomCommands.SaveAsPhraseFileCommand"/>
-        <Image x:Uid="Image_2" Source="{Binding HeaderImage}" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Grid.RowSpan="2" Width="100"/>
+        <Image x:Uid="Image_2" Source="pack://application:,,,/speech-bubble.png" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Grid.RowSpan="2" Width="100"/>
         <Button  x:Uid="StopDownloading" Content="Stop!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="Ctrl H" Command="self:CustomCommands.StopDownloadingCommand" Margin="5" Grid.Column="1" Grid.Row="6"/>
         <Button  x:Uid="StartDownloading" Content="Go!" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ToolTip="Ctrl G" Command="self:CustomCommands.StartDownloadingCommand" Margin="5" Grid.Column="0" Grid.Row="6"/>
 

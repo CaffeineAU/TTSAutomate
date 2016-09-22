@@ -211,8 +211,8 @@ namespace TTSAutomate
             }
         }
 
-        public BitmapImage HeaderImage { get; private set; }
-        public BitmapImage SettingsImage { get; private set; }
+        //public BitmapImage HeaderImage { get; private set; }
+        //public BitmapImage SettingsImage { get; private set; }
 
         public static MediaPlayer media = new MediaPlayer();
         private int InitialPhraseItems = 499;
@@ -233,8 +233,8 @@ namespace TTSAutomate
 
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
 
-            HeaderImage = LoadImage("speech-bubble.png");
-            SettingsImage = LoadImage("settings.png");
+            //HeaderImage = LoadImage("speech-bubble.png");
+            //SettingsImage = LoadImage("settings.png");
 
             List<PhraseItem> initialitems = new List<PhraseItem>();
             for (int i = 0; i < InitialPhraseItems; i++)
@@ -262,7 +262,14 @@ namespace TTSAutomate
             {
                 OutputDirectoryName = Properties.Settings.Default.LastOutputDirectory;
             }
-            if (Properties.Settings.Default.ReopenLastPSVFile)
+            if (Environment.GetCommandLineArgs().Length > 1 && File.Exists(Environment.GetCommandLineArgs()[1])) // user opened by double clicking a phrase file
+            {
+                LoadPhraseFile(Environment.GetCommandLineArgs()[1], Encoding.Default);
+                PhraseFileName = Environment.GetCommandLineArgs()[1];
+                NeedToSave = false;
+                filenameSelected = true;
+            }
+            else if (Properties.Settings.Default.ReopenLastPSVFile)
             {
                 if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile))
                 {
@@ -368,19 +375,19 @@ namespace TTSAutomate
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        public static BitmapImage LoadImage(string fileName)
-        {
-            var image = new BitmapImage();
+        //public static BitmapImage LoadImage(string fileName)
+        //{
+        //    //var image = new BitmapImage();
 
-            using (var stream = new FileStream(fileName, FileMode.Open))
-            {
-                image.BeginInit();
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.StreamSource = stream;
-                image.EndInit();
-            }
-            return image;
-        }
+        //    //using (var stream = new FileStream(fileName, FileMode.Open))
+        //    //{
+        //    //    image.BeginInit();
+        //    //    image.CacheOption = BitmapCacheOption.OnLoad;
+        //    //    image.StreamSource = stream;
+        //    //    image.EndInit();
+        //    //}
+        //    //return image;
+        //}
 
         private void DownloaderWorker_DoWork(object sender, DoWorkEventArgs e)
         {
