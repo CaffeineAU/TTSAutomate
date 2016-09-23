@@ -23,17 +23,6 @@ namespace TTSAutomate
 
         bool initialLoad = true;
         
-        //public BitmapImage HeaderImage { get; private set; }
-
-        private int myVar;
-
-        public int MyProperty
-        {
-            get { return myVar; }
-            set { myVar = value; }
-        }
-
-
         private List<CultureInfo> languageOptions = new List<CultureInfo>();
 
         public List<CultureInfo> LanguageOptions
@@ -45,23 +34,6 @@ namespace TTSAutomate
                 OnPropertyChanged("LanguageOptions");
             }
         }
-
-        //private CultureInfo selectedCulture = TTSAutomate.Properties.Settings.Default.SelectedCulture;
-
-        //public CultureInfo SelectedCulture
-        //{
-        //    get { return selectedCulture; }
-        //    set
-        //    {
-        //        selectedCulture = value;
-        //        TTSAutomate.Properties.Settings.Default.SelectedCulture = selectedCulture;
-        //        MessageBox.Show("Selected " + SelectedCulture.DisplayName);
-        //        OnPropertyChanged("SelectedCulture");
-        //    }
-        //}
-
-
-
 
 
         public List<String> IvonaRegions { get; set; }
