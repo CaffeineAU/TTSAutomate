@@ -112,25 +112,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_11310D85B901234FDB5710F354475E71"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6AEE104A12661A16FEEE6C7B51D81B7E"
+        "OwnerKey" = "8:_11310D85B901234FDB5710F354475E71"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_83006E4D5FE3A9BBAE8217D8C947A904"
+        "OwnerKey" = "8:_FB54E67E70E660FBD32CF7128832C1DF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,7 +136,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FB54E67E70E660FBD32CF7128832C1DF"
+        "OwnerKey" = "8:_83006E4D5FE3A9BBAE8217D8C947A904"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6AEE104A12661A16FEEE6C7B51D81B7E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -163,13 +163,29 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
+            }
         }
-        "Release"
+        "Installer"
         {
-        "DisplayName" = "8:Release"
+        "DisplayName" = "8:Installer"
         "IsDebugOnly" = "11:FALSE"
-        "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Setup TTSAutomate.msi"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Installer\\Setup TTSAutomate.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -179,6 +195,54 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
+            }
+        }
+        "Portable"
+        {
+        "DisplayName" = "8:Portable"
+        "IsDebugOnly" = "11:FALSE"
+        "IsReleaseOnly" = "11:FALSE"
+        "OutputFilename" = "8:Portable\\Setup TTSAutomate.msi"
+        "PackageFilesAs" = "3:2"
+        "PackageFileSize" = "3:-2147483648"
+        "CabType" = "3:1"
+        "Compression" = "3:2"
+        "SignOutput" = "11:FALSE"
+        "CertificateFile" = "8:"
+        "PrivateKeyFile" = "8:"
+        "TimeStampServer" = "8:"
+        "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -215,11 +279,6 @@
             "AssemblyAsmDisplayName" = "8:NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_11310D85B901234FDB5710F354475E71"
-                    {
-                    "Name" = "8:NAudio.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:NAudio.dll"
             "TargetName" = "8:"
@@ -243,7 +302,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.7.1.0, Culture=de-DE, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=de-DE, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1B1FD6F02F7C4FBD8EF4F594579C1940"
@@ -274,7 +333,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.7.1.0, Culture=sk-SK, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=sk-SK, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4E83D71813A943B9843C820CA558194E"
@@ -308,16 +367,6 @@
             "AssemblyAsmDisplayName" = "8:policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_5A9D0ADFB91F14B153FBA9B9FC7B1B68"
-                    {
-                    "Name" = "8:policy.2.0.taglib-sharp.dll"
-                    "Attributes" = "3:512"
-                    }
-                    "_DAF5D0448E11F5BEEDB366893BEA011E"
-                    {
-                    "Name" = "8:policy.2.0.taglib-sharp.config"
-                    "Attributes" = "3:1"
-                    }
                 }
             "SourcePath" = "8:policy.2.0.taglib-sharp.dll"
             "TargetName" = "8:"
@@ -344,11 +393,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_6AEE104A12661A16FEEE6C7B51D81B7E"
-                    {
-                    "Name" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
             "TargetName" = "8:"
@@ -372,7 +416,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.7.1.0, Culture=fr-FR, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=fr-FR, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_6CCE01CA733C43E2B0A8C3AE451DADFD"
@@ -423,7 +467,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.7.1.0, Culture=cs-CZ, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=cs-CZ, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_73CB012FD8684A79A42C949FA5D24BCB"
@@ -457,11 +501,6 @@
             "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_83006E4D5FE3A9BBAE8217D8C947A904"
-                    {
-                    "Name" = "8:Microsoft.WindowsAPICodePack.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Microsoft.WindowsAPICodePack.dll"
             "TargetName" = "8:"
@@ -488,11 +527,6 @@
             "AssemblyAsmDisplayName" = "8:taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_853591507222D5D09821A690DC76CC36"
-                    {
-                    "Name" = "8:taglib-sharp.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:taglib-sharp.dll"
             "TargetName" = "8:"
@@ -516,7 +550,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.7.1.0, Culture=pt-PT, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=pt-PT, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B3C3ACC4C25245FCA9F244E8BDC975AF"
@@ -570,11 +604,6 @@
             "AssemblyAsmDisplayName" = "8:NAudio.Lame, Version=1.0.3.3048, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_FB54E67E70E660FBD32CF7128832C1DF"
-                    {
-                    "Name" = "8:NAudio.Lame.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:NAudio.Lame.dll"
             "TargetName" = "8:"
@@ -729,7 +758,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TTSAutomate"
         "ProductCode" = "8:{E439FC46-6AA8-4919-A399-A8981893CC97}"
-        "PackageCode" = "8:{38ED74C2-02C4-4908-BB75-716C69565B20}"
+        "PackageCode" = "8:{33FD5C31-7D23-488D-938A-C45B809A9ABF}"
         "UpgradeCode" = "8:{B4709B2F-EB3E-4013-B334-7FA02922E6C7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1316,7 +1345,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_62304A748A7F40C89D9A0FBEDE07120E"
             {
-            "SourcePath" = "8:..\\Translator\\obj\\Release\\TTSAutomate.exe"
+            "SourcePath" = "8:..\\Translator\\obj\\Installer\\TTSAutomate.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
