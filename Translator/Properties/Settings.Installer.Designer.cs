@@ -283,5 +283,23 @@ namespace TTSAutomate.Properties {
                 this["MaximumFileNameLength"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CheckForNewVersion
+        {
+            get
+            {
+                return ((bool)(this["CheckForNewVersion"]));
+            }
+            set
+            {
+                this["CheckForNewVersion"] = value;
+            }
+        }
+
+
     }
 }

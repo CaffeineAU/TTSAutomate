@@ -23,6 +23,8 @@ using System.Globalization;
 using System.Windows.Markup;
 using System.IO.Packaging;
 using NAudio.Wave;
+using System.Net;
+using System.Web.Script.Serialization;
 
 namespace TTSAutomate
 {
@@ -32,6 +34,8 @@ namespace TTSAutomate
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         Boolean filenameSelected = false;
+
+        String downloadUrl = "";
 
         private bool isManualEditCommit;
 
@@ -58,6 +62,18 @@ namespace TTSAutomate
             {
                 isPlaying = value;
                 OnPropertyChanged("IsPlaying");
+            }
+        }
+
+        private Visibility newVersionCheck = Visibility.Collapsed;
+
+        public Visibility NewVersionCheck
+        {
+            get { return newVersionCheck; }
+            set
+            {
+                newVersionCheck = value;
+                OnPropertyChanged("NewVersionCheck");
             }
         }
 
@@ -309,8 +325,16 @@ namespace TTSAutomate
 
             }
 
+            new Task(() =>
+            {
+                CheckForNewVersion();
+            }).Start();
+
 
             this.DataContext = this;
+
+
+
         }
 
         private void CheckFolderForVoices()
@@ -1137,6 +1161,40 @@ namespace TTSAutomate
             {
                 item.initialLoad = false;
             }
+
+
+        }
+
+        private void CheckForNewVersion()
+        {
+            if (Properties.Settings.Default.CheckForNewVersion)
+            {
+                WebClient wc = new WebClient();
+                wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                String responseString = "";
+
+
+                using (Stream responseStream = new MemoryStream(wc.DownloadData("https://api.github.com/repos/CaffeineAU/TTSAutomate/releases/latest")))
+                {
+                    responseString = new StreamReader(responseStream).ReadToEnd();
+                }
+
+                // "html_url": "https://github.com/CaffeineAU/TTSAutomate/releases/tag/2.8.0.1",
+                // "tag_name": "2.8.0.1",
+
+                Regex url = new Regex(@"html_url\""\:\""(?<Url>.+)\""\,");
+                Regex tag = new Regex(@"tag_name\""\:\""(?<Tag>.+)\""\,");
+
+                responseString = responseString.Replace(",", ",\r\n");
+
+                downloadUrl = url.Matches(responseString)[0].Groups["Url"].Value;
+                string releaseTag = tag.Matches(responseString)[0].Groups["Tag"].Value;
+
+                if (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() != releaseTag)
+                {
+                    NewVersionCheck = Visibility.Visible;
+                }
+            }
         }
 
         private void ShowSettingsCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -1222,6 +1280,10 @@ namespace TTSAutomate
             IsPlaying = false;
         }
 
+        private void Label_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start(downloadUrl);
+        }
     }
 
     public class FileNameValidationRule : ValidationRule
@@ -1233,7 +1295,7 @@ namespace TTSAutomate
             {
                 return ValidationResult.ValidResult;
             }
-            String fileName  = value.ToString() ?? "";
+            String fileName = value.ToString() ?? "";
             if (value.ToString().Length > Properties.Settings.Default.MaximumFileNameLength)
             {
                 return new ValidationResult(false,

@@ -113,6 +113,7 @@
     </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
+    <Compile Include="ScheduledTask.cs" />
     <Compile Include="SplitButton.xaml.cs">
       <DependentUpon>SplitButton.xaml</DependentUpon>
     </Compile>

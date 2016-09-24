@@ -47,7 +47,9 @@
             <RowDefinition x:Uid="RowDefinition_4" Height="350"/>
             <RowDefinition x:Uid="RowDefinition_5" Height="60"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Uid="WordsListView" x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4" RowHeaderWidth="60" ItemsSource="{Binding Path=PhraseItems}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" SelectionChanged="WordsListView_SelectionChanged" local:DataGridBehavior.DisplayRowNumber="True" >
+        <StackPanel Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4">
+            <Label x:Uid="NewVersionString"  Content="A new version is available. Click here if you would like to go to download it" Visibility="{Binding NewVersionCheck}" HorizontalContentAlignment="Center" Background="White" BorderBrush="Red" BorderThickness="2" Margin="5" MouseUp="Label_MouseUp"  />
+            <DataGrid x:Uid="WordsListView" x:Name="WordsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="4" RowHeaderWidth="60" ItemsSource="{Binding Path=PhraseItems}" AutoGenerateColumns="False" CellEditEnding="WordsListView_CellEditEnding"  Margin="4,5,6,5" PreviewKeyDown="WordsListView_PreviewKeyDown" AlternatingRowBackground="#FFE5EDF7" SelectionUnit="CellOrRowHeader" SelectionChanged="WordsListView_SelectionChanged" local:DataGridBehavior.DisplayRowNumber="True" >
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="ValidationErrorTemplate">
@@ -110,6 +112,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+        </StackPanel>
         <Label  x:Uid="PhraseFilename" Content="Phrase File" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" VerticalAlignment="Stretch" Margin="5" Grid.ColumnSpan="2" Grid.Column="1"/>
         <TextBox x:Uid="TextBox_1" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Path=PhraseFileName}"  VerticalContentAlignment="Center" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" IsReadOnly="True" >
             <TextBox.Style>

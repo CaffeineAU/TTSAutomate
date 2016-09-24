@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <Image x:Uid="Image_1" Source="pack://application:,,,/settings.png" HorizontalAlignment="Left" Margin="5"  VerticalAlignment="Stretch" Width="70"/>
         <StackPanel x:Uid="StackPanel_1" Grid.Column="1" HorizontalAlignment="Stretch" Grid.ColumnSpan="3" Margin="5" Grid.RowSpan="2" VerticalAlignment="Stretch" Background="White" >
-            <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10" Header="Program options" BorderBrush="#FF4692D1" >
+            <GroupBox  x:Uid="ProgramOptions" Margin="5,0" Padding="10,5" Header="Program options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_2">
                     <StackPanel x:Uid="StackPanel_6" Orientation="Horizontal">
                         <Label  x:Uid="Language" Margin="0,5,5,5" Content="Program Language" HorizontalContentAlignment="Left" Width="150"/>
@@ -37,9 +37,10 @@
                     <CheckBox x:Uid="SetOutputDirectory" Margin="5" Content="Set output directory to last output directory" IsChecked="{Binding SetOutputDirectory, Source={x:Static properties:Settings.Default}}"/>
                     <CheckBox x:Uid="CopyWhenInserting" Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding CopyFolderWhenInsertingLines, Source={x:Static properties:Settings.Default}}"/>
                     <CheckBox x:Uid="CopyWhenSelecting" Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding CopyFolderWhenSelectingEmptyRow, Source={x:Static properties:Settings.Default}}"/>
+                    <CheckBox x:Uid="CheckForNewVersion" Margin="5" Content="Check for new program version on start" IsChecked="{Binding CheckForNewVersion, Source={x:Static properties:Settings.Default}}"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox  x:Uid="VoiceOptions" Margin="5,0" Padding="10" Header="Voice options" BorderBrush="#FF4692D1" >
+            <GroupBox  x:Uid="VoiceOptions" Margin="5,0" Padding="10,5" Header="Voice options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_3">
                     <CheckBox x:Uid="RememberLanguageSettings" Margin="5" Content="Remember language settings" IsChecked="{Binding RememberLanguageSettings, Source={x:Static properties:Settings.Default}}"/>
                     <StackPanel x:Uid="StackPanel_4" Orientation="Horizontal">
@@ -51,7 +52,7 @@
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10" Header="TTS specific options" BorderBrush="#FF4692D1" >
+            <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10,5" Header="TTS specific options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_5">
                     <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
                         <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="150"/>
