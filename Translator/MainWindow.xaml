@@ -140,6 +140,7 @@
                     <MenuItem x:Uid="UTF16BEEncodingMenu" Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
                     <MenuItem x:Uid="UTF32EncodingMenu" Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
                     <MenuItem x:Uid="ASCIIEncodingMenu" Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="cp1250EncodingMenu" Header="Open as Code Page 1250" CommandParameter="1250"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
                 </local:SplitButton.MenuItemsSource>
             </local:SplitButton>
             <Button  x:Uid="SelectOutputDirectory" Content="Select Output Directory..." ToolTip="Ctrl P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand"/>
