@@ -15,14 +15,8 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_11310D85B901234FDB5710F354475E71"
+        "MsmKey" = "8:_0552FB819095FE50CEB51C88E579AE77"
         "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_11310D85B901234FDB5710F354475E71"
-        "OwnerKey" = "8:_FB54E67E70E660FBD32CF7128832C1DF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -33,26 +27,38 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_2FBEA33534F960B22D9DC5FC01F499AC"
+        "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2FBEA33534F960B22D9DC5FC01F499AC"
+        "OwnerKey" = "8:_94CB2AAC93E74D65C77B478E531CCD05"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_479DE3A9F294C87EE9E477A5295F47BD"
+        "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_479DE3A9F294C87EE9E477A5295F47BD"
+        "OwnerKey" = "8:_8FB784F4FE29A454244FCE2628122881"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_4E83D71813A943B9843C820CA558194E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_5A9D0ADFB91F14B153FBA9B9FC7B1B68"
-        "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6AEE104A12661A16FEEE6C7B51D81B7E"
-        "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -75,19 +81,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_83006E4D5FE3A9BBAE8217D8C947A904"
+        "MsmKey" = "8:_8FB784F4FE29A454244FCE2628122881"
         "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_83006E4D5FE3A9BBAE8217D8C947A904"
-        "OwnerKey" = "8:_6AEE104A12661A16FEEE6C7B51D81B7E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_853591507222D5D09821A690DC76CC36"
+        "MsmKey" = "8:_94CB2AAC93E74D65C77B478E531CCD05"
         "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -105,7 +105,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FB54E67E70E660FBD32CF7128832C1DF"
+        "MsmKey" = "8:_F8AF363D490FAF93599D7E8F91C34ABF"
         "OwnerKey" = "8:_62304A748A7F40C89D9A0FBEDE07120E"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -118,31 +118,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_11310D85B901234FDB5710F354475E71"
+        "OwnerKey" = "8:_94CB2AAC93E74D65C77B478E531CCD05"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FB54E67E70E660FBD32CF7128832C1DF"
+        "OwnerKey" = "8:_2FBEA33534F960B22D9DC5FC01F499AC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_853591507222D5D09821A690DC76CC36"
+        "OwnerKey" = "8:_0552FB819095FE50CEB51C88E579AE77"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_83006E4D5FE3A9BBAE8217D8C947A904"
+        "OwnerKey" = "8:_8FB784F4FE29A454244FCE2628122881"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6AEE104A12661A16FEEE6C7B51D81B7E"
+        "OwnerKey" = "8:_479DE3A9F294C87EE9E477A5295F47BD"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -264,7 +264,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.5.2"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
                 }
@@ -272,15 +272,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_11310D85B901234FDB5710F354475E71"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0552FB819095FE50CEB51C88E579AE77"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_0552FB819095FE50CEB51C88E579AE77"
+                    {
+                    "Name" = "8:taglib-sharp.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:NAudio.dll"
+            "SourcePath" = "8:taglib-sharp.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
@@ -302,7 +307,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=de-DE, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.1.2, Culture=de-DE, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1B1FD6F02F7C4FBD8EF4F594579C1940"
@@ -329,11 +334,73 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2FBEA33534F960B22D9DC5FC01F499AC"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2FBEA33534F960B22D9DC5FC01F499AC"
+                    {
+                    "Name" = "8:Microsoft.WindowsAPICodePack.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.WindowsAPICodePack.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_479DE3A9F294C87EE9E477A5295F47BD"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_479DE3A9F294C87EE9E477A5295F47BD"
+                    {
+                    "Name" = "8:NAudio.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:NAudio.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4E83D71813A943B9843C820CA558194E"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=sk-SK, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.1.2, Culture=sk-SK, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4E83D71813A943B9843C820CA558194E"
@@ -360,63 +427,11 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5A9D0ADFB91F14B153FBA9B9FC7B1B68"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:policy.2.0.taglib-sharp.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6AEE104A12661A16FEEE6C7B51D81B7E"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                }
-            "SourcePath" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6CCE01CA733C43E2B0A8C3AE451DADFD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=fr-FR, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.1.2, Culture=fr-FR, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_6CCE01CA733C43E2B0A8C3AE451DADFD"
@@ -467,7 +482,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=cs-CZ, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.1.2, Culture=cs-CZ, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_73CB012FD8684A79A42C949FA5D24BCB"
@@ -494,15 +509,20 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_83006E4D5FE3A9BBAE8217D8C947A904"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8FB784F4FE29A454244FCE2628122881"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NAudio.Lame, Version=1.0.3.3048, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_8FB784F4FE29A454244FCE2628122881"
+                    {
+                    "Name" = "8:NAudio.Lame.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:Microsoft.WindowsAPICodePack.dll"
+            "SourcePath" = "8:NAudio.Lame.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
@@ -520,15 +540,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_853591507222D5D09821A690DC76CC36"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_94CB2AAC93E74D65C77B478E531CCD05"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:taglib-sharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_94CB2AAC93E74D65C77B478E531CCD05"
+                    {
+                    "Name" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:taglib-sharp.dll"
+            "SourcePath" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
@@ -550,7 +575,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.0.0, Culture=pt-PT, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:ttsautomate.resources, Version=2.8.1.2, Culture=pt-PT, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B3C3ACC4C25245FCA9F244E8BDC975AF"
@@ -597,15 +622,25 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FB54E67E70E660FBD32CF7128832C1DF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F8AF363D490FAF93599D7E8F91C34ABF"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NAudio.Lame, Version=1.0.3.3048, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_5656B8079D604596B63583E0CF71A523"
+                    {
+                    "Name" = "8:policy.2.0.taglib-sharp.config"
+                    "Attributes" = "3:1"
+                    }
+                    "_F8AF363D490FAF93599D7E8F91C34ABF"
+                    {
+                    "Name" = "8:policy.2.0.taglib-sharp.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
-            "SourcePath" = "8:NAudio.Lame.dll"
+            "SourcePath" = "8:policy.2.0.taglib-sharp.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_95A744256C6F4E57B1423D639F5F4D61"
@@ -758,7 +793,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TTSAutomate"
         "ProductCode" = "8:{E439FC46-6AA8-4919-A399-A8981893CC97}"
-        "PackageCode" = "8:{33FD5C31-7D23-488D-938A-C45B809A9ABF}"
+        "PackageCode" = "8:{6208841A-ED75-4ADA-ABEC-CC768984A02D}"
         "UpgradeCode" = "8:{B4709B2F-EB3E-4013-B334-7FA02922E6C7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
