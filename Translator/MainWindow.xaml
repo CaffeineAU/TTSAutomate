@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:TTSAutomate"
         xmlns:self="clr-namespace:TTSAutomate.Commands"
         xmlns:sys ="clr-namespace:System.Text;assembly=mscorlib"
+        xmlns:properties="clr-namespace:TTSAutomate.Properties"
         mc:Ignorable="d"
         Title="TTSAutomate" Height="800" Width="1200" FontSize="16" Background="#FF4692D1" Icon="speech-bubble.ico" Closing="Window_Closing" GotFocus="Window_GotFocus" Loaded="Window_GotFocus">
     <Window.CommandBindings>
@@ -28,6 +29,8 @@
         <CommandBinding x:Uid="PausePlayingCommand" Command="self:CustomCommands.PausePlayingCommand" CanExecute="PausePlayingCommand_CanExecute" Executed="PausePlayingCommand_Executed" />
         <CommandBinding x:Uid="ResumePlayingCommand" Command="self:CustomCommands.ResumePlayingCommand" CanExecute="ResumePlayingCommand_CanExecute" Executed="ResumePlayingCommand_Executed" />
         <CommandBinding x:Uid="StopPlayingCommand" Command="self:CustomCommands.StopPlayingCommand" CanExecute="StopPlayingCommand_CanExecute" Executed="StopPlayingCommand_Executed" />
+        <CommandBinding x:Uid="OpenOutputDirectorCommand" Command="self:CustomCommands.OpenOutputDirectoryCommand" CanExecute="OpenOutputDirectoryCommand_CanExecute" Executed="OpenOutputDirectoryCommand_Executed" />
+        <CommandBinding x:Uid="OpenPhraseFileCommand" Command="self:CustomCommands.OpenPhraseFileCommand" Executed="OpenPhraseFileCommand_Executed" />
     </Window.CommandBindings>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Uid="TaskbarItemInfo_1"/>
@@ -133,17 +136,31 @@
         <StackPanel x:Uid="StackPanel_1" Grid.Column="4" HorizontalAlignment="Stretch"  Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="5" >
             <local:SplitButton  x:Uid="OpenPhraseFile" Content="Open Phrase File..." ToolTip="Ctrl O"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand">
                 <local:SplitButton.MenuItemsSource>
-                    <MenuItem x:Uid="DefaultEncodingMenu" Header="Open as Default encoding" CommandParameter="{x:Static sys:Encoding.Default}"  Command="self:CustomCommands.BrowsePhraseFileCommand"/>
-                    <MenuItem x:Uid="UTF7EncodingMenu" Header="Open as UTF-7" CommandParameter="{x:Static sys:Encoding.UTF7}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="UTF8EncodingMenu" Header="Open as UTF-8" CommandParameter="{x:Static sys:Encoding.UTF8}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="UTF16LEEncodingMenu" Header="Open as Unicode (UTF-16LE)" CommandParameter="{x:Static sys:Encoding.Unicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="UTF16BEEncodingMenu" Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="UTF32EncodingMenu" Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="ASCIIEncodingMenu" Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
-                    <MenuItem x:Uid="cp1250EncodingMenu" Header="Open as Code Page 1250" CommandParameter="1250"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    <MenuItem x:Uid="OpenRecentFileMenu" ItemsSource="{Binding RecentFiles, Source={x:Static properties:Settings.Default}}" Header="Open recent file">
+                        <MenuItem.ItemTemplate>
+                            <DataTemplate>
+                                <MenuItem CommandParameter="{Binding}" Header="{Binding}" Command="self:CustomCommands.OpenPhraseFileCommand"/>
+                            </DataTemplate>
+                        </MenuItem.ItemTemplate>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem x:Uid="OpenExistingFileWithEncodingMenu" Header="Open existing file with encoding" >
+                        <MenuItem x:Uid="DefaultEncodingMenu" Header="Open as Default encoding" CommandParameter="{x:Static sys:Encoding.Default}"  Command="self:CustomCommands.BrowsePhraseFileCommand"/>
+                        <MenuItem x:Uid="UTF7EncodingMenu" Header="Open as UTF-7" CommandParameter="{x:Static sys:Encoding.UTF7}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="UTF8EncodingMenu" Header="Open as UTF-8" CommandParameter="{x:Static sys:Encoding.UTF8}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="UTF16LEEncodingMenu" Header="Open as Unicode (UTF-16LE)" CommandParameter="{x:Static sys:Encoding.Unicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="UTF16BEEncodingMenu" Header="Open as Big Endian Unicode (UTF-16BE)" CommandParameter="{x:Static sys:Encoding.BigEndianUnicode}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="UTF32EncodingMenu" Header="Open as UTF-32" CommandParameter="{x:Static sys:Encoding.UTF32}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="ASCIIEncodingMenu" Header="Open as ASCII" CommandParameter="{x:Static sys:Encoding.ASCII}"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                        <MenuItem x:Uid="cp1250EncodingMenu" Header="Open as Code Page 1250" CommandParameter="1250"  Command="self:CustomCommands.BrowsePhraseFileNoShortcutCommand"/>
+                    </MenuItem>
                 </local:SplitButton.MenuItemsSource>
             </local:SplitButton>
-            <Button  x:Uid="SelectOutputDirectory" Content="Select Output Directory..." ToolTip="Ctrl P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand"/>
+            <local:SplitButton x:Uid="SelectOutputDirectory" Content="Select Output Directory..." ToolTip="Ctrl P" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Grid.Row="1" Margin="5" Command="self:CustomCommands.BrowseOutputDirectoryCommand" >
+                <local:SplitButton.MenuItemsSource>
+                    <MenuItem x:Uid="BrowseInExplorer" Header="Open output directory in Windows Explorer" ToolTip="Alt O" Command="self:CustomCommands.OpenOutputDirectoryCommand"/>
+                </local:SplitButton.MenuItemsSource>
+            </local:SplitButton>
             <Button  x:Uid="CreateNewPhraseFile" Content="Create new Phrase File" ToolTip="Ctrl N" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.CreatePhraseFileCommand"/>
             <Label x:Uid="TTSProvider" Content="TTS Provider"/>
             <ComboBox x:Uid="Engine" ItemsSource="{Binding Path=TTSEngines}" SelectedValue="{Binding SelectedEngine, Mode=TwoWay}" SelectionChanged="EngineComboBox_SelectionChanged" />
