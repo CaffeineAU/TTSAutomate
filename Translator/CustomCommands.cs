@@ -194,5 +194,23 @@ namespace TTSAutomate.Commands
                 new KeyGesture(Key.S, ModifierKeys.Alt)
             }
     );
+        public static readonly RoutedUICommand OpenOutputDirectoryCommand = new RoutedUICommand
+    (
+            "OpenOutputDirectoryCommand",
+            "OpenOutputDirectoryCommand",
+            typeof(CustomCommands),
+            new InputGestureCollection()
+            {
+                new KeyGesture(Key.O, ModifierKeys.Alt)
+            }
+    );
+        public static readonly RoutedUICommand OpenPhraseFileCommand = new RoutedUICommand
+    (
+            "OpenPhraseFileCommand",
+            "OpenPhraseFileCommand",
+            typeof(CustomCommands),
+            null
+    );
+
     }
 }

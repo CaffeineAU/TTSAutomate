@@ -687,6 +687,12 @@ namespace TTSAutomate
             {
                 PhraseFileName = dlg.FileName;
                 LoadPhraseFile(PhraseFileName, encoding);
+                if (Properties.Settings.Default.RecentFiles.Contains(PhraseFileName))
+                {
+                    Properties.Settings.Default.RecentFiles.Remove(PhraseFileName);
+                }
+                Properties.Settings.Default.RecentFiles.Add(PhraseFileName);
+
                 filenameSelected = true;
                 Properties.Settings.Default.LastPhraseFile = dlg.FileName; //Path.GetDirectoryName(dlg.FileName);
                 NeedToSave = false;
@@ -1257,6 +1263,16 @@ namespace TTSAutomate
             KeepPlaying = false;
         }
 
+        private void OpenOutputDirectoryCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = !String.IsNullOrEmpty(OutputDirectoryName);
+        }
+
+        private void OpenOutputDirectoryCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Process.Start(OutputDirectoryName);
+        }
+
         private void ResumePlayingCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = !KeepPlaying && IsPlaying;
@@ -1266,6 +1282,11 @@ namespace TTSAutomate
         {
             KeepPlaying = true;
             PlayQueuedItems();
+        }
+
+        private void OpenPhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            LoadPhraseFile(e.Parameter.ToString(), Encoding.Default);
         }
 
 

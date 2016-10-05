@@ -1,69 +1,72 @@
 <?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TTSAutomate.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TTSAutomate.Properties" GeneratedClassName="Settings.Portable">
   <Profiles />
   <Settings>
-    <Setting Name="LastPhraseFile" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastPhraseFile" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastOutputDirectory" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastOutputDirectory" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ReopenLastPSVFile" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="ReopenLastPSVFile" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SetOutputDirectory" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="SetOutputDirectory" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="RememberLanguageSettings" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="RememberLanguageSettings" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="EncodeToWav" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="EncodeToWav" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IvonaRegion" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="IvonaRegion" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">eu-west-1</Value>
     </Setting>
-    <Setting Name="LastTTSProvider" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastTTSProvider" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Ivona Text To Speech</Value>
     </Setting>
-    <Setting Name="LastTTSVoice" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastTTSVoice" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Salli</Value>
     </Setting>
-    <Setting Name="LastTTSDiscreteVolume" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastTTSDiscreteVolume" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">medium</Value>
     </Setting>
-    <Setting Name="LastTTSDiscreteSpeed" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastTTSDiscreteSpeed" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">medium</Value>
     </Setting>
-    <Setting Name="LastTTSNumericVolume" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="LastTTSNumericVolume" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="LastTTSNumericSpeed" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="LastTTSNumericSpeed" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="CopyFolderWhenInsertingLines" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="CopyFolderWhenInsertingLines" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CopyFolderWhenSelectingEmptyRow" Roaming="true" Type="System.Boolean" Scope="User">
+    <Setting Name="CopyFolderWhenSelectingEmptyRow" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="WavSampleRate" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="WavSampleRate" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">16000</Value>
     </Setting>
-    <Setting Name="WavBitsPerSample" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="WavBitsPerSample" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">16</Value>
     </Setting>
-    <Setting Name="BingHeaderString" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="BingHeaderString" Provider="PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">mtstkn=4cgtvd0CJdF%2FSFWkmxNzQba9K1XhI2Gm24waNSWUY4SjtrHDjQ1%2Bw1oAkUtw%2F6Ew;MUIDB=2B66DE567E226CED09D6D72F7FA46D77; </Value>
     </Setting>
-    <Setting Name="SelectedCulture" Roaming="true" Type="System.Globalization.CultureInfo" Scope="User">
+    <Setting Name="SelectedCulture" Provider="PortableSettingsProvider" Roaming="true" Type="System.Globalization.CultureInfo" Scope="User">
       <Value Profile="(Default)">(Default)</Value>
     </Setting>
-    <Setting Name="MaximumFileNameLength" Roaming="true" Type="System.Int32" Scope="User">
+    <Setting Name="MaximumFileNameLength" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">255</Value>
     </Setting>
-    <Setting Name="CheckForNewVersion" Roaming="true" Type="System.Boolean" Scope="User">
+     <Setting Name="CheckForNewVersion" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-  </Settings>
+ 	    <Setting Name="RecentFiles" Provider="PortableSettingsProvider" Roaming="true" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)"></Value>
+    </Setting>
+</Settings>
 </SettingsFile>
