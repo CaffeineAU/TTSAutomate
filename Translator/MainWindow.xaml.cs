@@ -281,9 +281,6 @@ namespace TTSAutomate
             if (Environment.GetCommandLineArgs().Length > 1 && File.Exists(Environment.GetCommandLineArgs()[1])) // user opened by double clicking a phrase file
             {
                 LoadPhraseFile(Environment.GetCommandLineArgs()[1], Encoding.Default);
-                PhraseFileName = Environment.GetCommandLineArgs()[1];
-                NeedToSave = false;
-                filenameSelected = true;
             }
             else if (Properties.Settings.Default.ReopenLastPSVFile)
             {
@@ -292,9 +289,6 @@ namespace TTSAutomate
                     if (File.Exists(Properties.Settings.Default.LastPhraseFile))
                     {
                         LoadPhraseFile(Properties.Settings.Default.LastPhraseFile, Encoding.Default);
-                        PhraseFileName = Properties.Settings.Default.LastPhraseFile;
-                        NeedToSave = false;
-                        filenameSelected = true;
                     }
 
                 }
@@ -593,6 +587,18 @@ namespace TTSAutomate
 
         private void LoadPhraseFile(String filename, System.Text.Encoding encoding)
         {
+            PhraseFileName = filename;
+            if (Properties.Settings.Default.RecentFiles.Contains(filename))
+            {
+                Properties.Settings.Default.RecentFiles.Remove(filename);
+            }
+            Properties.Settings.Default.RecentFiles.Insert(0, filename);
+
+            filenameSelected = true;
+            Properties.Settings.Default.LastPhraseFile = filename; //Path.GetDirectoryName(dlg.FileName);
+            NeedToSave = false;
+
+
             PhraseItems.Clear();
             Regex r = new Regex(@"(?<Folder>.*)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
 
@@ -687,15 +693,6 @@ namespace TTSAutomate
             {
                 PhraseFileName = dlg.FileName;
                 LoadPhraseFile(PhraseFileName, encoding);
-                if (Properties.Settings.Default.RecentFiles.Contains(PhraseFileName))
-                {
-                    Properties.Settings.Default.RecentFiles.Remove(PhraseFileName);
-                }
-                Properties.Settings.Default.RecentFiles.Add(PhraseFileName);
-
-                filenameSelected = true;
-                Properties.Settings.Default.LastPhraseFile = dlg.FileName; //Path.GetDirectoryName(dlg.FileName);
-                NeedToSave = false;
             }
         }
 
@@ -1286,7 +1283,10 @@ namespace TTSAutomate
 
         private void OpenPhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            PhraseFileName = e.Parameter.ToString();
+
             LoadPhraseFile(e.Parameter.ToString(), Encoding.Default);
+
         }
 
 
