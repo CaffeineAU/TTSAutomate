@@ -108,10 +108,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AudioEditor.xaml.cs">
+      <DependentUpon>AudioEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigWindow.xaml.cs">
       <DependentUpon>ConfigWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logger.cs" />
+    <Compile Include="PolygonWaveFormControl.xaml.cs">
+      <DependentUpon>PolygonWaveFormControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PortableSettingsProvider.cs" />
     <Compile Include="ScheduledTask.cs" />
     <Compile Include="SplitButton.xaml.cs">
@@ -123,6 +129,10 @@
     <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
     <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
     <Compile Include="TTSProvider\TTSProvider.cs" />
+    <Page Include="AudioEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ConfigWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -141,6 +151,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PolygonWaveFormControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="SplitButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
