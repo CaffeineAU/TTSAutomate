@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="AudioEditor" Height="300" Width="800">
     <Grid Loaded="Grid_Loaded">
-        <local:PolygonWaveFormControl  x:Name="pwfc" Width="700" MouseDown="pwfc_MouseDown" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:PolygonWaveFormControl  x:Name="pwfc" Width="700" MouseDown="pwfc_MouseDown" Margin="46,0" Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" />
     </Grid>
 </Window>

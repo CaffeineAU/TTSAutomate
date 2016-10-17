@@ -27,18 +27,19 @@ namespace TTSAutomate
         public AudioEditor()
         {
             InitializeComponent();
-            pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255));
-            pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0));
             sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
             sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\ALT_WARN.wav"));
+            pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
+            pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
 
         }
 
         private void LoadSound(WaveChannel32 sound, int index)
         {
+            int count = 0;
             byte[] buffer = new byte[16384];
             int read = 0;
-
+            
             while (sound.Position < sound.Length)
             {
                 float max = 0;
@@ -51,7 +52,11 @@ namespace TTSAutomate
                     min = Math.Min(min, BitConverter.ToSingle(buffer, i * 4));
                 }
                 pwfc.waveForms[index].AddValue(max, min);
+                count++;
             }
+            Console.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
+            Console.WriteLine("Sound is " + sound.Length + " bytes");
+            Console.WriteLine("Called addvalue " + count + " times");
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)

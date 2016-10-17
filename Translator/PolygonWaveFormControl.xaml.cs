@@ -16,18 +16,22 @@ namespace TTSAutomate
     {
         public List<WaveForm> waveForms = new List<WaveForm>();
 
+        public double XScale { get; set; }
+
         public PolygonWaveFormControl()
         {
             this.SizeChanged += OnSizeChanged;
             InitializeComponent();
+            XScale = 2;
         }
 
-        public void AddNewWaveForm(Color newColor)
+        public void AddNewWaveForm(Color newColor, TimeSpan duration)
         {
             WaveForm waveForm = new WaveForm();
 
             waveForm.Stroke = this.Foreground;
             waveForm.StrokeThickness = 1;
+            waveForm.Duration = duration;
             waveForm.Fill = new SolidColorBrush(newColor);
             waveForms.Add(waveForm);
             mainCanvas.Children.Add(waveForm.WaveDisplayShape);
@@ -38,14 +42,41 @@ namespace TTSAutomate
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             // We will remove everything as we are going to rescale vertically
+
+            for (int i = 25; i < ActualWidth; i += 25)
+            {
+                mainCanvas.Children.Add(new Line
+                {
+                    Fill = Brushes.Black,
+                    Stroke = Brushes.DarkRed,
+                    StrokeThickness=0.3f,
+                    X1 = i,
+                    X2 = i,
+                    Y1 = 5,
+                    Y2 = ActualHeight-5
+                });
+                mainCanvas.Children.Add(new Label
+                {
+                    Content = String.Format("{0}ms", i*8/XScale),
+                    FontSize = 8,
+                    Margin =
+                    new Thickness(
+                                    i-5, ActualHeight,
+                                    i, ActualHeight), RenderTransform = new RotateTransform(-90)
+            });
+            }
+
+
             foreach (var item in waveForms)
             {
                 item.renderPosition = 0;
                 item.ClearAllPoints();
                 item.ActualWidth = ActualWidth;
+                item.ActualHeight = ActualHeight;
                 item.BlankZone = 10;
                 item.yTranslate = this.ActualHeight / 2;
                 item.yScale = this.ActualHeight / 2;
+                item.xScale = XScale;
             }
         }
 
@@ -59,7 +90,20 @@ namespace TTSAutomate
     {
         public StringBuilder sb = new StringBuilder();
 
+        private TimeSpan duration;
+
+        public TimeSpan Duration
+        {
+            get { return duration; }
+            set
+            {
+                duration = value;
+            }
+        }
+
         public double ActualWidth { get; set; }
+
+        public double ActualHeight { get; set; }
 
         public int BlankZone { get; set; }
 
