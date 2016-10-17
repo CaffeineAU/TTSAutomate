@@ -18,11 +18,17 @@ namespace TTSAutomate
 
         public double XScale { get; set; }
 
+        Line cursor;
+        Label cursorPosition;
+
         public PolygonWaveFormControl()
         {
             this.SizeChanged += OnSizeChanged;
             InitializeComponent();
             XScale = 2;
+
+
+
         }
 
         public void AddNewWaveForm(Color newColor, TimeSpan duration)
@@ -34,6 +40,7 @@ namespace TTSAutomate
             waveForm.Duration = duration;
             waveForm.Fill = new SolidColorBrush(newColor);
             waveForms.Add(waveForm);
+            Canvas.SetZIndex(waveForm.WaveDisplayShape, 2);
             mainCanvas.Children.Add(waveForm.WaveDisplayShape);
 
         }
@@ -47,23 +54,24 @@ namespace TTSAutomate
             {
                 mainCanvas.Children.Add(new Line
                 {
-                    Fill = Brushes.Black,
                     Stroke = Brushes.DarkRed,
-                    StrokeThickness=0.3f,
+                    StrokeThickness = 0.3f,
                     X1 = i,
                     X2 = i,
-                    Y1 = 5,
-                    Y2 = ActualHeight-5
+                    Y1 = 15,
+                    Y2 = ActualHeight - 5
                 });
                 mainCanvas.Children.Add(new Label
                 {
-                    Content = String.Format("{0}ms", i*8/XScale),
+                    Content = String.Format("{0}ms", i * 8 / XScale),
                     FontSize = 8,
                     Margin =
                     new Thickness(
-                                    i-5, ActualHeight,
-                                    i, ActualHeight), RenderTransform = new RotateTransform(-90)
-            });
+                                    i - 5, ActualHeight,
+                                    i, ActualHeight),
+                    RenderTransform = new RotateTransform(-90)
+                });
+
             }
 
 
@@ -80,8 +88,34 @@ namespace TTSAutomate
             }
         }
 
+        private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (cursor == null)
+            {
 
-       /// <summary>
+                cursor = new Line
+                {
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 0.3f,
+                    X1 = -1,
+                    X2 = -1,
+                    Y1 = 5,
+                    Y2 = ActualHeight - 5,
+                };
+                Canvas.SetZIndex(cursor, 10);
+                mainCanvas.Children.Add(cursor);
+                cursorPosition = new Label { Content = String.Format("{0}ms", 0), FontSize = 8 };
+
+                Canvas.SetZIndex(cursorPosition, 10);
+                mainCanvas.Children.Add(cursorPosition);
+
+            }
+            Canvas.SetLeft(cursor, e.GetPosition(mainCanvas).X);
+            cursorPosition.Content = String.Format("{0}ms", e.GetPosition(mainCanvas).X/25*100);
+            Canvas.SetLeft(cursorPosition, e.GetPosition(mainCanvas).X);
+        }
+
+        /// <summary>
         /// Clears the waveform and repositions on the left
         /// </summary>
     }

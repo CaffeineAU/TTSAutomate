@@ -1,4 +1,5 @@
 ﻿using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,9 +28,9 @@ namespace TTSAutomate
         public AudioEditor()
         {
             InitializeComponent();
-            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
-            sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\ALT_WARN.wav"));
-            pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
+            //sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
+            sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
+            //pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
             pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
 
         }
@@ -54,6 +55,8 @@ namespace TTSAutomate
                 pwfc.waveForms[index].AddValue(max, min);
                 count++;
             }
+
+            sound.Close();
             Console.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
             Console.WriteLine("Sound is " + sound.Length + " bytes");
             Console.WriteLine("Called addvalue " + count + " times");
@@ -61,15 +64,26 @@ namespace TTSAutomate
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadSound(sound0, 0);
-            LoadSound(sound1, 1 );
-            Clipboard.SetText(pwfc.waveForms[0].sb.ToString());
+            //LoadSound(sound0, 0);
+            LoadSound(sound1,0 );
+            //Clipboard.SetText(pwfc.waveForms[0].sb.ToString());
+
+            //var file = new AudioFileReader(@"C:\temp\wav\system\CAP_WARN.wav");
+            //var trimmed = new OffsetSampleProvider(file);
+            //trimmed.SkipOver = TimeSpan.FromMilliseconds(100);
+            //trimmed.Take = TimeSpan.FromMilliseconds(1430);
+
+            //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            //var player = new WaveOutEvent();
+            //player.Init(trimmed);
+            //player.Play();
         }
 
         private void pwfc_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Console.WriteLine("{0}, {1}", pwfc.waveForms[0].Points, pwfc.waveForms[1].Points);
         }
+
     }
 
 
