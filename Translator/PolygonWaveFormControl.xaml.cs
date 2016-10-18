@@ -20,6 +20,10 @@ namespace TTSAutomate
 
         Line cursor;
         Label cursorPosition;
+        Rectangle selectionRect;
+        double left;
+
+        bool selecting = false;
 
         public PolygonWaveFormControl()
         {
@@ -113,6 +117,33 @@ namespace TTSAutomate
             Canvas.SetLeft(cursor, e.GetPosition(mainCanvas).X);
             cursorPosition.Content = String.Format("{0}ms", e.GetPosition(mainCanvas).X/25*100);
             Canvas.SetLeft(cursorPosition, e.GetPosition(mainCanvas).X);
+            if (selecting)
+            {
+                double mouseX = e.GetPosition(mainCanvas).X;
+                Canvas.SetLeft(selectionRect, mouseX > left ? left : mouseX);
+                selectionRect.Width = Math.Abs(left - e.GetPosition(mainCanvas).X);
+            }
+        }
+
+        private void mainCanvas_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            selecting = false; 
+        }
+
+        private void mainCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (mainCanvas.Children.Contains(selectionRect))
+            {
+                mainCanvas.Children.Remove(selectionRect);
+            }
+            left = e.GetPosition(mainCanvas).X;
+            selectionRect = new Rectangle { Width = 1, Height = ActualHeight-10, Fill = new SolidColorBrush(Color.FromArgb(64,0,128,0))};
+            Canvas.SetZIndex(selectionRect, 20);
+            Canvas.SetLeft(selectionRect, left);
+            selectionRect.Width = 0;
+            Canvas.SetTop(selectionRect, 5);
+            mainCanvas.Children.Add(selectionRect);
+            selecting = true;
         }
 
         /// <summary>

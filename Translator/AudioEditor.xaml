@@ -11,6 +11,6 @@
             <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:PolygonWaveFormControl x:Name="pwfc" Width="700" MouseDown="pwfc_MouseDown" Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3"   />
+        <local:PolygonWaveFormControl x:Name="pwfc" Width="700"  Margin="0,5" MouseDown="pwfc_MouseDown"  Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp"   />
     </Grid>
 </Window>
