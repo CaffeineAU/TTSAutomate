@@ -25,16 +25,14 @@ namespace TTSAutomate
         WaveChannel32 sound0;
         WaveChannel32 sound1;
 
-        double startselection = 0;
-        double endselection = 0;
 
         public AudioEditor()
         {
             InitializeComponent();
-            //sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
-            //sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\wav\system\CAP_WARN.wav"));
-            sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
-            //pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
+            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
+            sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\wav\system\Sw_Warn.wav"));
+            //sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
+            pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
             pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
 
         }
@@ -68,8 +66,8 @@ namespace TTSAutomate
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            //LoadSound(sound0, 0);
-            LoadSound(sound1,0 );
+            LoadSound(sound0, 0);
+            LoadSound(sound1,1 );
             //Clipboard.SetText(pwfc.waveForms[0].sb.ToString());
 
             //var file = new AudioFileReader(@"C:\temp\wav\system\CAP_WARN.wav");
@@ -85,13 +83,19 @@ namespace TTSAutomate
 
         private void pwfc_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            startselection = e.GetPosition(pwfc).X;
-            //Console.WriteLine("{0}, {1}", pwfc.waveForms[0].Points, pwfc.waveForms[1].Points);
         }
 
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            endselection = e.GetPosition(pwfc).X;
+            var file = new AudioFileReader(@"c:\temp\wav\system\Sw_Warn.wav");
+            var trimmed = new OffsetSampleProvider(file);
+            trimmed.SkipOver = pwfc.SelectionStart;
+            trimmed.Take = pwfc.SelectionEnd - pwfc.SelectionStart;
+
+            //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            var player = new WaveOutEvent();
+            player.Init(trimmed);
+            player.Play();
 
         }
     }
