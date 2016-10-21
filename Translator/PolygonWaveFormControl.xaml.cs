@@ -93,6 +93,30 @@ namespace TTSAutomate
 
             }
 
+            for (int i = -10; i <= 10; i ++)
+            {
+                mainCanvas.Children.Add(new Line
+                {
+                    Stroke = Brushes.DarkRed,
+                    StrokeThickness = 0.3f,
+                    X1 = 0,
+                    X2 = ActualWidth,
+                    Y1 = i*(ActualHeight/21) + ActualHeight / 2,
+                    Y2 = i * (ActualHeight / 21) + ActualHeight / 2
+                });
+                //mainCanvas.Children.Add(new Label
+                //{
+                //    Content = String.Format("{0}ms", i * 8 / XScale),
+                //    FontSize = 8,
+                //    Margin =
+                //    new Thickness(
+                //                    i - 5, ActualHeight,
+                //                    i, ActualHeight),
+                //    RenderTransform = new RotateTransform(-90)
+                //});
+
+            }
+
 
             foreach (var item in waveForms)
             {

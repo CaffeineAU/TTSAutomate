@@ -25,12 +25,17 @@ namespace TTSAutomate
         WaveChannel32 sound0;
         WaveChannel32 sound1;
 
+        float max = 0;
+        float min = 1000;
+
+
+        int bufferSize = 1024;
 
         public AudioEditor()
         {
             InitializeComponent();
-            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
-            sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\wav\system\Sw_Warn.wav"));
+            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\Loud\wav\system\CAP_WARN.wav"));
+            sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\Quiet\wav\system\CAP_Warn.wav"));
             //sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
             pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
             pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
@@ -40,20 +45,18 @@ namespace TTSAutomate
         private void LoadSound(WaveChannel32 sound, int index)
         {
             int count = 0;
-            byte[] buffer = new byte[16384];
+            byte[] buffer = new byte[bufferSize];
             int read = 0;
-            
+            sound.Sample += Sound0_Sample;
+
+
             while (sound.Position < sound.Length)
             {
-                float max = 0;
-                float min = 1000;
-                read = sound.Read(buffer, 0, 1024);
+                max =-1;
+                min = 1;
 
-                for (int i = 0; i < read / 4; i++)
-                {
-                    max = Math.Max(max, BitConverter.ToSingle(buffer, i * 4));
-                    min = Math.Min(min, BitConverter.ToSingle(buffer, i * 4));
-                }
+                read = sound.Read(buffer, 0, bufferSize);
+                sb.AppendFormat("{1}\t{2}\t{3}\t{0}\r\n", NAudio.Utils.Decibels.LinearToDecibels(max), index, count, max);
                 pwfc.waveForms[index].AddValue(max, min);
                 count++;
             }
@@ -68,7 +71,7 @@ namespace TTSAutomate
         {
             LoadSound(sound0, 0);
             LoadSound(sound1,1 );
-            //Clipboard.SetText(pwfc.waveForms[0].sb.ToString());
+            Clipboard.SetText(sb.ToString());
 
             //var file = new AudioFileReader(@"C:\temp\wav\system\CAP_WARN.wav");
             //var trimmed = new OffsetSampleProvider(file);
@@ -87,15 +90,25 @@ namespace TTSAutomate
 
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var file = new AudioFileReader(@"c:\temp\wav\system\Sw_Warn.wav");
+            var file = new AudioFileReader(@"c:\temp\wav\system\CAP_WARN.wav");
             var trimmed = new OffsetSampleProvider(file);
-            trimmed.SkipOver = pwfc.SelectionStart;
-            trimmed.Take = pwfc.SelectionEnd - pwfc.SelectionStart;
+            trimmed.SkipOver = pwfc.SelectionStart < pwfc.SelectionEnd? pwfc.SelectionStart: pwfc.SelectionEnd;
+            trimmed.Take = TimeSpan.FromMilliseconds(Math.Abs(pwfc.SelectionEnd.TotalMilliseconds - pwfc.SelectionStart.TotalMilliseconds));
+
+            
 
             //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
             var player = new WaveOutEvent();
             player.Init(trimmed);
             player.Play();
+
+        }
+
+        private void Sound0_Sample(object sender, SampleEventArgs e)
+        {
+            max = Math.Max(max, e.Left);
+            min = Math.Min(min, e.Left);
+
 
         }
     }
