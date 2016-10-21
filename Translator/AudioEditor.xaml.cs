@@ -34,11 +34,11 @@ namespace TTSAutomate
         public AudioEditor()
         {
             InitializeComponent();
-            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\Loud\wav\system\CAP_WARN.wav"));
-            sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\Quiet\wav\system\CAP_Warn.wav"));
+            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
+            sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_Warn.wav"));
             //sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
-            pwfc.AddNewWaveForm(Color.FromArgb(64, 0, 0, 255), sound0.TotalTime);
-            pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
+            pwfc.AddNewWaveForm(Color.FromRgb(67,217,150), sound0.TotalTime);
+           // pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
 
         }
 
@@ -70,8 +70,8 @@ namespace TTSAutomate
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSound(sound0, 0);
-            LoadSound(sound1,1 );
-            Clipboard.SetText(sb.ToString());
+            //LoadSound(sound1,1 );
+            //Clipboard.SetText(sb.ToString());
 
             //var file = new AudioFileReader(@"C:\temp\wav\system\CAP_WARN.wav");
             //var trimmed = new OffsetSampleProvider(file);

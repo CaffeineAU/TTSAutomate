@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="TTSAutomate.PolygonWaveFormControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-     Background="Gray"
-     Foreground="Black" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" MouseDown="mainCanvas_MouseDown">
+     Background="Black"
+     Foreground="#FF43D996" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" MouseDown="mainCanvas_MouseDown" BorderBrush="#FF003500">
     <Canvas x:Name="mainCanvas" >
 
     </Canvas>

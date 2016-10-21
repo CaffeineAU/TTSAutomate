@@ -39,6 +39,13 @@ namespace TTSAutomate
             set { selectionEnd = value; }
         }
 
+        private Brush gridBrush = new SolidColorBrush(Color.FromRgb(0,16,0));
+
+        public Brush GridBrush
+        {
+            get { return gridBrush; }
+            set { gridBrush = value; }
+        }
 
 
         bool selecting = false;
@@ -59,7 +66,7 @@ namespace TTSAutomate
             waveForm.Duration = duration;
             waveForm.Fill = new SolidColorBrush(newColor);
             waveForms.Add(waveForm);
-            Canvas.SetZIndex(waveForm.WaveDisplayShape, 2);
+            Canvas.SetZIndex(waveForm.WaveDisplayShape, 5);
             mainCanvas.Children.Add(waveForm.WaveDisplayShape);
 
         }
@@ -73,8 +80,8 @@ namespace TTSAutomate
             {
                 mainCanvas.Children.Add(new Line
                 {
-                    Stroke = Brushes.DarkRed,
-                    StrokeThickness = 0.3f,
+                    Stroke = GridBrush,
+                    StrokeThickness = 0.25f,
                     X1 = i,
                     X2 = i,
                     Y1 = 25,
@@ -83,7 +90,7 @@ namespace TTSAutomate
                 mainCanvas.Children.Add(new Label
                 {
                     Content = String.Format("{0}ms", i * 8 / XScale),
-                    FontSize = 8,
+                    FontSize = 10,
                     Margin =
                     new Thickness(
                                     i - 5, ActualHeight,
@@ -93,27 +100,13 @@ namespace TTSAutomate
 
             }
 
-            for (int i = -10; i <= 10; i ++)
+            double[] dBs = { -2, -4, -6, -9, -12, -15, -18, -24 };
+
+            //for (double i = -9; i < 9; i += NAudio.Utils.Decibels.DecibelsToLinear(3))
+            foreach (var db in dBs)
             {
-                mainCanvas.Children.Add(new Line
-                {
-                    Stroke = Brushes.DarkRed,
-                    StrokeThickness = 0.3f,
-                    X1 = 0,
-                    X2 = ActualWidth,
-                    Y1 = i*(ActualHeight/21) + ActualHeight / 2,
-                    Y2 = i * (ActualHeight / 21) + ActualHeight / 2
-                });
-                //mainCanvas.Children.Add(new Label
-                //{
-                //    Content = String.Format("{0}ms", i * 8 / XScale),
-                //    FontSize = 8,
-                //    Margin =
-                //    new Thickness(
-                //                    i - 5, ActualHeight,
-                //                    i, ActualHeight),
-                //    RenderTransform = new RotateTransform(-90)
-                //});
+                DrawDBScaleLine(db, true);
+                DrawDBScaleLine(db, false);
 
             }
 
@@ -129,6 +122,40 @@ namespace TTSAutomate
                 item.yScale = this.ActualHeight / 2;
                 item.xScale = XScale;
             }
+        }
+
+        private void DrawDBScaleLine(double db, bool flip)
+        {
+            Console.WriteLine("DB {0} is {1}", db, NAudio.Utils.Decibels.DecibelsToLinear(db));
+            mainCanvas.Children.Add(new Line
+            {
+                Stroke = GridBrush,
+                StrokeThickness = 0.25f,
+                X1 = 0,
+                X2 = ActualWidth,
+                Y1 = SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),// *(ActualHeight/21) + ActualHeight / 2,
+                Y2 = SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1))
+            });
+            mainCanvas.Children.Add(new Label
+            {
+                Content = String.Format("{0} dB", db),
+                FontSize = 10,
+                Foreground = GridBrush,
+                Margin =
+                new Thickness(
+                                -40, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),
+                                15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)))
+            });
+            mainCanvas.Children.Add(new Label
+            {
+                Content = String.Format("{0} dB", db),
+                FontSize = 10,
+                Foreground = GridBrush,
+                Margin =
+                new Thickness(
+                                ActualWidth, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),
+                                15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)))
+            });
         }
 
         private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -173,7 +200,7 @@ namespace TTSAutomate
                 selectionDuration.Content = String.Format("{0}ms", XLocationToTimeSpan(Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX)).TotalMilliseconds);
                 Canvas.SetLeft(selectionDuration, Math.Max(0, Math.Min(TimeSpanToXLocation(SelectionStart), mouseX) + (Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX) / 2) - selectionDuration.Width / 2));
 
-                Canvas.SetZIndex(cursorPosition, 10);
+                Canvas.SetZIndex(selectionDuration, 10);
 
             }
         }
@@ -182,6 +209,12 @@ namespace TTSAutomate
         {
             selecting = false;
             SelectionEnd = XLocationToTimeSpan(Math.Max(0,e.GetPosition(mainCanvas).X));
+            if (SelectionEnd == SelectionStart)
+            {
+                mainCanvas.Children.Remove(selectionRect);
+                mainCanvas.Children.Remove(selectionDuration);
+                selectionDuration = null;
+            }
             mainCanvas.ReleaseMouseCapture();
         }
 
@@ -193,8 +226,8 @@ namespace TTSAutomate
             }
 
             SelectionStart = XLocationToTimeSpan(e.GetPosition(mainCanvas).X);
-            selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 4, Fill = new SolidColorBrush(Color.FromArgb(64, 0, 128, 0)), Stroke=Brushes.DarkGreen };
-            Canvas.SetZIndex(selectionRect, 20);
+            selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 4, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
+            Canvas.SetZIndex(selectionRect, 1);
             Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
             selectionRect.Width = 0;
             Canvas.SetTop(selectionRect, 2);
@@ -212,6 +245,12 @@ namespace TTSAutomate
         {
             return time.TotalMilliseconds / 100 * 25;
         }
+
+        private double SampleToYPosition(double value)
+        {
+            return (ActualHeight/2) + value * (ActualHeight / 2);
+        }
+
 
         /// <summary>
         /// Clears the waveform and repositions on the left
