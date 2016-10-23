@@ -57,18 +57,20 @@ namespace TTSAutomate
             XScale = 2;
         }
 
-        public void AddNewWaveForm(Color newColor, TimeSpan duration)
+        public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
         {
             WaveForm waveForm = new WaveForm();
 
             waveForm.Stroke = this.Foreground;
             waveForm.StrokeThickness = 1;
-            waveForm.Duration = duration;
             waveForm.Fill = new SolidColorBrush(newColor);
+            waveForm.SampleRate = samplerate;
+            waveForm.BitsPerSample = bitspersample;
+            waveForm.Channels = channels;
             waveForms.Add(waveForm);
             Canvas.SetZIndex(waveForm.WaveDisplayShape, 5);
             mainCanvas.Children.Add(waveForm.WaveDisplayShape);
-
+            
         }
 
 
@@ -89,7 +91,7 @@ namespace TTSAutomate
                 });
                 mainCanvas.Children.Add(new Label
                 {
-                    Content = String.Format("{0}ms", i * 8 / XScale),
+                    Content = String.Format("{0}ms", XLocationToTimeSpan(i).TotalMilliseconds),
                     FontSize = 10,
                     Margin =
                     new Thickness(
@@ -109,6 +111,15 @@ namespace TTSAutomate
                 DrawDBScaleLine(db, false);
 
             }
+            mainCanvas.Children.Add(new Line
+            {
+                Stroke = GridBrush,
+                StrokeThickness = 0.25f,
+                X1 = 0,
+                X2 = ActualWidth,
+                Y1 = SampleToYPosition(0),// *(ActualHeight/21) + ActualHeight / 2,
+                Y2 = SampleToYPosition(0)
+            });
 
 
             foreach (var item in waveForms)
@@ -207,8 +218,17 @@ namespace TTSAutomate
 
         private void mainCanvas_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            TimeSpan mousepos = XLocationToTimeSpan(Math.Max(0, e.GetPosition(mainCanvas).X));
             selecting = false;
-            SelectionEnd = XLocationToTimeSpan(Math.Max(0,e.GetPosition(mainCanvas).X));
+            if (mousepos < SelectionStart)
+            {
+                SelectionEnd = SelectionStart;
+                SelectionStart = mousepos;
+            }
+            else
+            {
+                SelectionEnd = mousepos;
+            }
             if (SelectionEnd == SelectionStart)
             {
                 mainCanvas.Children.Remove(selectionRect);
@@ -238,7 +258,13 @@ namespace TTSAutomate
 
         private TimeSpan XLocationToTimeSpan(double x)
         {
-            return TimeSpan.FromMilliseconds(x / 25 * 100);
+            // x is 1024 bytes
+
+            double millis = 1000*x*1024/ XScale / waveForms[0].SampleRate / (waveForms[0].BitsPerSample/8) /waveForms[0].Channels;
+            System.Diagnostics.Debug.WriteLine("X was {0}, millis is {1}", x, millis);
+
+            return TimeSpan.FromMilliseconds(millis);
+
         }
 
         private double TimeSpanToXLocation(TimeSpan time)
@@ -269,6 +295,40 @@ namespace TTSAutomate
             set
             {
                 duration = value;
+            }
+        }
+
+
+        private int sampleRate = 0;
+
+        public int SampleRate
+        {
+            get { return sampleRate; }
+            set
+            {
+                sampleRate = value;
+            }
+        }
+
+        private int bitsPerSample = 0;
+
+        public int BitsPerSample
+        {
+            get { return bitsPerSample; }
+            set
+            {
+                bitsPerSample = value;
+            }
+        }
+
+        private int channels = 0;
+
+        public int Channels
+        {
+            get { return channels; }
+            set
+            {
+                channels = value;
             }
         }
 
@@ -373,6 +433,7 @@ namespace TTSAutomate
             }
             renderPosition++;
             sb.AppendFormat("{0}\t{1}\t{2}\r\n", xPos, topYPos, bottomYPos);
+            System.Diagnostics.Debug.WriteLine("Added point at x:{0}", xPos);
         }
         private int BottomPointIndex(int position)
         {

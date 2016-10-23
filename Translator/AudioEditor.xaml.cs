@@ -2,6 +2,8 @@
 using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,14 +21,81 @@ namespace TTSAutomate
     /// <summary>
     /// Interaction logic for AudioEditor.xaml
     /// </summary>
-    public partial class AudioEditor : Window
+    public partial class AudioEditor : Window, INotifyPropertyChanged
     {
         StringBuilder sb = new StringBuilder();
+        WaveFileReader wfr;
         WaveChannel32 sound0;
-        WaveChannel32 sound1;
 
         float max = 0;
         float min = 1000;
+
+        private int sampleRate = 0;
+
+        public int SampleRate
+        {
+            get { return sampleRate; }
+            set
+            {
+                sampleRate = value;
+                OnPropertyChanged("SampleRate");
+            }
+        }
+
+        private int bitsPerSample = 0;
+
+        public int BitsPerSample
+        {
+            get { return bitsPerSample; }
+            set
+            {
+                bitsPerSample = value;
+                OnPropertyChanged("BitsPerSample");
+            }
+        }
+
+        private int channels = 0;
+
+        public int Channels
+        {
+            get { return channels; }
+            set
+            {
+                channels = value;
+                OnPropertyChanged("Channels");
+            }
+        }
+
+        private String filename = "";
+
+        public String FileName
+        {
+            get { return filename; }
+            set
+            {
+                filename = value;
+                wfr = new WaveFileReader(value);
+
+                sound0 = new WaveChannel32(wfr);
+                SampleRate = wfr.WaveFormat.SampleRate;
+                BitsPerSample = wfr.WaveFormat.BitsPerSample;
+                Duration = wfr.TotalTime;
+                Channels = wfr.WaveFormat.Channels;
+                pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
+            }
+        }
+
+        private TimeSpan duration;
+
+        public TimeSpan Duration
+        {
+            get { return duration; }
+            set
+            {
+                duration = value;
+                OnPropertyChanged("Duration");
+            }
+        }
 
 
         int bufferSize = 1024;
@@ -34,12 +103,11 @@ namespace TTSAutomate
         public AudioEditor()
         {
             InitializeComponent();
-            sound0 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_WARN.wav"));
-            sound1 = new WaveChannel32(new WaveFileReader(@"C:\temp\wav\system\CAP_Warn.wav"));
-            //sound1 = new WaveChannel32(new WaveFileReader(@"c:\temp\trimmed.wav"));
-            pwfc.AddNewWaveForm(Color.FromRgb(67,217,150), sound0.TotalTime);
-           // pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
-
+            // pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
+            FileName = @"J:\Videos\StopMotion\1SecondHum.wav";
+            //FileName = @"J:\Videos\StopMotion\11.wav";
+            //FileName = @"C:\temp\wav\system\CAP_Warn.wav";
+            this.DataContext = this;
         }
 
         private void LoadSound(WaveChannel32 sound, int index)
@@ -62,9 +130,9 @@ namespace TTSAutomate
             }
 
             sound.Close();
-            Console.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
-            Console.WriteLine("Sound is " + sound.Length + " bytes");
-            Console.WriteLine("Called addvalue " + count + " times");
+            Debug.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
+            Debug.WriteLine("Sound is " + sound.Length + " bytes");
+            Debug.WriteLine("Called addvalue " + count + " times");
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -90,9 +158,9 @@ namespace TTSAutomate
 
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var file = new AudioFileReader(@"c:\temp\wav\system\CAP_WARN.wav");
+            var file = new AudioFileReader(FileName);
             var trimmed = new OffsetSampleProvider(file);
-            trimmed.SkipOver = pwfc.SelectionStart < pwfc.SelectionEnd? pwfc.SelectionStart: pwfc.SelectionEnd;
+            trimmed.SkipOver =pwfc.SelectionStart;
             trimmed.Take = TimeSpan.FromMilliseconds(Math.Abs(pwfc.SelectionEnd.TotalMilliseconds - pwfc.SelectionStart.TotalMilliseconds));
 
             
@@ -111,6 +179,14 @@ namespace TTSAutomate
 
 
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(String name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
     }
 
 

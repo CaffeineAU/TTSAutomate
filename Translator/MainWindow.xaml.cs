@@ -237,8 +237,6 @@ namespace TTSAutomate
         public MainWindow()
         {
             InitializeComponent();
-            AudioEditor ae = new AudioEditor();
-            ae.Show();
             media.MediaEnded += delegate
             {
                 media.Close();
@@ -1166,6 +1164,8 @@ namespace TTSAutomate
                 item.initialLoad = false;
             }
 
+            AudioEditor ae = new AudioEditor();
+            ae.Show();
 
         }
 

@@ -7,10 +7,29 @@
         mc:Ignorable="d"
         Title="AudioEditor" Height="800" Width="1200" Icon="speech-bubble.ico">
     <Grid Loaded="Grid_Loaded">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="600"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:PolygonWaveFormControl x:Name="pwfc" Width="1100"  Margin="0,5" MouseDown="pwfc_MouseDown"  Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp"   />
+        <local:PolygonWaveFormControl x:Name="pwfc" Width="1100"  Margin="46,5" MouseDown="pwfc_MouseDown"  Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="3"   />
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+            <Label  Content="File" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="Sample Rate" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="Bits Per Sample" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="Duration" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="Channels" VerticalContentAlignment="Center" Margin="5,0"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+            <Label Content="{Binding FileName}" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="{Binding SampleRate}" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="{Binding BitsPerSample}" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="{Binding Duration}" VerticalContentAlignment="Center" Margin="5,0"/>
+            <Label Content="{Binding Channels}" VerticalContentAlignment="Center" Margin="5,0"/>
+        </StackPanel>
     </Grid>
 </Window>
