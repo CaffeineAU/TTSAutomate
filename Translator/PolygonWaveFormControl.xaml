@@ -3,7 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      Background="Black"
      Foreground="#FF43D996" MouseMove="mainCanvas_MouseMove" MouseUp="mainCanvas_MouseUp" MouseDown="mainCanvas_MouseDown" BorderBrush="#FF003500">
-    <Canvas x:Name="mainCanvas" >
-
-    </Canvas>
+    <Grid >
+        <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Hidden"  >
+            <Canvas x:Name="mainCanvas" Width="10000" />
+        </ScrollViewer>
+        <Canvas x:Name="LegendCanvas" Margin="0,0,0,40"/>
+    </Grid>
 </UserControl>

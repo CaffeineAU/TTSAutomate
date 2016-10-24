@@ -81,7 +81,7 @@ namespace TTSAutomate
              // We will remove everything as we are going to rescale vertically
            mainCanvas.Children.Clear();
 
-            for (int i = 25; i < ActualWidth; i += 25)
+            for (int i = 25; i < mainCanvas.ActualWidth; i += 25)
             {
                 mainCanvas.Children.Add(new Line
                 {
@@ -94,12 +94,12 @@ namespace TTSAutomate
                 });
                 mainCanvas.Children.Add(new Label
                 {
-                    Content = String.Format("{0}ms", XLocationToTimeSpan(i).TotalMilliseconds),
+                    Content = String.Format("{0} ms", XLocationToTimeSpan(i).TotalMilliseconds),
                     FontSize = 10,
                     Margin =
                     new Thickness(
-                                    i - 5, ActualHeight,
-                                    i, ActualHeight),
+                                    i - 5, ActualHeight-14,
+                                    i, ActualHeight-40),
                     RenderTransform = new RotateTransform(-90)
                 });
 
@@ -114,10 +114,10 @@ namespace TTSAutomate
                 DrawDBScaleLine(db, false);
 
             }
-            mainCanvas.Children.Add(new Line
+            LegendCanvas.Children.Add(new Line
             {
-                Stroke = GridBrush,
-                StrokeThickness = 0.25f,
+                Stroke = Brushes.Red,
+                StrokeThickness = 0.75f,
                 X1 = 0,
                 X2 = ActualWidth,
                 Y1 = SampleToYPosition(0),// *(ActualHeight/21) + ActualHeight / 2,
@@ -141,7 +141,7 @@ namespace TTSAutomate
         private void DrawDBScaleLine(double db, bool flip)
         {
             //Console.WriteLine("DB {0} is {1}", db, NAudio.Utils.Decibels.DecibelsToLinear(db));
-            mainCanvas.Children.Add(new Line
+            LegendCanvas.Children.Add(new Line
             {
                 Stroke = GridBrush,
                 StrokeThickness = 0.25f,
@@ -150,25 +150,25 @@ namespace TTSAutomate
                 Y1 = SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),// *(ActualHeight/21) + ActualHeight / 2,
                 Y2 = SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1))
             });
-            mainCanvas.Children.Add(new Label
+            LegendCanvas.Children.Add(new Label
             {
                 Content = String.Format("{0} dB", db),
                 FontSize = 10,
                 Foreground = GridBrush,
                 Margin =
                 new Thickness(
-                                -40, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),
-                                15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)))
+                                -40, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
+                                15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
             });
-            mainCanvas.Children.Add(new Label
+            LegendCanvas.Children.Add(new Label
             {
                 Content = String.Format("{0} dB", db),
                 FontSize = 10,
                 Foreground = GridBrush,
                 Margin =
                 new Thickness(
-                                ActualWidth, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)),
-                                15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)))
+                                ActualWidth-20, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
+                                ActualWidth, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
             });
         }
 
