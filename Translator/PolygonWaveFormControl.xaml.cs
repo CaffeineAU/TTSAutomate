@@ -140,7 +140,7 @@ namespace TTSAutomate
 
         private void DrawDBScaleLine(double db, bool flip)
         {
-            Console.WriteLine("DB {0} is {1}", db, NAudio.Utils.Decibels.DecibelsToLinear(db));
+            //Console.WriteLine("DB {0} is {1}", db, NAudio.Utils.Decibels.DecibelsToLinear(db));
             mainCanvas.Children.Add(new Line
             {
                 Stroke = GridBrush,
@@ -208,7 +208,7 @@ namespace TTSAutomate
                     mainCanvas.Children.Add(selectionDuration);
 
                 }
-                Console.WriteLine(mouseX);
+                //Console.WriteLine(mouseX);
                 Canvas.SetLeft(selectionRect, mouseX > TimeSpanToXLocation(SelectionStart) ? TimeSpanToXLocation(SelectionStart) : mouseX);
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
 

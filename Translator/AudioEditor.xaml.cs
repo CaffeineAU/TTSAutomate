@@ -166,13 +166,22 @@ namespace TTSAutomate
         {
             var file = new AudioFileReader(FileName);
             var trimmed = new OffsetSampleProvider(file);
-            trimmed.SkipOver =pwfc.SelectionStart;
+            trimmed.SkipOver = pwfc.SelectionStart;
             trimmed.Take = TimeSpan.FromMilliseconds(Math.Abs(pwfc.SelectionEnd.TotalMilliseconds - pwfc.SelectionStart.TotalMilliseconds));
 
             //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
-            var player = new WaveOutEvent();
-            player.Init(trimmed);
-            player.Play();
+            new Task(() =>
+            {
+                var player = new WaveOutEvent();
+                player.Init(trimmed);
+                player.Play();
+                while (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                file.Close();
+            }).Start();
+
         }
 
         private void Sound0_Sample(object sender, SampleEventArgs e)
