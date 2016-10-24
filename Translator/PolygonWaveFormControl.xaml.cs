@@ -264,10 +264,10 @@ namespace TTSAutomate
         {
             // x is 1024 bytes
 
-            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000 ;
+            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000;
 
-            double millis = 1000 * x * scale / waveForm.SampleRate / (waveForm.BitsPerSample);// / waveForm.Channels;
-            System.Diagnostics.Debug.WriteLine("X was {0}, millis is {1}", x, millis);
+            double millis = 1000 * x * scale / waveForm.SampleRate / (waveForm.BitsPerSample) * waveForm.Channels;
+            //System.Diagnostics.Debug.WriteLine("X was {0}, millis is {1}", x, millis);
 
             return TimeSpan.FromMilliseconds(millis);
 
@@ -276,7 +276,7 @@ namespace TTSAutomate
         private double TimeSpanToXLocation(TimeSpan time)
         {
             double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000 ;
-            return time.TotalMilliseconds / (1000 * scale / waveForm.SampleRate / (waveForm.BitsPerSample));// / waveForm.Channels);
+            return time.TotalMilliseconds / (1000 * scale / waveForm.SampleRate / (waveForm.BitsPerSample) * waveForm.Channels);
         }
 
         private double SampleToYPosition(double value)

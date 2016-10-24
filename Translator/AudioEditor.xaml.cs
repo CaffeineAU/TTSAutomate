@@ -98,15 +98,22 @@ namespace TTSAutomate
 
         int bufferSize = 1024;
 
-        public AudioEditor()
+        public AudioEditor(string filename)
         {
             InitializeComponent();
-            //FileName = @"J:\Videos\StopMotion\1SecondHum.wav";
-            //FileName = @"J:\Videos\StopMotion\11.wav";
+            FileName = filename; //@"J:\Videos\StopMotion\1SecondHum.wav";
+            //FileName = @"J:\Videos\StopMotion\Sawtooth.wav";
+            //FileName = @"J:\Videos\StopMotion\Sawtooth24.wav";
+            //FileName = @"J:\Videos\StopMotion\Sawtooth32.wav";
+            //FileName = @"J:\Videos\StopMotion\SawtoothMono.wav";
+            //FileName = @"J:\Videos\StopMotion\331980__dmunk__shuffling.wav";
+            //FileName = @"C:\Users\Liam O\Downloads\22267__zeuss__the-chime.wav";
+            //FileName = @"C:\Users\Liam O\Downloads\345228__v0idation__kids-counting-1-to-20-mono-44khz.wav";
+            //FileName = @"C:\Users\Liam O\Downloads\223452__achim-bornhoeft__1-4.wav";
             //FileName = @"C:\temp\wav\system\CAP_Warn.wav";
             //FileName = @"C:\Users\liamo\Downloads\177269__sergeeo__numbers-in-french.wav";
             //FileName = @"C:\Users\liamo\Downloads\26903__vexst__snare-4.wav";
-            FileName = @"C:\Users\liamo\Downloads\363118__fractalstudios__waves-001.wav";
+            //FileName = @"C:\Users\liamo\Downloads\363118__fractalstudios__waves-001.wav";
             //FileName = @"C:\Users\liamo\Downloads\364296__mickmon__justa-hick-burl.wav";
             //FileName = @"C:\Users\liamo\Downloads\1kHz_44100Hz_16bit_05sec.wav";
             this.DataContext = this;
@@ -117,7 +124,7 @@ namespace TTSAutomate
             int count = 0;
             int read = 0;
             sound.Sample += Sound0_Sample;
-            bufferSize =1024* sampleRate * bitsPerSample/ 256000 ;
+            bufferSize =1024* sampleRate * 16 / 256000*Channels ;
 
             byte[] buffer = new byte[bufferSize];
 
@@ -132,6 +139,7 @@ namespace TTSAutomate
             }
 
             sound.Close();
+            wfr.Close();
             Debug.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
             Debug.WriteLine("Sound is " + wfr.Length + " bytes");
             Debug.WriteLine("Called addvalue " + count + " times");

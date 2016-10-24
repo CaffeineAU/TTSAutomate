@@ -1164,8 +1164,6 @@ namespace TTSAutomate
                 item.initialLoad = false;
             }
 
-            AudioEditor ae = new AudioEditor();
-            ae.Show();
 
         }
 
@@ -1305,6 +1303,23 @@ namespace TTSAutomate
         private void Label_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Process.Start(downloadUrl);
+        }
+
+        private void WordsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            while ((dep != null) && !(dep is DataGridRow) && !(dep is System.Windows.Controls.Primitives.DataGridColumnHeader))
+            {
+                dep = VisualTreeHelper.GetParent(dep);
+            }
+            if (dep != null && ((dep as DataGridRow).Item as PhraseItem).DownloadComplete)
+            {
+                AudioEditor ae = new AudioEditor(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, ((dep as DataGridRow).Item as PhraseItem).FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
+                ae.Show();
+
+            }
+
+
         }
     }
 
