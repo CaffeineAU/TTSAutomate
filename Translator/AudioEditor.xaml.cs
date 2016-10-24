@@ -23,7 +23,6 @@ namespace TTSAutomate
     /// </summary>
     public partial class AudioEditor : Window, INotifyPropertyChanged
     {
-        StringBuilder sb = new StringBuilder();
         WaveFileReader wfr;
         WaveChannel32 sound0;
 
@@ -97,26 +96,30 @@ namespace TTSAutomate
             }
         }
 
-
         int bufferSize = 1024;
 
         public AudioEditor()
         {
             InitializeComponent();
-            // pwfc.AddNewWaveForm(Color.FromArgb(64, 255, 0, 0), sound1.TotalTime);
-            FileName = @"J:\Videos\StopMotion\1SecondHum.wav";
+            //FileName = @"J:\Videos\StopMotion\1SecondHum.wav";
             //FileName = @"J:\Videos\StopMotion\11.wav";
             //FileName = @"C:\temp\wav\system\CAP_Warn.wav";
+            //FileName = @"C:\Users\liamo\Downloads\177269__sergeeo__numbers-in-french.wav";
+            //FileName = @"C:\Users\liamo\Downloads\26903__vexst__snare-4.wav";
+            FileName = @"C:\Users\liamo\Downloads\363118__fractalstudios__waves-001.wav";
+            //FileName = @"C:\Users\liamo\Downloads\364296__mickmon__justa-hick-burl.wav";
+            //FileName = @"C:\Users\liamo\Downloads\1kHz_44100Hz_16bit_05sec.wav";
             this.DataContext = this;
         }
 
         private void LoadSound(WaveChannel32 sound, int index)
         {
             int count = 0;
-            byte[] buffer = new byte[bufferSize];
             int read = 0;
             sound.Sample += Sound0_Sample;
+            bufferSize =1024* sampleRate * bitsPerSample/ 256000 ;
 
+            byte[] buffer = new byte[bufferSize];
 
             while (sound.Position < sound.Length)
             {
@@ -124,14 +127,13 @@ namespace TTSAutomate
                 min = 1;
 
                 read = sound.Read(buffer, 0, bufferSize);
-                sb.AppendFormat("{1}\t{2}\t{3}\t{0}\r\n", NAudio.Utils.Decibels.LinearToDecibels(max), index, count, max);
-                pwfc.waveForms[index].AddValue(max, min);
+                pwfc.waveForm.AddValue(max, min);
                 count++;
             }
 
             sound.Close();
             Debug.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
-            Debug.WriteLine("Sound is " + sound.Length + " bytes");
+            Debug.WriteLine("Sound is " + wfr.Length + " bytes");
             Debug.WriteLine("Called addvalue " + count + " times");
         }
 
@@ -152,10 +154,6 @@ namespace TTSAutomate
             //player.Play();
         }
 
-        private void pwfc_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-        }
-
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var file = new AudioFileReader(FileName);
@@ -163,21 +161,16 @@ namespace TTSAutomate
             trimmed.SkipOver =pwfc.SelectionStart;
             trimmed.Take = TimeSpan.FromMilliseconds(Math.Abs(pwfc.SelectionEnd.TotalMilliseconds - pwfc.SelectionStart.TotalMilliseconds));
 
-            
-
             //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
             var player = new WaveOutEvent();
             player.Init(trimmed);
             player.Play();
-
         }
 
         private void Sound0_Sample(object sender, SampleEventArgs e)
         {
             max = Math.Max(max, e.Left);
             min = Math.Min(min, e.Left);
-
-
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -186,9 +179,5 @@ namespace TTSAutomate
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
     }
-
-
-
 }

@@ -14,7 +14,7 @@ namespace TTSAutomate
     /// </summary>
     public partial class PolygonWaveFormControl : UserControl
     {
-        public List<WaveForm> waveForms = new List<WaveForm>();
+        public WaveForm waveForm = new WaveForm();
 
         public double XScale { get; set; }
 
@@ -59,24 +59,27 @@ namespace TTSAutomate
 
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
         {
-            WaveForm waveForm = new WaveForm();
-
             waveForm.Stroke = this.Foreground;
             waveForm.StrokeThickness = 1;
             waveForm.Fill = new SolidColorBrush(newColor);
             waveForm.SampleRate = samplerate;
             waveForm.BitsPerSample = bitspersample;
             waveForm.Channels = channels;
-            waveForms.Add(waveForm);
             Canvas.SetZIndex(waveForm.WaveDisplayShape, 5);
             mainCanvas.Children.Add(waveForm.WaveDisplayShape);
-            
         }
 
 
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // We will remove everything as we are going to rescale vertically
+
+            DrawGrid();
+        }
+
+        private void DrawGrid()
+        {
+             // We will remove everything as we are going to rescale vertically
+           mainCanvas.Children.Clear();
 
             for (int i = 25; i < ActualWidth; i += 25)
             {
@@ -122,17 +125,17 @@ namespace TTSAutomate
             });
 
 
-            foreach (var item in waveForms)
-            {
-                item.renderPosition = 0;
-                item.ClearAllPoints();
-                item.ActualWidth = ActualWidth;
-                item.ActualHeight = ActualHeight;
-                item.BlankZone = 10;
-                item.yTranslate = this.ActualHeight / 2;
-                item.yScale = this.ActualHeight / 2;
-                item.xScale = XScale;
-            }
+            waveForm.renderPosition = 0;
+            //waveForm.ClearAllPoints();
+            waveForm.ActualWidth = ActualWidth;
+            waveForm.ActualHeight = ActualHeight;
+            waveForm.BlankZone = 10;
+            waveForm.yTranslate = this.ActualHeight / 2;
+            waveForm.yScale = this.ActualHeight / 2;
+            waveForm.xScale = XScale;
+                mainCanvas.Children.Add(waveForm.WaveDisplayShape);
+
+            
         }
 
         private void DrawDBScaleLine(double db, bool flip)
@@ -172,6 +175,7 @@ namespace TTSAutomate
         private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             double mouseX = Math.Min(mainCanvas.ActualWidth, Math.Max(0, e.GetPosition(mainCanvas).X));
+
             if (cursor == null)
             {
                 cursor = new Line
@@ -260,7 +264,9 @@ namespace TTSAutomate
         {
             // x is 1024 bytes
 
-            double millis = 1000*x*1024/ XScale / waveForms[0].SampleRate / (waveForms[0].BitsPerSample/8) /waveForms[0].Channels;
+            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000 ;
+
+            double millis = 1000 * x * scale / waveForm.SampleRate / (waveForm.BitsPerSample);// / waveForm.Channels;
             System.Diagnostics.Debug.WriteLine("X was {0}, millis is {1}", x, millis);
 
             return TimeSpan.FromMilliseconds(millis);
@@ -269,7 +275,8 @@ namespace TTSAutomate
 
         private double TimeSpanToXLocation(TimeSpan time)
         {
-            return time.TotalMilliseconds / 100 * 25;
+            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000 ;
+            return time.TotalMilliseconds / (1000 * scale / waveForm.SampleRate / (waveForm.BitsPerSample));// / waveForm.Channels);
         }
 
         private double SampleToYPosition(double value)
@@ -299,7 +306,7 @@ namespace TTSAutomate
         }
 
 
-        private int sampleRate = 0;
+        private int sampleRate = 16000;
 
         public int SampleRate
         {
@@ -310,7 +317,7 @@ namespace TTSAutomate
             }
         }
 
-        private int bitsPerSample = 0;
+        private int bitsPerSample = 16;
 
         public int BitsPerSample
         {
@@ -321,7 +328,7 @@ namespace TTSAutomate
             }
         }
 
-        private int channels = 0;
+        private int channels = 1;
 
         public int Channels
         {
@@ -394,17 +401,17 @@ namespace TTSAutomate
             {
                 CreatePoint(maxValue, minValue);
 
-                if (renderPosition > visiblePixels)
-                {
-                    renderPosition = 0;
-                }
-                int erasePosition = (renderPosition + BlankZone) % visiblePixels;
-                if (erasePosition < Points)
-                {
-                    double yPos = SampleToYPosition(0);
-                    WaveDisplayShape.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
-                    WaveDisplayShape.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
-                }
+                //if (renderPosition > visiblePixels)
+                //{
+                //    renderPosition = 0;
+                //}
+                //int erasePosition = (renderPosition + BlankZone) % visiblePixels;
+                //if (erasePosition < Points)
+                //{
+                //    double yPos = SampleToYPosition(0);
+                //    WaveDisplayShape.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
+                //    WaveDisplayShape.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
+                //}
             }
         }
 
@@ -432,8 +439,7 @@ namespace TTSAutomate
                 WaveDisplayShape.Points[BottomPointIndex(renderPosition)] = new Point(xPos, bottomYPos);
             }
             renderPosition++;
-            sb.AppendFormat("{0}\t{1}\t{2}\r\n", xPos, topYPos, bottomYPos);
-            System.Diagnostics.Debug.WriteLine("Added point at x:{0}", xPos);
+            //System.Diagnostics.Debug.WriteLine("Added point at x:{0}", xPos);
         }
         private int BottomPointIndex(int position)
         {

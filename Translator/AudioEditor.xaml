@@ -16,7 +16,7 @@
             <RowDefinition Height="600"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:PolygonWaveFormControl x:Name="pwfc" Width="1100"  Margin="46,5" MouseDown="pwfc_MouseDown"  Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="3"   />
+        <local:PolygonWaveFormControl x:Name="pwfc" Width="1000"  Margin="46,5" Grid.Row="0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="3"   />
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
             <Label  Content="File" VerticalContentAlignment="Center" Margin="5,0"/>
             <Label Content="Sample Rate" VerticalContentAlignment="Center" Margin="5,0"/>
