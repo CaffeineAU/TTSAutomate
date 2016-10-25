@@ -239,14 +239,36 @@ namespace TTSAutomate
             if (movingStart)
             {
                 SelectionStart = XLocationToTimeSpan(mouseX);
+                if (SelectionStart > selectionEnd) // We crossed the streams
+                {
+                    SwapStartAndEnd();
+                    movingStart = false;
+                    movingEnd = true;
+                    return;
+                }
                 Canvas.SetLeft(selectionRect, mouseX);
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionEnd) - mouseX);
             }
             if (movingEnd)
             {
-                SelectionEnd= XLocationToTimeSpan(mouseX);
+                if (SelectionStart > selectionEnd) // We crossed the streams
+                {
+                    SwapStartAndEnd();
+                    movingStart = true;
+                    movingEnd = false;
+                    return;
+                }
+
+                SelectionEnd = XLocationToTimeSpan(mouseX);
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
             }
+        }
+
+        private void SwapStartAndEnd()
+        {
+            TimeSpan temp = selectionStart;
+            SelectionStart = SelectionEnd;
+            selectionEnd = temp;
         }
 
         private void mainCanvas_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
