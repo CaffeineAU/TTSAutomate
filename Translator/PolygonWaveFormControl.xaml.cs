@@ -251,6 +251,7 @@ namespace TTSAutomate
             }
             if (movingEnd)
             {
+                SelectionEnd = XLocationToTimeSpan(mouseX);
                 if (SelectionStart > selectionEnd) // We crossed the streams
                 {
                     SwapStartAndEnd();
@@ -259,7 +260,6 @@ namespace TTSAutomate
                     return;
                 }
 
-                SelectionEnd = XLocationToTimeSpan(mouseX);
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
             }
         }
@@ -328,11 +328,11 @@ namespace TTSAutomate
             if (!movingStart && !movingEnd)
             {
                 SelectionStart = XLocationToTimeSpan(e.GetPosition(mainCanvas).X);
-                selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 4, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
+                selectionRect = new Rectangle { Width = 1, Height = ActualHeight -120, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
                 Canvas.SetZIndex(selectionRect, 1);
                 Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
                 selectionRect.Width = 0;
-                Canvas.SetTop(selectionRect, 2);
+                Canvas.SetTop(selectionRect, 60);
                 mainCanvas.Children.Add(selectionRect);
                 selecting = true;
 
