@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -16,12 +17,15 @@ namespace TTSAutomate
     {
         public WaveForm waveForm = new WaveForm();
 
+        Cursor defaultCursor;
+
         public double XScale { get; set; }
 
         Line cursor;
         Label cursorPosition;
         Label selectionDuration;
         Rectangle selectionRect;
+        double mouseX;
 
         private TimeSpan selectionStart = new TimeSpan();
 
@@ -49,12 +53,15 @@ namespace TTSAutomate
 
 
         bool selecting = false;
+        private bool movingStart = false;
+        private bool movingEnd = false;
 
         public PolygonWaveFormControl()
         {
             this.SizeChanged += OnSizeChanged;
             InitializeComponent();
             XScale = 2;
+            defaultCursor = Cursor;
         }
 
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
@@ -174,7 +181,7 @@ namespace TTSAutomate
 
         private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            double mouseX = Math.Min(mainCanvas.ActualWidth, Math.Max(0, e.GetPosition(mainCanvas).X));
+            mouseX = Math.Min(mainCanvas.ActualWidth, Math.Max(0, e.GetPosition(mainCanvas).X));
 
             if (cursor == null)
             {
@@ -195,6 +202,17 @@ namespace TTSAutomate
                 mainCanvas.Children.Add(cursorPosition);
 
             }
+
+            if ((Math.Abs(e.GetPosition(mainCanvas).X - TimeSpanToXLocation(SelectionStart)) < 2) ||
+                    Math.Abs(e.GetPosition(mainCanvas).X - TimeSpanToXLocation(SelectionEnd)) < 2)
+            {
+                Cursor = System.Windows.Input.Cursors.SizeWE;
+            }
+            else
+            {
+                Cursor = defaultCursor;
+            }
+
             Canvas.SetLeft(cursor, mouseX);
             cursorPosition.Content = String.Format("{0}ms",  XLocationToTimeSpan(mouseX).TotalMilliseconds);
 
@@ -218,46 +236,86 @@ namespace TTSAutomate
                 Canvas.SetZIndex(selectionDuration, 10);
 
             }
+            if (movingStart)
+            {
+                SelectionStart = XLocationToTimeSpan(mouseX);
+                Canvas.SetLeft(selectionRect, mouseX);
+                selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionEnd) - mouseX);
+            }
+            if (movingEnd)
+            {
+                SelectionEnd= XLocationToTimeSpan(mouseX);
+                selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
+            }
         }
 
         private void mainCanvas_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             TimeSpan mousepos = XLocationToTimeSpan(Math.Max(0, e.GetPosition(mainCanvas).X));
             selecting = false;
-            if (mousepos < SelectionStart)
+            if (movingStart)
             {
-                SelectionEnd = SelectionStart;
                 SelectionStart = mousepos;
+                movingStart = false;
+            }
+            else if (movingEnd)
+            {
+                SelectionEnd = mousepos;
+                movingEnd = false;
             }
             else
             {
-                SelectionEnd = mousepos;
-            }
-            if (SelectionEnd == SelectionStart)
-            {
-                mainCanvas.Children.Remove(selectionRect);
-                mainCanvas.Children.Remove(selectionDuration);
-                selectionDuration = null;
+                if (mousepos < SelectionStart)
+                {
+                    SelectionEnd = SelectionStart;
+                    SelectionStart = mousepos;
+                }
+                else
+                {
+                    SelectionEnd = mousepos;
+                }
+                if (SelectionEnd == SelectionStart)
+                {
+                    mainCanvas.Children.Remove(selectionRect);
+                    mainCanvas.Children.Remove(selectionDuration);
+                    selectionDuration = null;
+                }
             }
             mainCanvas.ReleaseMouseCapture();
         }
 
         private void mainCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+
             if (mainCanvas.Children.Contains(selectionRect))
             {
-                mainCanvas.Children.Remove(selectionRect);
+                if (mouseX - TimeSpanToXLocation(SelectionStart) < 2) // we're over the start of the selection rectangle
+                {
+                    movingStart = true;
+                }
+                else if (mouseX - TimeSpanToXLocation(SelectionEnd) < 2) // we're over the start of the selection rectangle
+                {
+                    movingEnd = true;
+                }
+                else
+                {
+                    mainCanvas.Children.Remove(selectionRect);
+                }
             }
 
-            SelectionStart = XLocationToTimeSpan(e.GetPosition(mainCanvas).X);
-            selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 4, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
-            Canvas.SetZIndex(selectionRect, 1);
-            Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
-            selectionRect.Width = 0;
-            Canvas.SetTop(selectionRect, 2);
-            mainCanvas.Children.Add(selectionRect);
-            selecting = true;
-            mainCanvas.CaptureMouse();
+            if (!movingStart && !movingEnd)
+            {
+                SelectionStart = XLocationToTimeSpan(e.GetPosition(mainCanvas).X);
+                selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 4, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
+                Canvas.SetZIndex(selectionRect, 1);
+                Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
+                selectionRect.Width = 0;
+                Canvas.SetTop(selectionRect, 2);
+                mainCanvas.Children.Add(selectionRect);
+                selecting = true;
+
+            }
+                mainCanvas.CaptureMouse();
         }
 
         private TimeSpan XLocationToTimeSpan(double x)
