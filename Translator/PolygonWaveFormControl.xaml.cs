@@ -203,8 +203,8 @@ namespace TTSAutomate
 
             }
 
-            if ((Math.Abs(e.GetPosition(mainCanvas).X - TimeSpanToXLocation(SelectionStart)) < 2) ||
-                    Math.Abs(e.GetPosition(mainCanvas).X - TimeSpanToXLocation(SelectionEnd)) < 2)
+            if ((Difference(e.GetPosition(mainCanvas).X, TimeSpanToXLocation(SelectionStart)) < 2) ||
+                    Difference(e.GetPosition(mainCanvas).X, TimeSpanToXLocation(SelectionEnd)) < 2)
             {
                 Cursor = System.Windows.Input.Cursors.SizeWE;
             }
@@ -222,7 +222,7 @@ namespace TTSAutomate
             {
                 if (selectionDuration == null)
                 {
-                    selectionDuration = new Label { Content = String.Format("{0}ms", XLocationToTimeSpan(Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX))), FontSize = 8, Width=50, HorizontalContentAlignment= HorizontalAlignment.Center };
+                    selectionDuration = new Label { Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX))), FontSize = 8, Width=50, HorizontalContentAlignment= HorizontalAlignment.Center };
                     mainCanvas.Children.Add(selectionDuration);
 
                 }
@@ -230,8 +230,8 @@ namespace TTSAutomate
                 Canvas.SetLeft(selectionRect, mouseX > TimeSpanToXLocation(SelectionStart) ? TimeSpanToXLocation(SelectionStart) : mouseX);
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
 
-                selectionDuration.Content = String.Format("{0}ms", XLocationToTimeSpan(Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX)).TotalMilliseconds);
-                Canvas.SetLeft(selectionDuration, Math.Max(0, Math.Min(TimeSpanToXLocation(SelectionStart), mouseX) + (Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX) / 2) - selectionDuration.Width / 2));
+                selectionDuration.Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX)).TotalMilliseconds);
+                Canvas.SetLeft(selectionDuration, Math.Max(0, Math.Min(TimeSpanToXLocation(SelectionStart), mouseX) + (Difference(TimeSpanToXLocation(SelectionStart), mouseX) / 2) - selectionDuration.Width / 2));
 
                 Canvas.SetZIndex(selectionDuration, 10);
 
@@ -247,7 +247,7 @@ namespace TTSAutomate
                     return;
                 }
                 Canvas.SetLeft(selectionRect, mouseX);
-                selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionEnd) - mouseX);
+                selectionRect.Width = Difference(TimeSpanToXLocation(SelectionEnd), mouseX);
             }
             if (movingEnd)
             {
@@ -260,7 +260,7 @@ namespace TTSAutomate
                     return;
                 }
 
-                selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
+                selectionRect.Width = Difference(TimeSpanToXLocation(SelectionStart), mouseX);
             }
         }
 
@@ -308,14 +308,15 @@ namespace TTSAutomate
 
         private void mainCanvas_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            mouseX = e.GetPosition(mainCanvas).X;
 
             if (mainCanvas.Children.Contains(selectionRect))
             {
-                if (mouseX - TimeSpanToXLocation(SelectionStart) < 2) // we're over the start of the selection rectangle
+                if (Difference(mouseX,TimeSpanToXLocation(SelectionStart)) < 2) // we're over the start of the selection rectangle
                 {
                     movingStart = true;
                 }
-                else if (mouseX - TimeSpanToXLocation(SelectionEnd) < 2) // we're over the start of the selection rectangle
+                else if (Difference(mouseX, TimeSpanToXLocation(SelectionEnd)) < 2) // we're over the start of the selection rectangle
                 {
                     movingEnd = true;
                 }
@@ -338,6 +339,12 @@ namespace TTSAutomate
 
             }
                 mainCanvas.CaptureMouse();
+        }
+
+        private double Difference(double first, double second)
+        {
+            return Math.Abs(first - second);
+
         }
 
         private TimeSpan XLocationToTimeSpan(double x)
