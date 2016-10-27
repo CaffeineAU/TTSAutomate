@@ -107,7 +107,10 @@ namespace TTSAutomate
 </p>
 </speak>
 ",text);
-             string algorithm = "AWS4-HMAC-SHA256";
+            byte[] stringbytes = Encoding.Default.GetBytes(SSMLText);
+            SSMLText = Encoding.UTF8.GetString(stringbytes);
+
+            string algorithm = "AWS4-HMAC-SHA256";
             string regionName = Properties.Settings.Default.IvonaRegion;
             string serviceName = "tts";
             string method = "POST";
@@ -195,6 +198,7 @@ namespace TTSAutomate
 
             var webRequest = WebRequest.Create("https://" + host + canonicalUri);
 
+            var bytes = ToBytes(requestPayload);
             webRequest.Method = method;
             webRequest.Timeout = 20000;
             webRequest.ContentType = contentType;
@@ -202,13 +206,13 @@ namespace TTSAutomate
             webRequest.Headers.Add("Authorization", authorization);
             webRequest.Headers.Add("x-amz-content-sha256", hashedRequestPayload);
             webRequest.ContentLength = requestPayload.Length;
-
+            webRequest.ContentLength = bytes.Length;
 
             try
             {
                 using (Stream newStream = webRequest.GetRequestStream())
                 {
-                    newStream.Write(ToBytes(requestPayload), 0, requestPayload.Length);
+                    newStream.Write(bytes, 0, bytes.Length);
                     newStream.Flush();
                 }
                 var response = (HttpWebResponse)webRequest.GetResponse();
@@ -228,7 +232,7 @@ namespace TTSAutomate
             }
             catch (Exception ex)
             {
-
+                System.Diagnostics.Debug.WriteLine("Failed : {0}", ex);
 
             }
             return new byte[0];
