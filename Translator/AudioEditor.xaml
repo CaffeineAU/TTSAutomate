@@ -8,28 +8,36 @@
         Title="AudioEditor" Height="800" Width="1200" Icon="speech-bubble.ico">
     <Grid Loaded="Grid_Loaded">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="95"/>
+            <ColumnDefinition Width="90"/>
             <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="600"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:PolygonWaveFormControl x:Name="pwfc" Width="1000"  Margin="46,5" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="3"/>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
-            <Label  Content="File" VerticalContentAlignment="Center" Margin="5,0"/>
-            <Label Content="Sample Rate" VerticalContentAlignment="Center" Margin="5,0"/>
-            <Label Content="Bits Per Sample" VerticalContentAlignment="Center" Margin="5,0"/>
-            <Label Content="Duration" VerticalContentAlignment="Center" Margin="5,0"/>
-            <Label Content="Channels" VerticalContentAlignment="Center" Margin="5,0"/>
+        <local:PolygonWaveFormControl x:Name="pwfc" Width="1000"  Margin="46,5" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="5"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" Margin="0,5" >
+            <Label  Content="File" VerticalContentAlignment="Center" Margin="0"/>
+            <Label Content="Sample Rate" VerticalContentAlignment="Center" Margin="0"/>
+            <Label Content="Bits Per Sample" VerticalContentAlignment="Center" Margin="0"/>
+            <Label Content="Duration" VerticalContentAlignment="Center" Margin="0"/>
+            <Label Content="Channels" VerticalContentAlignment="Center" Margin="0"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" Margin="0,5" >
             <Label Content="{Binding FileName}" VerticalContentAlignment="Center" Margin="5,0"/>
             <Label Content="{Binding SampleRate}" VerticalContentAlignment="Center" Margin="5,0"/>
             <Label Content="{Binding BitsPerSample}" VerticalContentAlignment="Center" Margin="5,0"/>
             <Label Content="{Binding Duration}" VerticalContentAlignment="Center" Margin="5,0"/>
             <Label Content="{Binding Channels}" VerticalContentAlignment="Center" Margin="5,0"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="3" Margin="0,5" >
+            <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim star and end silence" VerticalContentAlignment="Center" Margin="5"/>
         </StackPanel>
     </Grid>
 </Window>
