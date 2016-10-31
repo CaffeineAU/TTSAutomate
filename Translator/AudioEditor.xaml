@@ -42,7 +42,32 @@
             <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim star and end silence" VerticalContentAlignment="Center" Margin="5"/>
         </StackPanel>
-        <ProgressBar DataContext="{Binding Path=pwfc}" Value="{Binding Path=MaxValue}" Grid.Column="5" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" />
-        <ProgressBar DataContext="{Binding Path=pwfc}" Value="{Binding Path=MinValue}" Grid.Column="5" Grid.Row="1" Orientation="Vertical" Minimum="-1.0" Maximum="0"/>
+        <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="5" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" >
+            <!--<ProgressBar.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
+                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FF00AC10"/>
+                    <GradientStop Color="Red" Offset="1"/>
+                    <GradientStop Color="#FFFFF300" Offset="0.528"/>
+                </LinearGradientBrush>
+            </ProgressBar.Foreground>-->
+        </ProgressBar>
+        <ProgressBar  Value="{Binding Path=MinValue, ElementName=pwfc}" Grid.Column="5" Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="1.0" RenderTransformOrigin="0.5,0.5">
+            <ProgressBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                    <SkewTransform AngleY="0" AngleX="0"/>
+                    <RotateTransform Angle="-180"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </ProgressBar.RenderTransform>
+        </ProgressBar>
     </Grid>
 </Window>

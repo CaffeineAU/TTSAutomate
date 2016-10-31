@@ -70,7 +70,7 @@ namespace TTSAutomate
             set { selectionEnd = value; }
         }
 
-        private Brush gridBrush = new SolidColorBrush(Color.FromRgb(0,16,0));
+        private Brush gridBrush = new SolidColorBrush(Color.FromRgb(0, 16, 0));
 
         public Brush GridBrush
         {
@@ -89,7 +89,7 @@ namespace TTSAutomate
             InitializeComponent();
             XScale = 2;
             defaultCursor = Cursor;
-            //this.DataContext = this;
+            this.DataContext = this;
         }
 
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
@@ -114,8 +114,8 @@ namespace TTSAutomate
 
         private void DrawGrid()
         {
-             // We will remove everything as we are going to rescale vertically
-           mainCanvas.Children.Clear();
+            // We will remove everything as we are going to rescale vertically
+            mainCanvas.Children.Clear();
 
             for (int i = 25; i < mainCanvas.ActualWidth; i += 25)
             {
@@ -134,8 +134,8 @@ namespace TTSAutomate
                     FontSize = 10,
                     Margin =
                     new Thickness(
-                                    i - 5, ActualHeight-14,
-                                    i, ActualHeight-40),
+                                    i - 5, ActualHeight - 14,
+                                    i, ActualHeight - 40),
                     RenderTransform = new RotateTransform(-90)
                 });
 
@@ -153,10 +153,10 @@ namespace TTSAutomate
             LegendCanvas.Children.Add(new Line
             {
                 Stroke = Brushes.Red,
-                StrokeThickness = 0.75f,
+                StrokeThickness = 0.25f,
                 X1 = 0,
                 X2 = ActualWidth,
-                Y1 = SampleToYPosition(0),// *(ActualHeight/21) + ActualHeight / 2,
+                Y1 = SampleToYPosition(0),
                 Y2 = SampleToYPosition(0)
             });
 
@@ -169,9 +169,9 @@ namespace TTSAutomate
             waveForm.yTranslate = this.ActualHeight / 2;
             waveForm.yScale = this.ActualHeight / 2;
             waveForm.xScale = XScale;
-                mainCanvas.Children.Add(waveForm.WaveDisplayShape);
+            mainCanvas.Children.Add(waveForm.WaveDisplayShape);
 
-            
+
         }
 
         private void DrawDBScaleLine(double db, bool flip)
@@ -203,7 +203,7 @@ namespace TTSAutomate
                 Foreground = GridBrush,
                 Margin =
                 new Thickness(
-                                ActualWidth-20, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
+                                ActualWidth - 20, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
                                 ActualWidth, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
             });
         }
@@ -242,15 +242,16 @@ namespace TTSAutomate
                 Cursor = defaultCursor;
             }
 
-            Canvas.SetLeft(cursor, mouseX);
-            cursorPosition.Content = String.Format("{0}ms",  XLocationToTimeSpan(mouseX).TotalMilliseconds);
             int xPos = Convert.ToInt32(mouseX);
-            if (xPos %2 != 0)
+            if (xPos % 2 != 0)
             {
                 xPos--;
             }
             MaxValue = waveForm.Values.ContainsKey(xPos) ? waveForm.Values[xPos].Item1 : 0;
-            MinValue = waveForm.Values.ContainsKey(xPos) ? waveForm.Values[xPos].Item2 : 0;
+            MinValue = waveForm.Values.ContainsKey(xPos) ? -waveForm.Values[xPos].Item2 : 0;
+
+            Canvas.SetLeft(cursor, mouseX);
+            cursorPosition.Content = String.Format("{0}ms", XLocationToTimeSpan(mouseX).TotalMilliseconds, NAudio.Utils.Decibels.LinearToDecibels(MaxValue), NAudio.Utils.Decibels.LinearToDecibels(MinValue));
 
             Canvas.SetLeft(cursorPosition, mouseX);
             Canvas.SetTop(cursorPosition, 10);
@@ -258,7 +259,7 @@ namespace TTSAutomate
             {
                 if (selectionDuration == null)
                 {
-                    selectionDuration = new Label { Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX))), FontSize = 8, Width=50, HorizontalContentAlignment= HorizontalAlignment.Center };
+                    selectionDuration = new Label { Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX))), FontSize = 8, Width = 50, HorizontalContentAlignment = HorizontalAlignment.Center };
                     mainCanvas.Children.Add(selectionDuration);
 
                 }
@@ -348,7 +349,7 @@ namespace TTSAutomate
 
             if (mainCanvas.Children.Contains(selectionRect))
             {
-                if (Difference(mouseX,TimeSpanToXLocation(SelectionStart)) < 2) // we're over the start of the selection rectangle
+                if (Difference(mouseX, TimeSpanToXLocation(SelectionStart)) < 2) // we're over the start of the selection rectangle
                 {
                     movingStart = true;
                 }
@@ -365,7 +366,7 @@ namespace TTSAutomate
             if (!movingStart && !movingEnd)
             {
                 SelectionStart = XLocationToTimeSpan(e.GetPosition(mainCanvas).X);
-                selectionRect = new Rectangle { Width = 1, Height = ActualHeight -120, Fill = new SolidColorBrush(Color.FromArgb(64,128,0,0)), Stroke=Brushes.DarkRed};
+                selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 120, Fill = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)), Stroke = Brushes.DarkRed };
                 Canvas.SetZIndex(selectionRect, 1);
                 Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
                 selectionRect.Width = 0;
@@ -374,7 +375,7 @@ namespace TTSAutomate
                 selecting = true;
 
             }
-                mainCanvas.CaptureMouse();
+            mainCanvas.CaptureMouse();
         }
 
         private double Difference(double first, double second)
@@ -398,13 +399,13 @@ namespace TTSAutomate
 
         private double TimeSpanToXLocation(TimeSpan time)
         {
-            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000 ;
+            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000;
             return time.TotalMilliseconds / (1000 * scale / waveForm.SampleRate / (waveForm.BitsPerSample) * waveForm.Channels);
         }
 
         private double SampleToYPosition(double value)
         {
-            return (ActualHeight/2) + value * (ActualHeight / 2);
+            return (ActualHeight / 2) + value * (ActualHeight / 2);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -435,7 +436,7 @@ namespace TTSAutomate
             }
         }
 
-        public Dictionary<int,Tuple<float,float>> Values { get; set; }
+        public Dictionary<int, Tuple<float, float>> Values { get; set; }
 
 
         private int sampleRate = 16000;
