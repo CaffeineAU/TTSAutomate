@@ -13,6 +13,7 @@
             <ColumnDefinition Width="450"/>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
@@ -21,7 +22,7 @@
             <RowDefinition Height="300"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:PolygonWaveFormControl x:Name="pwfc"  Margin="50,0,5,0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="4" Grid.RowSpan="2" Grid.Column="1"/>
+        <local:PolygonWaveFormControl x:Name="pwfc"  Margin="50,0,5,0" Background="WhiteSmoke" BorderThickness="1" BorderBrush="#FFC3C3C3" MouseUp="pwfc_MouseUp" Grid.ColumnSpan="5" Grid.RowSpan="2" Grid.Column="1"/>
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="1" Margin="0,5" >
             <Label  Content="File" VerticalContentAlignment="Center" Margin="0"/>
             <Label Content="Sample Rate" VerticalContentAlignment="Center" Margin="0"/>
@@ -40,9 +41,9 @@
             <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
-            <Button Content="Trim star and end silence" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim start and end silence" VerticalContentAlignment="Center" Margin="5"/>
         </StackPanel>
-        <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="5" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" >
+        <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" >
             <!--<ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
                     <LinearGradientBrush.RelativeTransform>
@@ -59,7 +60,7 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>-->
         </ProgressBar>
-        <ProgressBar  Value="{Binding Path=MinValue, ElementName=pwfc}" Grid.Column="5" Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="1.0" RenderTransformOrigin="0.5,0.5">
+        <ProgressBar  Value="{Binding Path=MinValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="1.0" RenderTransformOrigin="0.5,0.5">
             <ProgressBar.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleY="1" ScaleX="-1"/>
@@ -69,5 +70,23 @@
                 </TransformGroup>
             </ProgressBar.RenderTransform>
         </ProgressBar>
+        <Grid Grid.Column="5"  Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Grid.ColumnSpan="2" >
+                <TextBlock Text="Cursor (MM:SS:ms)" />
+                <TextBlock Text="Selection Start" />
+                <TextBlock Text="Selection End" />
+                <TextBlock Text="Selection Duration"  />
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Grid.Column="1" >
+                <TextBlock Text="{Binding Path=CursorTime, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
+                <TextBlock Text="{Binding Path=SelectionStart, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
+                <TextBlock Text="{Binding Path=SelectionEnd, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
+                <TextBlock Text="{Binding Path=SelectionDuration, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}"  />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

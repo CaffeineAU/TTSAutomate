@@ -45,6 +45,18 @@ namespace TTSAutomate
             }
         }
 
+        private TimeSpan cursorTime = new TimeSpan();
+
+        public TimeSpan CursorTime
+        {
+            get { return cursorTime; }
+            set
+            {
+                cursorTime = value;
+                OnPropertyChanged("CursorTime");
+            }
+        }
+
 
         public double XScale { get; set; }
 
@@ -59,7 +71,23 @@ namespace TTSAutomate
         public TimeSpan SelectionStart
         {
             get { return selectionStart; }
-            set { selectionStart = value; }
+            set
+            {
+                selectionStart = value;
+                OnPropertyChanged("SelectionStart");
+            }
+        }
+
+        private TimeSpan selectionDurationTS = new TimeSpan();
+
+        public TimeSpan SelectionDuration
+        {
+            get { return selectionDurationTS; }
+            set
+            {
+                selectionDurationTS = value;
+                OnPropertyChanged("SelectionDuration");
+            }
         }
 
         private TimeSpan selectionEnd = new TimeSpan();
@@ -67,7 +95,11 @@ namespace TTSAutomate
         public TimeSpan SelectionEnd
         {
             get { return selectionEnd; }
-            set { selectionEnd = value; }
+            set
+            {
+                selectionEnd = value;
+                OnPropertyChanged("SelectionEnd");
+            }
         }
 
         private Brush gridBrush = new SolidColorBrush(Color.FromRgb(0, 16, 0));
@@ -115,6 +147,7 @@ namespace TTSAutomate
         private void DrawGrid()
         {
             // We will remove everything as we are going to rescale vertically
+            
             mainCanvas.Children.Clear();
 
             for (int i = 25; i < mainCanvas.ActualWidth; i += 25)
@@ -196,16 +229,16 @@ namespace TTSAutomate
                                 -40, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
                                 15, SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
             });
-            LegendCanvas.Children.Add(new Label
-            {
-                Content = String.Format("{0} dB", db),
-                FontSize = 10,
-                Foreground = GridBrush,
-                Margin =
-                new Thickness(
-                                ActualWidth - 20, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
-                                ActualWidth, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
-            });
+            //LegendCanvas.Children.Add(new Label
+            //{
+            //    Content = String.Format("{0} dB", db),
+            //    FontSize = 10,
+            //    Foreground = GridBrush,
+            //    Margin =
+            //    new Thickness(
+            //                    ActualWidth - 20, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10,
+            //                    ActualWidth, 20 - SampleToYPosition(NAudio.Utils.Decibels.DecibelsToLinear(db) * (flip ? -1 : 1)) - 10)
+            //});
         }
 
         private void mainCanvas_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -252,6 +285,7 @@ namespace TTSAutomate
 
             Canvas.SetLeft(cursor, mouseX);
             cursorPosition.Content = String.Format("{0}ms", XLocationToTimeSpan(mouseX).TotalMilliseconds, NAudio.Utils.Decibels.LinearToDecibels(MaxValue), NAudio.Utils.Decibels.LinearToDecibels(MinValue));
+            CursorTime = XLocationToTimeSpan(mouseX);
 
             Canvas.SetLeft(cursorPosition, mouseX);
             Canvas.SetTop(cursorPosition, 10);
@@ -268,6 +302,8 @@ namespace TTSAutomate
                 selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - mouseX);
 
                 selectionDuration.Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX)).TotalMilliseconds);
+                SelectionDuration = XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX));
+                SelectionEnd = XLocationToTimeSpan(mouseX);
                 Canvas.SetLeft(selectionDuration, Math.Max(0, Math.Min(TimeSpanToXLocation(SelectionStart), mouseX) + (Difference(TimeSpanToXLocation(SelectionStart), mouseX) / 2) - selectionDuration.Width / 2));
 
                 Canvas.SetZIndex(selectionDuration, 10);
@@ -276,6 +312,8 @@ namespace TTSAutomate
             if (movingStart)
             {
                 SelectionStart = XLocationToTimeSpan(mouseX);
+                SelectionDuration = XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionEnd), mouseX));
+
                 if (SelectionStart > selectionEnd) // We crossed the streams
                 {
                     SwapStartAndEnd();
@@ -289,6 +327,8 @@ namespace TTSAutomate
             if (movingEnd)
             {
                 SelectionEnd = XLocationToTimeSpan(mouseX);
+                SelectionDuration = XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX));
+
                 if (SelectionStart > selectionEnd) // We crossed the streams
                 {
                     SwapStartAndEnd();
