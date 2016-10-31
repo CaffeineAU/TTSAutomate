@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,11 +14,37 @@ namespace TTSAutomate
     /// <summary>
     /// Interaction logic for PolygonWaveFormControl.xaml
     /// </summary>
-    public partial class PolygonWaveFormControl : UserControl
+    public partial class PolygonWaveFormControl : UserControl, INotifyPropertyChanged
     {
         public WaveForm waveForm = new WaveForm();
 
         Cursor defaultCursor;
+
+        private float maxValue = 0;
+
+        public float MaxValue
+        {
+            get { return maxValue; }
+            set
+            {
+                maxValue = value;
+                OnPropertyChanged("MaxValue");
+                System.Diagnostics.Debug.WriteLine("max {0}", MaxValue);
+            }
+        }
+
+        private float minValue = 0;
+
+        public float MinValue
+        {
+            get { return minValue; }
+            set
+            {
+                minValue = value;
+                OnPropertyChanged("MinValue");
+            }
+        }
+
 
         public double XScale { get; set; }
 
@@ -62,10 +89,12 @@ namespace TTSAutomate
             InitializeComponent();
             XScale = 2;
             defaultCursor = Cursor;
+            //this.DataContext = this;
         }
 
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
         {
+            waveForm.Values = new Dictionary<int, Tuple<float, float>>();
             waveForm.Stroke = this.Foreground;
             waveForm.StrokeThickness = 1;
             waveForm.Fill = new SolidColorBrush(newColor);
@@ -215,6 +244,13 @@ namespace TTSAutomate
 
             Canvas.SetLeft(cursor, mouseX);
             cursorPosition.Content = String.Format("{0}ms",  XLocationToTimeSpan(mouseX).TotalMilliseconds);
+            int xPos = Convert.ToInt32(mouseX);
+            if (xPos %2 != 0)
+            {
+                xPos--;
+            }
+            MaxValue = waveForm.Values.ContainsKey(xPos) ? waveForm.Values[xPos].Item1 : 0;
+            MinValue = waveForm.Values.ContainsKey(xPos) ? waveForm.Values[xPos].Item2 : 0;
 
             Canvas.SetLeft(cursorPosition, mouseX);
             Canvas.SetTop(cursorPosition, 10);
@@ -371,6 +407,13 @@ namespace TTSAutomate
             return (ActualHeight/2) + value * (ActualHeight / 2);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(String name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
 
         /// <summary>
         /// Clears the waveform and repositions on the left
@@ -391,6 +434,8 @@ namespace TTSAutomate
                 duration = value;
             }
         }
+
+        public Dictionary<int,Tuple<float,float>> Values { get; set; }
 
 
         private int sampleRate = 16000;
@@ -514,6 +559,7 @@ namespace TTSAutomate
             double topYPos = SampleToYPosition(topValue);
             double bottomYPos = SampleToYPosition(bottomValue);
             double xPos = renderPosition * xScale;
+            Values.Add(Convert.ToInt32(xPos), new Tuple<float, float>(topValue, bottomValue));
             if (renderPosition >= Points)
             {
                 int insertPos = Points;

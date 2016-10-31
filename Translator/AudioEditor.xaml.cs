@@ -29,6 +29,7 @@ namespace TTSAutomate
         float max = 0;
         float min = 1000;
 
+
         private int sampleRate = 0;
 
         public int SampleRate
