@@ -14,7 +14,7 @@
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="25"/>
             <ColumnDefinition Width="25"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -38,28 +38,12 @@
             <Label Content="{Binding Channels}" VerticalContentAlignment="Center" Margin="5,0"/>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="3" Margin="0,5" >
-            <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5" Click="Button_Click"/>
             <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim start and end silence" VerticalContentAlignment="Center" Margin="5"/>
         </StackPanel>
-        <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" >
-            <!--<ProgressBar.Foreground>
-                <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                    <LinearGradientBrush.RelativeTransform>
-                        <TransformGroup>
-                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
-                            <SkewTransform CenterY="0.5" CenterX="0.5"/>
-                            <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </LinearGradientBrush.RelativeTransform>
-                    <GradientStop Color="#FF00AC10"/>
-                    <GradientStop Color="Red" Offset="1"/>
-                    <GradientStop Color="#FFFFF300" Offset="0.528"/>
-                </LinearGradientBrush>
-            </ProgressBar.Foreground>-->
-        </ProgressBar>
+        <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" />
         <ProgressBar  Value="{Binding Path=MinValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="1.0" RenderTransformOrigin="0.5,0.5">
             <ProgressBar.RenderTransform>
                 <TransformGroup>

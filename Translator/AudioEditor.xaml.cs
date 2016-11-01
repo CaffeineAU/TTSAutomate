@@ -102,21 +102,7 @@ namespace TTSAutomate
         public AudioEditor(string filename)
         {
             InitializeComponent();
-            FileName = filename; //@"J:\Videos\StopMotion\1SecondHum.wav";
-            //FileName = @"J:\Videos\StopMotion\Sawtooth.wav";
-            //FileName = @"J:\Videos\StopMotion\Sawtooth24.wav";
-            //FileName = @"J:\Videos\StopMotion\Sawtooth32.wav";
-            //FileName = @"J:\Videos\StopMotion\SawtoothMono.wav";
-            //FileName = @"J:\Videos\StopMotion\331980__dmunk__shuffling.wav";
-            //FileName = @"C:\Users\Liam O\Downloads\22267__zeuss__the-chime.wav";
-            //FileName = @"C:\Users\Liam O\Downloads\345228__v0idation__kids-counting-1-to-20-mono-44khz.wav";
-            //FileName = @"C:\Users\Liam O\Downloads\223452__achim-bornhoeft__1-4.wav";
-            //FileName = @"C:\temp\wav\system\CAP_Warn.wav";
-            //FileName = @"C:\Users\liamo\Downloads\177269__sergeeo__numbers-in-french.wav";
-            //FileName = @"C:\Users\liamo\Downloads\26903__vexst__snare-4.wav";
-            //FileName = @"C:\Users\liamo\Downloads\363118__fractalstudios__waves-001.wav";
-            //FileName = @"C:\Users\liamo\Downloads\364296__mickmon__justa-hick-burl.wav";
-            //FileName = @"C:\Users\liamo\Downloads\1kHz_44100Hz_16bit_05sec.wav";
+            FileName = filename; 
             this.DataContext = this;
         }
 
@@ -135,7 +121,7 @@ namespace TTSAutomate
                 min = 1;
 
                 read = sound.Read(buffer, 0, bufferSize);
-                pwfc.waveForm.AddValue(max, min);
+                pwfc.WaveFormDisplay.AddValue(max, min);
                 count++;
             }
 
@@ -149,18 +135,6 @@ namespace TTSAutomate
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSound(sound0, 0);
-            //LoadSound(sound1,1 );
-            //Clipboard.SetText(sb.ToString());
-
-            //var file = new AudioFileReader(@"C:\temp\wav\system\CAP_WARN.wav");
-            //var trimmed = new OffsetSampleProvider(file);
-            //trimmed.SkipOver = TimeSpan.FromMilliseconds(200);
-            //trimmed.Take = TimeSpan.FromMilliseconds(1460);
-
-            //WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
-            //var player = new WaveOutEvent();
-            //player.Init(trimmed);
-            //player.Play();
         }
 
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
@@ -196,6 +170,25 @@ namespace TTSAutomate
         protected void OnPropertyChanged(String name)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var file = new AudioFileReader(FileName);
+            var trimmed = new OffsetSampleProvider(file);
+            trimmed.SkipOver = pwfc.SelectionStart;
+            trimmed.Take = pwfc.SelectionEnd - pwfc.SelectionStart;
+
+            WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            pwfc.ClearWaveForm();
+            
+            FileName = @"c:\temp\trimmed.wav";
+            LoadSound(sound0, 0);
+
+            var player = new WaveOutEvent();
+            player.Init(trimmed);
+            player.Play();
+
         }
     }
 }

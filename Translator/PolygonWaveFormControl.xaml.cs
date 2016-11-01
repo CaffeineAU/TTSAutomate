@@ -16,7 +16,18 @@ namespace TTSAutomate
     /// </summary>
     public partial class PolygonWaveFormControl : UserControl, INotifyPropertyChanged
     {
-        public WaveForm waveForm = new WaveForm();
+        private WaveForm waveForm = new WaveForm();
+
+        public WaveForm WaveFormDisplay
+        {
+            get { return waveForm; }
+            set
+            {
+                waveForm = value;
+                OnPropertyChanged("WaveFormDisplay");
+            }
+        }
+
 
         Cursor defaultCursor;
 
@@ -126,29 +137,39 @@ namespace TTSAutomate
 
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
         {
-            waveForm.Values = new Dictionary<int, Tuple<float, float>>();
-            waveForm.Stroke = this.Foreground;
-            waveForm.StrokeThickness = 1;
-            waveForm.Fill = new SolidColorBrush(newColor);
-            waveForm.SampleRate = samplerate;
-            waveForm.BitsPerSample = bitspersample;
-            waveForm.Channels = channels;
-            Canvas.SetZIndex(waveForm.WaveDisplayShape, 5);
-            mainCanvas.Children.Add(waveForm.WaveDisplayShape);
+            WaveFormDisplay = new WaveForm();
+            //WaveFormDisplay.WaveDisplayShape = new Polygon();
+            WaveFormDisplay.Values = new Dictionary<int, Tuple<float, float>>();
+            WaveFormDisplay.Stroke = this.Foreground;
+            WaveFormDisplay.StrokeThickness = 1;
+            WaveFormDisplay.Fill = new SolidColorBrush(newColor);
+            WaveFormDisplay.SampleRate = samplerate;
+            WaveFormDisplay.BitsPerSample = bitspersample;
+            WaveFormDisplay.Channels = channels;
+            Canvas.SetZIndex(WaveFormDisplay.WaveDisplayShape, 5);
+            mainCanvas.Children.Add(WaveFormDisplay.WaveDisplayShape);
         }
 
 
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
 
-            DrawGrid();
+            RedrawGrid();
         }
 
-        private void DrawGrid()
+        public void ClearWaveForm()
+        {
+            //mainCanvas.Children.Remove(WaveFormDisplay.WaveDisplayShape);
+            mainCanvas.UpdateLayout();
+            RedrawGrid();
+        }
+
+        public void RedrawGrid()
         {
             // We will remove everything as we are going to rescale vertically
             
             mainCanvas.Children.Clear();
+            mainCanvas.InvalidateVisual();
 
             for (int i = 25; i < mainCanvas.ActualWidth; i += 25)
             {
@@ -194,15 +215,15 @@ namespace TTSAutomate
             });
 
 
-            waveForm.renderPosition = 0;
-            //waveForm.ClearAllPoints();
-            waveForm.ActualWidth = ActualWidth;
-            waveForm.ActualHeight = ActualHeight;
-            waveForm.BlankZone = 10;
-            waveForm.yTranslate = this.ActualHeight / 2;
-            waveForm.yScale = this.ActualHeight / 2;
-            waveForm.xScale = XScale;
-            mainCanvas.Children.Add(waveForm.WaveDisplayShape);
+            WaveFormDisplay.renderPosition = 0;
+            //WaveFormDisplay.ClearAllPoints();
+            WaveFormDisplay.ActualWidth = ActualWidth;
+            WaveFormDisplay.ActualHeight = ActualHeight;
+            WaveFormDisplay.BlankZone = 10;
+            WaveFormDisplay.yTranslate = this.ActualHeight / 2;
+            WaveFormDisplay.yScale = this.ActualHeight / 2;
+            WaveFormDisplay.xScale = XScale;
+            mainCanvas.Children.Add(WaveFormDisplay.WaveDisplayShape);
 
 
         }
@@ -280,8 +301,8 @@ namespace TTSAutomate
             {
                 xPos--;
             }
-            MaxValue = waveForm.Values.ContainsKey(xPos) ? waveForm.Values[xPos].Item1 : 0;
-            MinValue = waveForm.Values.ContainsKey(xPos) ? -waveForm.Values[xPos].Item2 : 0;
+            MaxValue = WaveFormDisplay.Values.ContainsKey(xPos) ? WaveFormDisplay.Values[xPos].Item1 : 0;
+            MinValue = WaveFormDisplay.Values.ContainsKey(xPos) ? -WaveFormDisplay.Values[xPos].Item2 : 0;
 
             Canvas.SetLeft(cursor, mouseX);
             cursorPosition.Content = String.Format("{0}ms", XLocationToTimeSpan(mouseX).TotalMilliseconds, NAudio.Utils.Decibels.LinearToDecibels(MaxValue), NAudio.Utils.Decibels.LinearToDecibels(MinValue));
@@ -428,9 +449,9 @@ namespace TTSAutomate
         {
             // x is 1024 bytes
 
-            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000;
+            double scale = 1024 * WaveFormDisplay.SampleRate * WaveFormDisplay.BitsPerSample / 256000;
 
-            double millis = 1000 * x * scale / waveForm.SampleRate / (waveForm.BitsPerSample) * waveForm.Channels;
+            double millis = 1000 * x * scale / WaveFormDisplay.SampleRate / (WaveFormDisplay.BitsPerSample) * WaveFormDisplay.Channels;
             //System.Diagnostics.Debug.WriteLine("X was {0}, millis is {1}", x, millis);
 
             return TimeSpan.FromMilliseconds(millis);
@@ -439,8 +460,8 @@ namespace TTSAutomate
 
         private double TimeSpanToXLocation(TimeSpan time)
         {
-            double scale = 1024 * waveForm.SampleRate * waveForm.BitsPerSample / 256000;
-            return time.TotalMilliseconds / (1000 * scale / waveForm.SampleRate / (waveForm.BitsPerSample) * waveForm.Channels);
+            double scale = 1024 * WaveFormDisplay.SampleRate * WaveFormDisplay.BitsPerSample / 256000;
+            return time.TotalMilliseconds / (1000 * scale / WaveFormDisplay.SampleRate / (WaveFormDisplay.BitsPerSample) * WaveFormDisplay.Channels);
         }
 
         private double SampleToYPosition(double value)
