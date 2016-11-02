@@ -25,6 +25,7 @@ using System.IO.Packaging;
 using NAudio.Wave;
 using System.Net;
 using System.Web.Script.Serialization;
+using System.Reflection;
 
 namespace TTSAutomate
 {
@@ -1345,6 +1346,63 @@ namespace TTSAutomate
         }
     }
 
+    public class RowValidationRule : ValidationRule
+    {
+        public override ValidationResult Validate(object value,
+            System.Globalization.CultureInfo cultureInfo)
+        {
+            PhraseItem item = (value as BindingGroup).Items[0] as PhraseItem;
+            if (String.IsNullOrEmpty(item.FileName))
+            {
+                return new ValidationResult(false,
+                    "Filename cannot be blank");
+            }
+            else if (String.IsNullOrEmpty(item.Phrase))
+            {
+                return new ValidationResult(false,
+                    "Phrase to speak should not be blank");
+            }
+            else
+            {
+                return ValidationResult.ValidResult;
+            }
+        }
+    }
+
+    public class UniqueFileFolderValidationRule : ValidationRule
+    {
+        public CollectionViewSource CurrentCollection { get; set; }
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (value != null)
+            {
+                PhraseItem phraseItem = (value as BindingGroup).Items[0] as PhraseItem;
+                if (String.IsNullOrEmpty(phraseItem.Folder) && String.IsNullOrEmpty(phraseItem.FileName))
+                {
+                    return new ValidationResult(true, null);
+
+                }
+                ObservableCollection<PhraseItem> castedCollection = (ObservableCollection<PhraseItem>)CurrentCollection.Source;
+
+                foreach (PhraseItem item in castedCollection)
+                {
+                    if ((item.FileName == phraseItem.FileName) &&
+                        (item.Folder == phraseItem.Folder))
+                    {
+                        if (castedCollection.Count(n=> n.FileName == phraseItem.FileName && n.Folder == phraseItem.Folder) > 1)
+                        {
+                            return new ValidationResult(false, "There is already a phrase with that folder and filename");
+
+                        }
+                    }
+                }
+            }
+
+            return new ValidationResult(true, null);
+        }
+    }
+
     public class PlayItem
     {
         public string Filename { get; set; }
@@ -1528,5 +1586,41 @@ namespace TTSAutomate
 
         #endregion // Get Visuals
     }
-}
+
+    /// <summary>
+    /// This class overrides the OnCanExecuteBeginEdit method of the standard grid
+    /// </summary>
+    public partial class EditableDataGrid : System.Windows.Controls.DataGrid
+    {
+
+        /// <summary>
+        /// This method overrides the 
+        /// if (canExecute && HasRowValidationError) condition of the base method to allow
+        /// ----entering edit mode when there is a pending validation error
+        /// ---editing of other rows
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnCanExecuteBeginEdit(System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+
+            bool hasCellValidationError = false;
+            bool hasRowValidationError = false;
+            BindingFlags bindingFlags = BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Instance;
+            //Current cell
+            PropertyInfo cellErrorInfo = this.GetType().BaseType.GetProperty("HasCellValidationError", bindingFlags);
+            //Grid level
+            PropertyInfo rowErrorInfo = this.GetType().BaseType.GetProperty("HasRowValidationError", bindingFlags);
+
+            if (cellErrorInfo != null) hasCellValidationError = (bool)cellErrorInfo.GetValue(this, null);
+            if (rowErrorInfo != null) hasRowValidationError = (bool)rowErrorInfo.GetValue(this, null);
+
+            base.OnCanExecuteBeginEdit(e);
+            if (!e.CanExecute && !hasCellValidationError && hasRowValidationError)
+            {
+                e.CanExecute = true;
+                e.Handled = true;
+            }
+        }
+    }
+    }
 // http://translate.google.com/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&q=Thousand&tl=En-au
