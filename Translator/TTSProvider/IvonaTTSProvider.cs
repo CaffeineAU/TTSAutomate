@@ -107,7 +107,7 @@ namespace TTSAutomate
 </p>
 </speak>
 ",text);
-            byte[] stringbytes = Encoding.Default.GetBytes(SSMLText);
+            byte[] stringbytes = Encoding.UTF8.GetBytes(SSMLText);
             SSMLText = Encoding.UTF8.GetString(stringbytes);
 
             string algorithm = "AWS4-HMAC-SHA256";
