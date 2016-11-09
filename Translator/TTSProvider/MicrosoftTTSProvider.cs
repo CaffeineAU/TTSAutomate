@@ -31,7 +31,7 @@ namespace TTSAutomate
             {
                 foreach (var v in speechSynth.GetInstalledVoices().Select(v => v.VoiceInfo))
                 {
-                    AvailableVoices.Add(new Voice { Name = v.Name, Gender = v.Gender.ToString(), Language = v.Culture.DisplayName });
+                    AvailableVoices.Add(new Voice { Name = v.Name, Gender = v.Gender.ToString(), Language = v.Culture.Name});
                 }
                 if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
                 {
@@ -59,12 +59,12 @@ namespace TTSAutomate
         public override void DownloadItem(PhraseItem item, string folder)
         {
             String SSMLText = String.Format(@"<?xml version=""1.0""?>
-<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""en-US"">
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""{1}"">
 <p>
 <s>{0}</s>
 </p>
 </speak>
-", item.Phrase);
+", item.Phrase, SelectedVoice.Language);
 
             try
             {
@@ -109,12 +109,12 @@ namespace TTSAutomate
         public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
             String SSMLText = String.Format(@"<?xml version=""1.0""?>
-<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""en-US"">
+<speak xmlns=""http://www.w3.org/2001/10/synthesis"" version=""1.0"" xml:lang=""{1}"">
 <p>
 <s>{0}</s>
 </p>
 </speak>
-", item.Phrase);
+", item.Phrase, SelectedVoice.Language);
 
             try
             {
