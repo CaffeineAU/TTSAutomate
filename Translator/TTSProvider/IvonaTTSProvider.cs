@@ -106,7 +106,7 @@ namespace TTSAutomate
 <s>{0}</s>
 </p>
 </speak>
-",text);
+",text.Replace("&","&amp;"));
             byte[] stringbytes = Encoding.UTF8.GetBytes(SSMLText);
             SSMLText = Encoding.UTF8.GetString(stringbytes);
 

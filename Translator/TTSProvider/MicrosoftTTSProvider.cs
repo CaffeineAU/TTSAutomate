@@ -64,7 +64,7 @@ namespace TTSAutomate
 <s>{0}</s>
 </p>
 </speak>
-", item.Phrase, SelectedVoice.Language);
+", item.Phrase.Replace("&", "&amp;"), SelectedVoice.Language);
 
             try
             {
@@ -114,7 +114,7 @@ namespace TTSAutomate
 <s>{0}</s>
 </p>
 </speak>
-", item.Phrase, SelectedVoice.Language);
+", item.Phrase.Replace("&", "&amp;"), SelectedVoice.Language);
 
             try
             {
