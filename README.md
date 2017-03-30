@@ -1,5 +1,6 @@
 # TTSAutomate
 
+## Ivona voices are currently over the usage limit and have been disabled by Ivona until April 1 ##
 ## _Download the tool [here](https://github.com/CaffeineAU/TTSAutomate/releases/latest)_
 
 A tool to generate Audio files from text strings in WAV and MP3 format, using various TTS engines as the source
