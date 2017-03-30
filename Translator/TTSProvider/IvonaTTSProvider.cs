@@ -14,6 +14,7 @@ namespace TTSAutomate
 {
     partial class IvonaTTSProvider : TTSProvider
     {
+        bool disabled = false;
         public IvonaTTSProvider()
         {
             Name = "Ivona Text To Speech";
@@ -22,6 +23,7 @@ namespace TTSAutomate
             HasDiscreteSpeed = true;
             HasDiscreteVolume = true;
             BackgroundWorker loadVoicesWorker = new BackgroundWorker();
+            
             loadVoicesWorker.DoWork += delegate
             {
                 try
@@ -37,10 +39,11 @@ namespace TTSAutomate
                     }
 
                 }
-                catch (Exception)
+                catch (Exception Ex)
                 {
-                    //Couldn't load voices :(
-                    //throw;
+                    AvailableVoices.Add(new Voice { Name = "Ivona Voices are Disabled", Language = "en-US", Gender = "None"});
+                    SelectedVoice = AvailableVoices[0];
+                    disabled = true;
                 }
             };
             loadVoicesWorker.RunWorkerAsync();
@@ -90,9 +93,12 @@ namespace TTSAutomate
 
         public override void Play(PhraseItem item)
         {
-            byte[] mp3 = IvonaCreateSpeech(item.Phrase, SelectedVoice);
-            //File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName), );
-            MainWindow.PlayAudioStream(mp3);
+            if (!disabled)
+            {
+                byte[] mp3 = IvonaCreateSpeech(item.Phrase, SelectedVoice);
+                //File.WriteAllBytes(String.Format("{0}\\mp3\\{1}\\{2}.mp3", Path.GetTempPath(), item.Folder, item.FileName), );
+                MainWindow.PlayAudioStream(mp3);
+            }
         }
 
         public byte[] IvonaCreateSpeech(string text, Voice selectedVoice)
