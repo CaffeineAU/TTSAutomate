@@ -80,6 +80,7 @@ namespace TTSAutomate
             SampleRates.Add(11025);
             SampleRates.Add(16000);
             SampleRates.Add(22050);
+            SampleRates.Add(32000);
             SampleRates.Add(44100);
             SampleRates.Add(48000);
 

@@ -155,7 +155,7 @@ namespace TTSAutomate
             }
         }
 
-        private Voice selectedVoice;
+        private Voice selectedVoice = new Voice { Name = "No Voice Selected", Gender = "Female", Language = "en-US" };
 
         public Voice SelectedVoice
         {
