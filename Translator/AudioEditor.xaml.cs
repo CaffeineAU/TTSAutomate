@@ -29,6 +29,21 @@ namespace TTSAutomate
         float max = 0;
         float min = 1000;
 
+        private float silenceThreshold = -24;
+
+        public float SilenceThreshold
+        {
+            get { return silenceThreshold; }
+            set
+            {
+                silenceThreshold = value;
+                pwfc.SelectionStart = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+                pwfc.SelectionEnd = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.Reverse().First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+                pwfc.DrawSelectionRect();
+                OnPropertyChanged("SilenceThreshold");
+            }
+        }
+
 
         private int sampleRate = 0;
 
@@ -82,6 +97,7 @@ namespace TTSAutomate
                 Duration = wfr.TotalTime;
                 Channels = wfr.WaveFormat.Channels;
                 pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
+                LoadSound(sound0, 0);
             }
         }
 
@@ -181,13 +197,52 @@ namespace TTSAutomate
 
             WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
             pwfc.ClearWaveForm();
-            
-            FileName = @"c:\temp\trimmed.wav";
-            LoadSound(sound0, 0);
+            pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
 
-            var player = new WaveOutEvent();
-            player.Init(trimmed);
-            player.Play();
+            FileName = @"c:\temp\trimmed.wav";
+            //LoadSound(sound0, 0);
+            file = new AudioFileReader(FileName);
+
+            new Task(() =>
+            {
+                var player = new WaveOutEvent();
+                player.Init(file);
+                player.Play();
+                while (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                file.Close();
+            }).Start();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var file = new AudioFileReader(FileName);
+            var trimmed = new OffsetSampleProvider(file);
+            int totrim = pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key;
+            trimmed.SkipOver = pwfc.XLocationToTimeSpan(totrim);
+            trimmed.Take = TimeSpan.Zero;
+
+            WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            pwfc.ClearWaveForm();
+            pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
+
+            FileName = @"c:\temp\trimmed.wav";
+            //LoadSound(sound0, 0);
+            file = new AudioFileReader(FileName);
+
+            new Task(() =>
+            {
+                var player = new WaveOutEvent();
+                player.Init(file);
+                player.Play();
+                while (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                file.Close();
+            }).Start();
 
         }
     }

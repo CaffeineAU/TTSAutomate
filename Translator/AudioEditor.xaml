@@ -39,10 +39,15 @@
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="3" Margin="0,5" >
             <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5" Click="Button_Click"/>
-            <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5" Click="Button_Click_1"/>
             <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
             <Button Content="Trim start and end silence" VerticalContentAlignment="Center" Margin="5"/>
         </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="4" Grid.Row="2" Margin="0,5" Height="30" VerticalAlignment="Top" >
+            <Label Content="Silence Threshold" VerticalContentAlignment="Top" Margin="5,0"/>
+            <TextBox Text="{Binding Path=SilenceThreshold}" VerticalContentAlignment="Top" Margin="5,5" Width="50"/>
+                
+            </StackPanel>
         <ProgressBar  Value="{Binding Path=MaxValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1.0" />
         <ProgressBar  Value="{Binding Path=MinValue, ElementName=pwfc}" Grid.Column="6" Grid.Row="1" Orientation="Vertical" Minimum="0" Maximum="1.0" RenderTransformOrigin="0.5,0.5">
             <ProgressBar.RenderTransform>
@@ -64,12 +69,14 @@
                 <TextBlock Text="Selection Start" />
                 <TextBlock Text="Selection End" />
                 <TextBlock Text="Selection Duration"  />
+                <TextBlock Text="Sound level at cursor"  />
             </StackPanel>
             <StackPanel HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Grid.Column="1" >
                 <TextBlock Text="{Binding Path=CursorTime, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
                 <TextBlock Text="{Binding Path=SelectionStart, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
                 <TextBlock Text="{Binding Path=SelectionEnd, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}" />
                 <TextBlock Text="{Binding Path=SelectionDuration, StringFormat=' {0:mm}:{0:ss}.{0:fff}', ElementName=pwfc}"  />
+                <TextBlock Text="{Binding Path=CursordB, ElementName=pwfc}" />
             </StackPanel>
         </Grid>
     </Grid>

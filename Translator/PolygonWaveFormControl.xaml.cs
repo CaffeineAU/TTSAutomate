@@ -31,22 +31,22 @@ namespace TTSAutomate
 
         Cursor defaultCursor;
 
-        private float maxValue = 0;
+        private double maxValue = 0;
 
-        public float MaxValue
+        public double MaxValue
         {
             get { return maxValue; }
             set
             {
                 maxValue = value;
                 OnPropertyChanged("MaxValue");
-                System.Diagnostics.Debug.WriteLine("max {0}", MaxValue);
+                //System.Diagnostics.Debug.WriteLine("max {0}", MaxValue);
             }
         }
 
-        private float minValue = 0;
+        private double minValue = 0;
 
-        public float MinValue
+        public double MinValue
         {
             get { return minValue; }
             set
@@ -65,6 +65,18 @@ namespace TTSAutomate
             {
                 cursorTime = value;
                 OnPropertyChanged("CursorTime");
+            }
+        }
+
+        private String cursordB = "";
+
+        public String CursordB
+        {
+            get { return cursordB; }
+            set
+            {
+                cursordB = value;
+                OnPropertyChanged("CursordB");
             }
         }
 
@@ -138,6 +150,8 @@ namespace TTSAutomate
         public void AddNewWaveForm(Color newColor, int samplerate, int bitspersample, int channels)
         {
             WaveFormDisplay = new WaveForm();
+            WaveFormDisplay.yTranslate = 300;
+            waveForm.yScale = 300;
             //WaveFormDisplay.WaveDisplayShape = new Polygon();
             WaveFormDisplay.Values = new Dictionary<int, Tuple<float, float>>();
             WaveFormDisplay.Stroke = this.Foreground;
@@ -160,7 +174,9 @@ namespace TTSAutomate
         public void ClearWaveForm()
         {
             //mainCanvas.Children.Remove(WaveFormDisplay.WaveDisplayShape);
-            mainCanvas.UpdateLayout();
+            WaveFormDisplay.Reset();
+            //mainCanvas.InvalidateVisual();
+            //mainCanvas.UpdateLayout();
             RedrawGrid();
         }
 
@@ -169,6 +185,7 @@ namespace TTSAutomate
             // We will remove everything as we are going to rescale vertically
             
             mainCanvas.Children.Clear();
+            cursor = null;
             mainCanvas.InvalidateVisual();
 
             for (int i = 25; i < mainCanvas.ActualWidth; i += 25)
@@ -217,11 +234,11 @@ namespace TTSAutomate
 
             WaveFormDisplay.renderPosition = 0;
             //WaveFormDisplay.ClearAllPoints();
-            WaveFormDisplay.ActualWidth = ActualWidth;
-            WaveFormDisplay.ActualHeight = ActualHeight;
+            //WaveFormDisplay.ActualWidth = ActualWidth;
+            //WaveFormDisplay.ActualHeight = ActualHeight;
             WaveFormDisplay.BlankZone = 10;
-            WaveFormDisplay.yTranslate = this.ActualHeight / 2;
-            WaveFormDisplay.yScale = this.ActualHeight / 2;
+            //WaveFormDisplay.yTranslate = this.ActualHeight / 2;
+            //WaveFormDisplay.yScale = this.ActualHeight / 2;
             WaveFormDisplay.xScale = XScale;
             mainCanvas.Children.Add(WaveFormDisplay.WaveDisplayShape);
 
@@ -266,6 +283,13 @@ namespace TTSAutomate
         {
             mouseX = Math.Min(mainCanvas.ActualWidth, Math.Max(0, e.GetPosition(mainCanvas).X));
 
+            Point mousepos = e.GetPosition(mainCanvas);
+
+            UpdateCursor(mousepos, selecting);
+        }
+
+        public void UpdateCursor(Point mousepos, bool drawSelection)
+        {
             if (cursor == null)
             {
                 cursor = new Line
@@ -286,8 +310,8 @@ namespace TTSAutomate
 
             }
 
-            if ((Difference(e.GetPosition(mainCanvas).X, TimeSpanToXLocation(SelectionStart)) < 2) ||
-                    Difference(e.GetPosition(mainCanvas).X, TimeSpanToXLocation(SelectionEnd)) < 2)
+            if ((Difference(mousepos.X, TimeSpanToXLocation(SelectionStart)) < 2) ||
+                    Difference(mousepos.X, TimeSpanToXLocation(SelectionEnd)) < 2)
             {
                 Cursor = System.Windows.Input.Cursors.SizeWE;
             }
@@ -301,16 +325,16 @@ namespace TTSAutomate
             {
                 xPos--;
             }
-            MaxValue = WaveFormDisplay.Values.ContainsKey(xPos) ? WaveFormDisplay.Values[xPos].Item1 : 0;
-            MinValue = WaveFormDisplay.Values.ContainsKey(xPos) ? -WaveFormDisplay.Values[xPos].Item2 : 0;
-
+            MaxValue = WaveFormDisplay.Values.ContainsKey(xPos) ? -WaveFormDisplay.Values[xPos].Item2 : double.MinValue;
+            MinValue = WaveFormDisplay.Values.ContainsKey(xPos) ? WaveFormDisplay.Values[xPos].Item1 : double.MinValue;
             Canvas.SetLeft(cursor, mouseX);
-            cursorPosition.Content = String.Format("{0}ms", XLocationToTimeSpan(mouseX).TotalMilliseconds, NAudio.Utils.Decibels.LinearToDecibels(MaxValue), NAudio.Utils.Decibels.LinearToDecibels(MinValue));
+            cursorPosition.Content = String.Format("{0}ms", XLocationToTimeSpan(mouseX).TotalMilliseconds);
             CursorTime = XLocationToTimeSpan(mouseX);
+            CursordB = String.Format("({0:F2}dB / {1:F2}dB)", double.IsNaN(NAudio.Utils.Decibels.LinearToDecibels(MaxValue))? double.NegativeInfinity : NAudio.Utils.Decibels.LinearToDecibels(MaxValue), double.IsNaN(NAudio.Utils.Decibels.LinearToDecibels(MinValue)) ? double.NegativeInfinity : NAudio.Utils.Decibels.LinearToDecibels(MinValue));
 
             Canvas.SetLeft(cursorPosition, mouseX);
             Canvas.SetTop(cursorPosition, 10);
-            if (selecting)
+            if (drawSelection)
             {
                 if (selectionDuration == null)
                 {
@@ -445,7 +469,32 @@ namespace TTSAutomate
 
         }
 
-        private TimeSpan XLocationToTimeSpan(double x)
+        public void DrawSelectionRect()
+        {
+            mainCanvas.Children.Remove(selectionRect);
+            mainCanvas.Children.Remove(selectionDuration);
+
+            selectionRect = new Rectangle { Width = 1, Height = ActualHeight - 120, Fill = new SolidColorBrush(Color.FromArgb(64, 128, 0, 0)), Stroke = Brushes.DarkRed };
+            mainCanvas.Children.Add(selectionRect);
+
+            Canvas.SetZIndex(selectionRect, 1);
+            Canvas.SetTop(selectionRect, 60);
+
+            selectionDuration = new Label { Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), mouseX))), FontSize = 8, Width = 50, HorizontalContentAlignment = HorizontalAlignment.Center };
+            mainCanvas.Children.Add(selectionDuration);
+            //Console.WriteLine(mouseX);
+            Canvas.SetLeft(selectionRect, TimeSpanToXLocation(SelectionStart));
+            selectionRect.Width = Math.Abs(TimeSpanToXLocation(SelectionStart) - TimeSpanToXLocation(SelectionEnd));
+
+            selectionDuration.Content = String.Format("{0}ms", XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), TimeSpanToXLocation(SelectionEnd))).TotalMilliseconds);
+            SelectionDuration = XLocationToTimeSpan(Difference(TimeSpanToXLocation(SelectionStart), TimeSpanToXLocation(SelectionEnd)));
+            Canvas.SetLeft(selectionDuration, Math.Max(0, Math.Min(TimeSpanToXLocation(SelectionStart), TimeSpanToXLocation(SelectionEnd)) + (Difference(TimeSpanToXLocation(SelectionStart), TimeSpanToXLocation(SelectionEnd)) / 2) - selectionDuration.Width / 2));
+
+            Canvas.SetZIndex(selectionDuration, 10);
+
+        }
+
+        public TimeSpan XLocationToTimeSpan(double x)
         {
             // x is 1024 bytes
 
@@ -591,8 +640,8 @@ namespace TTSAutomate
         public void AddValue(float maxValue, float minValue)
         {
             int visiblePixels = (int)(ActualWidth / xScale);
-            if (visiblePixels > 0)
-            {
+            //if (visiblePixels > 0)
+            //{
                 CreatePoint(maxValue, minValue);
 
                 //if (renderPosition > visiblePixels)
@@ -606,7 +655,7 @@ namespace TTSAutomate
                 //    WaveDisplayShape.Points[erasePosition] = new Point(erasePosition * xScale, yPos);
                 //    WaveDisplayShape.Points[BottomPointIndex(erasePosition)] = new Point(erasePosition * xScale, yPos);
                 //}
-            }
+            //}
         }
 
         public void Reset()
