@@ -15,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace TTSAutomate
 {
@@ -23,13 +24,12 @@ namespace TTSAutomate
     /// </summary>
     public partial class AudioEditor : Window, INotifyPropertyChanged
     {
-        WaveFileReader wfr;
         WaveChannel32 sound0;
 
         float max = 0;
         float min = 1000;
 
-        private float silenceThreshold = -24;
+        private float silenceThreshold = -48;
 
         public float SilenceThreshold
         {
@@ -89,7 +89,10 @@ namespace TTSAutomate
             set
             {
                 filename = value;
-                wfr = new WaveFileReader(value);
+                //wfr = new WaveFileReader(value);
+                MemoryStream ms = new MemoryStream(File.ReadAllBytes(value));
+                var wfr = new WaveFileReader(ms);
+
 
                 sound0 = new WaveChannel32(wfr);
                 SampleRate = wfr.WaveFormat.SampleRate;
@@ -98,6 +101,7 @@ namespace TTSAutomate
                 Channels = wfr.WaveFormat.Channels;
                 pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
                 LoadSound(sound0, 0);
+                wfr.Close();
             }
         }
 
@@ -120,6 +124,7 @@ namespace TTSAutomate
             InitializeComponent();
             FileName = filename; 
             this.DataContext = this;
+
         }
 
         private void LoadSound(WaveChannel32 sound, int index)
@@ -142,10 +147,9 @@ namespace TTSAutomate
             }
 
             sound.Close();
-            wfr.Close();
-            Debug.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
-            Debug.WriteLine("Sound is " + wfr.Length + " bytes");
-            Debug.WriteLine("Called addvalue " + count + " times");
+            //Debug.WriteLine("Sound is " + sound.TotalTime.TotalMilliseconds + "ms long");
+            //Debug.WriteLine("Sound is " + wfr.Length + " bytes");
+            //Debug.WriteLine("Called addvalue " + count + " times");
         }
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -155,6 +159,7 @@ namespace TTSAutomate
 
         private void pwfc_MouseUp(object sender, MouseButtonEventArgs e)
         {
+
             var file = new AudioFileReader(FileName);
             var trimmed = new OffsetSampleProvider(file);
             trimmed.SkipOver = pwfc.SelectionStart;
@@ -200,19 +205,18 @@ namespace TTSAutomate
             pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
 
             FileName = @"c:\temp\trimmed.wav";
-            //LoadSound(sound0, 0);
-            file = new AudioFileReader(FileName);
-
+            MemoryStream ms = new MemoryStream(File.ReadAllBytes(FileName));
+            var file2 = new WaveFileReader(ms);
             new Task(() =>
             {
                 var player = new WaveOutEvent();
-                player.Init(file);
+                player.Init(file2);
                 player.Play();
                 while (player.PlaybackState != PlaybackState.Stopped)
                 {
                     System.Threading.Thread.Sleep(100);
                 }
-                file.Close();
+                file2.Close();
             }).Start();
         }
 
@@ -230,20 +234,116 @@ namespace TTSAutomate
 
             FileName = @"c:\temp\trimmed.wav";
             //LoadSound(sound0, 0);
-            file = new AudioFileReader(FileName);
-
+            MemoryStream ms = new MemoryStream(File.ReadAllBytes(FileName));
+            var file2 = new WaveFileReader(ms);
             new Task(() =>
             {
                 var player = new WaveOutEvent();
-                player.Init(file);
+                player.Init(file2);
                 player.Play();
                 while (player.PlaybackState != PlaybackState.Stopped)
                 {
                     System.Threading.Thread.Sleep(100);
                 }
-                file.Close();
+                file2.Close();
+            }).Start();
+
+
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            var file = new AudioFileReader(FileName);
+            var trimmed = new OffsetSampleProvider(file);
+            int totrim = pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key;
+            pwfc.SelectionStart = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+            pwfc.SelectionEnd = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.Reverse().First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+            pwfc.DrawSelectionRect();
+
+            trimmed.SkipOver = pwfc.XLocationToTimeSpan(totrim);
+            trimmed.Take = pwfc.SelectionEnd - pwfc.SelectionStart;
+
+            WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            pwfc.ClearWaveForm();
+            pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
+
+            FileName = @"c:\temp\trimmed.wav";
+            //LoadSound(sound0, 0);
+            MemoryStream ms = new MemoryStream(File.ReadAllBytes(FileName));
+            var file2 = new WaveFileReader(ms);
+            new Task(() =>
+            {
+                var player = new WaveOutEvent();
+                player.Init(file2);
+                player.Play();
+                while (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                file2.Close();
+            }).Start();
+
+
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            var file = new AudioFileReader(FileName);
+            var trimmed = new OffsetSampleProvider(file);
+            int totrim = pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key;
+            pwfc.SelectionStart = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+            pwfc.SelectionEnd = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.Reverse().First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
+            pwfc.DrawSelectionRect();
+
+            trimmed.SkipOver = TimeSpan.Zero; 
+            trimmed.Take = pwfc.SelectionEnd ;
+
+            WaveFileWriter.CreateWaveFile(@"c:\temp\trimmed.wav", new SampleToWaveProvider(trimmed));
+            pwfc.ClearWaveForm();
+            pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
+
+            FileName = @"c:\temp\trimmed.wav";
+            //LoadSound(sound0, 0);
+            MemoryStream ms = new MemoryStream(File.ReadAllBytes(FileName));
+            var file2 = new WaveFileReader(ms);
+            new Task(() =>
+            {
+                var player = new WaveOutEvent();
+                player.Init(file2);
+                player.Play();
+                while (player.PlaybackState != PlaybackState.Stopped)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+                file2.Close();
             }).Start();
 
         }
+    }
+
+    class AutoDisposeFileReader : ISampleProvider
+    {
+        private readonly AudioFileReader reader;
+        private bool isDisposed;
+        public AutoDisposeFileReader(AudioFileReader reader)
+        {
+            this.reader = reader;
+            this.WaveFormat = reader.WaveFormat;
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            if (isDisposed)
+                return 0;
+            int read = reader.Read(buffer, offset, count);
+            if (read == 0)
+            {
+                reader.Dispose();
+                isDisposed = true;
+            }
+            return read;
+        }
+
+        public WaveFormat WaveFormat { get; private set; }
     }
 }

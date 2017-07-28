@@ -69,11 +69,15 @@ namespace TTSAutomate
 
             this.DataContext = this;
             //HeaderImage = MainWindow.LoadImage("settings.png");
-
             IvonaRegions = new List<string>();
-            IvonaRegions.Add("eu-west-1");
-            IvonaRegions.Add("us-east-1");
-            IvonaRegions.Add("us-west-2");
+
+
+            foreach (var item in Amazon.RegionEndpoint.EnumerableAllRegions)
+            {
+                IvonaRegions.Add(item.DisplayName);
+
+            }
+
 
             SampleRates = new List<int>();
             SampleRates.Add(8000);

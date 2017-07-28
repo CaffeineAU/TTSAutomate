@@ -98,7 +98,6 @@ namespace TTSAutomate
                 file.Tag.Title = item.Phrase;
                 file.Tag.Comment = String.Format("{0}, {1}, {2}, {3}", details[0], details[1], details[2], details[3]);
                 file.Save();
-
             }
             catch 
             {
@@ -109,7 +108,6 @@ namespace TTSAutomate
             {
                 using (Mp3FileReader mp3 = new Mp3FileReader(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                 {
-
                     using (var resampler = new MediaFoundationResampler(mp3, new NAudio.Wave.WaveFormat(Properties.Settings.Default.WavSampleRate, Properties.Settings.Default.WavBitsPerSample, 1)))
                     {
                         resampler.ResamplerQuality = 60;

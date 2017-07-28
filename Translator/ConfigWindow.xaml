@@ -55,7 +55,7 @@
             <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10,5" Header="TTS specific options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_5">
                     <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
-                        <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Ivona Region" HorizontalContentAlignment="Left" Width="150"/>
+                        <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Amazon Polly Region" HorizontalContentAlignment="Left" Width="150"/>
                         <ComboBox  x:Uid="ComboBox_4" Margin="0,5" ItemsSource="{Binding IvonaRegions}" VerticalContentAlignment="Center" SelectedItem="{Binding IvonaRegion, Source={x:Static properties:Settings.Default}}"/>
                     </StackPanel>
                     <StackPanel x:Uid="StackPanel_7" Orientation="Horizontal">

@@ -26,6 +26,7 @@ using NAudio.Wave;
 using System.Net;
 using System.Web.Script.Serialization;
 using System.Reflection;
+using Amazon.Polly;
 
 namespace TTSAutomate
 {
@@ -237,6 +238,9 @@ namespace TTSAutomate
 
         public MainWindow()
         {
+
+
+
             InitializeComponent();
             media.MediaEnded += delegate
             {
@@ -260,11 +264,11 @@ namespace TTSAutomate
 
             PhraseItems = new ObservableCollection<PhraseItem>(initialitems);
 
-            TTSEngines.Add(new IvonaTTSProvider());
+            TTSEngines.Add(new AmazonPollyTTSProvider());
             TTSEngines.Add(new GoogleTTSProvider());
             TTSEngines.Add(new MicrosoftTTSProvider());
             TTSEngines.Add(new BingTTSProvider());
-            TTSEngines.Add(new FromTextToSpeechTTSProvider());
+           // TTSEngines.Add(new FromTextToSpeechTTSProvider());
 
             Title = String.Format("TTSAutomate {2} - {0} {1}", PhraseFileName, "(Unsaved)", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
@@ -298,13 +302,14 @@ namespace TTSAutomate
                 if (TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider) != null)
                 {
                     SelectedEngine = TTSEngines.Find(n => n.Name == Properties.Settings.Default.LastTTSProvider);
-
                 }
                 else
                 {
                     SelectedEngine = TTSEngines[0];
-                    SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
-
+                    if (SelectedEngine.AvailableVoices.Count > 0)
+                    {
+                        SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
+                    }
                 }
                 SelectedEngine.SelectedDiscreteVolume = Properties.Settings.Default.LastTTSDiscreteVolume;
                 SelectedEngine.SelectedDiscreteSpeed = Properties.Settings.Default.LastTTSDiscreteSpeed;
@@ -315,8 +320,10 @@ namespace TTSAutomate
             else
             {
                 SelectedEngine = TTSEngines[0];
-                SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
-
+                if (SelectedEngine.AvailableVoices.Count > 0)
+                {
+                    SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
+                }
             }
 
             new Task(() =>
@@ -545,11 +552,12 @@ namespace TTSAutomate
                 {
                     using (WaveOut waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback()))
                     {
+
                         waveOut.Init(blockAlignedStream);
                         waveOut.Play();
                         while (waveOut.PlaybackState == PlaybackState.Playing)
                         {
-                            System.Threading.Thread.Sleep(10);
+                            System.Threading.Thread.Sleep(100);
                         }
                     }
                 }

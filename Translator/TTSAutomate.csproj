@@ -60,6 +60,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.3.17\lib\net45\AWSSDK.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AWSSDK.Polly, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Polly.3.3.2.3\lib\net45\AWSSDK.Polly.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Windows7APICodePack-Core.1.1.0.0\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
       <Private>True</Private>
@@ -126,6 +134,7 @@
     <Compile Include="TTSProvider\FromTextToSpeechTTSProvider.cs" />
     <Compile Include="TTSProvider\BingTTSProvider.cs" />
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
+    <Compile Include="TTSProvider\AmazonPollyProvider.cs" />
     <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
     <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
     <Compile Include="TTSProvider\TTSProvider.cs" />
@@ -207,6 +216,9 @@
     </Content>
     <Resource Include="settings.png" />
     <Resource Include="ToDo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.Polly.3.3.2.3\analyzers\dotnet\cs\AWSSDK.Polly.CodeAnalysis.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

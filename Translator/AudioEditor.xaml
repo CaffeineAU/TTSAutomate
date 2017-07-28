@@ -40,8 +40,8 @@
         <StackPanel Orientation="Vertical" Grid.Row="2" Grid.Column="3" Margin="0,5" >
             <Button Content="Crop to selection" VerticalContentAlignment="Center" Margin="5" Click="Button_Click"/>
             <Button Content="Trim start silence" VerticalContentAlignment="Center" Margin="5" Click="Button_Click_1"/>
-            <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5"/>
-            <Button Content="Trim start and end silence" VerticalContentAlignment="Center" Margin="5"/>
+            <Button Content="Trim end silence" VerticalContentAlignment="Center" Margin="5" Click="Button_Click_3"/>
+            <Button Content="Trim start and end silence" VerticalContentAlignment="Center" Margin="5" Click="Button_Click_2"/>
         </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Column="4" Grid.Row="2" Margin="0,5" Height="30" VerticalAlignment="Top" >
             <Label Content="Silence Threshold" VerticalContentAlignment="Top" Margin="5,0"/>
