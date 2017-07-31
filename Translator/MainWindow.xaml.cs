@@ -125,6 +125,11 @@ namespace TTSAutomate
             {
                 selectedEngine = value;
                 Properties.Settings.Default.LastTTSProvider = SelectedEngine.Name;
+                if (SelectedEngine.AvailableVoices.Count > 0)
+                {
+                    SelectedEngine.SelectedVoice = SelectedEngine.AvailableVoices[0];
+
+                }
                 OnPropertyChanged("SelectedEngine");
                 CheckFolderForVoices();
 

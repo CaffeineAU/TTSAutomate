@@ -29,15 +29,17 @@ namespace TTSAutomate
                 try
                 {
                     AvailableVoices = IvonaListVoices().Voices;
-                    if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                    if (this.Name == Properties.Settings.Default.LastTTSProvider)
                     {
-                        SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                        if (Properties.Settings.Default.RememberLanguageSettings)
+                        {
+                            SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                        }
+                        else
+                        {
+                            SelectedVoice = AvailableVoices[0];
+                        }
                     }
-                    else
-                    {
-                        SelectedVoice = AvailableVoices[0];
-                    }
-
                 }
                 catch (Exception Ex)
                 {

@@ -28,13 +28,16 @@ namespace TTSAutomate
                 cultures.AddRange(CultureInfo.GetCultures(CultureTypes.SpecificCultures));
                 cultures.Sort((x, y) => x.DisplayName.CompareTo(y.DisplayName));
                 AvailableVoices = cultures.Select(x => new Voice() { Name = x.DisplayName, Language = x.Name }).ToList();
-                if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                if (this.Name == Properties.Settings.Default.LastTTSProvider)
                 {
-                    SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
-                }
-                else
-                {
-                    SelectedVoice = AvailableVoices[0];
+                    if (Properties.Settings.Default.RememberLanguageSettings)
+                    {
+                        SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                    }
+                    else
+                    {
+                        SelectedVoice = AvailableVoices[0];
+                    }
                 }
 
             };

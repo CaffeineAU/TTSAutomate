@@ -34,27 +34,26 @@ namespace TTSAutomate
             {
                 try
                 {
-                    //List<Amazon.Polly.Model.Voice> availableVoices = polly.DescribeVoices(new Amazon.Polly.Model.DescribeVoicesRequest()).Voices;
                     foreach (var v in polly.DescribeVoices(new Amazon.Polly.Model.DescribeVoicesRequest()).Voices)
                     {
                         AvailableVoices.Add(new Voice { Name = v.Name, Gender = v.Gender.ToString(), Language = v.LanguageName });
                     }
 
-                    //foreach (var item in availableVoices)
-                    //{
-                    //    AvailableVoices.Add(new TTSAutomate.Voice { Name = item.Name, Gender = item.Gender, Language = item.LanguageName });
-                    //}
-                    if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                    if (this.Name == Properties.Settings.Default.LastTTSProvider)
                     {
-                        SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
-                    }
-                    else
-                    {
-                        SelectedVoice = AvailableVoices[0];
+                        if (Properties.Settings.Default.RememberLanguageSettings)
+                        {
+                            SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                        }
+                        else
+                        {
+                            SelectedVoice = AvailableVoices[0];
+                        }
                     }
                 }
                 catch (Exception Ex)
                 {
+                    Logger.Log(Ex.ToString());
                     AvailableVoices.Add(new Voice { Name = "Amazon Polly Voices are Disabled", Language = "en-US", Gender = "None"});
                     SelectedVoice = AvailableVoices[0];
                     disabled = true;
@@ -62,21 +61,10 @@ namespace TTSAutomate
             };
             loadVoicesWorker.RunWorkerAsync();
 
-            AvailableSpeeds.AddRange(new String[] { "x-slow", "slow", "medium", "fast", "x-fast" });
-            SelectedDiscreteSpeed = "medium";
-
-            AvailableVolumes.AddRange(new String[] { "silent", "x-soft", "soft", "medium", "loud", "x-loud" });
-            SelectedDiscreteVolume = "medium";
         }
 
         public override void DownloadItem(PhraseItem item, string folder)
         {
-            //            String SSMLText = String.Format(@"
-            //<?xml version=""1.0""?>
-            //<speak xml:lang=""en - US"" onlangfailure=""processorchoice"" xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-            //  {0}
-            //</speak >
-            //", item.Phrase.Replace("&", "&amp;"));
             String SSMLText = String.Format(@"
 <speak>
   {0}
@@ -111,12 +99,6 @@ namespace TTSAutomate
 
         public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {
-//            String SSMLText = String.Format(@"
-//<?xml version=""1.0""?>
-//<speak xml:lang=""en - US"" onlangfailure=""processorchoice"" xmlns=""http://www.w3.org/2001/10/synthesis"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-//  {0}
-//</speak >
-//", item.Phrase.Replace("&", "&amp;"));
             String SSMLText = String.Format(@"
 <speak>
   {0}

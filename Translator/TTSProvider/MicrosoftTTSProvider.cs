@@ -33,13 +33,16 @@ namespace TTSAutomate
                 {
                     AvailableVoices.Add(new Voice { Name = v.Name, Gender = v.Gender.ToString(), Language = v.Culture.Name});
                 }
-                if (Properties.Settings.Default.RememberLanguageSettings && this.Name == Properties.Settings.Default.LastTTSProvider)
+                if (this.Name == Properties.Settings.Default.LastTTSProvider)
                 {
-                    SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
-                }
-                else
-                {
-                    SelectedVoice = AvailableVoices[0];
+                    if (Properties.Settings.Default.RememberLanguageSettings)
+                    {
+                        SelectedVoice = AvailableVoices.Find(n => n.Name == Properties.Settings.Default.LastTTSVoice);
+                    }
+                    else
+                    {
+                        SelectedVoice = AvailableVoices[0];
+                    }
                 }
             }).Start();
 
