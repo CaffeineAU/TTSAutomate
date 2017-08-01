@@ -181,7 +181,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <ComboBox x:Uid="AvailableVoices" ItemsSource="{Binding Path=SelectedEngine.AvailableVoices}" SelectedValue="{Binding Path=SelectedEngine.SelectedVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
+            <ComboBox x:Uid="AvailableVoices" ItemsSource="{Binding Path=SelectedEngine.AvailableVoices}" SelectedItem="{Binding Path=SelectedEngine.SelectedVoice, Mode=TwoWay}" SelectionChanged="VoiceComboBox_SelectionChanged" >
                 <ComboBox.Style>
                     <Style x:Uid="Style_4" TargetType="{x:Type ComboBox}">
                         <Setter x:Uid="Setter_12" Property="Visibility" Value="Collapsed" />
