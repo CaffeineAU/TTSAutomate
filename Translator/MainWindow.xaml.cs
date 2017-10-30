@@ -1099,11 +1099,11 @@ namespace TTSAutomate
                         //{
                         nextRowCell = (nextRowCell as DataGridCell).PredictFocus(FocusNavigationDirection.Right);
                         //}
-                        int rowselected = PhraseItems.IndexOf(((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem);
+                        int rowselected = PhraseItems.IndexOf((nextRow as DataGridRow).Item as PhraseItem);
                         while (rowselected >= 0 && String.IsNullOrEmpty(PhraseItems[rowselected].Folder)) { rowselected--; } // traverse upwards
                         if (rowselected >= 0)
                         {
-                            (((nextRow as DataGridRow).Item as PhraseItem) as PhraseItem).Folder = PhraseItems[rowselected].Folder;
+                            ((nextRow as DataGridRow).Item as PhraseItem).Folder = PhraseItems[rowselected].Folder;
                             NeedToSave = true;
                         }
                     }
