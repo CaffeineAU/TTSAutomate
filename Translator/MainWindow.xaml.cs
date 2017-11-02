@@ -1328,7 +1328,7 @@ namespace TTSAutomate
             }
             if (dep != null && ((dep as DataGridRow).Item as PhraseItem).DownloadComplete)
             {
-                AudioEditor ae = new AudioEditor(String.Format("{0}\\wav\\{1}.wav", OutputDirectoryName, ((dep as DataGridRow).Item as PhraseItem).FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
+                AudioEditor ae = new AudioEditor(String.Format("{0}\\wav\\{1}.{2}", OutputDirectoryName, ((dep as DataGridRow).Item as PhraseItem).FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
                 ae.Show();
 
             }
