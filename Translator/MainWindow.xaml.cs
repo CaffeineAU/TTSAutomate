@@ -372,7 +372,7 @@ namespace TTSAutomate
                                 }
                                 catch (TagLib.CorruptFileException ex)
                                 {
-                                    Debug.WriteLine("File {1} Exception", ex, item.Phrase);
+                                    Debug.WriteLine("File {1} Exception {0}", ex, item.Phrase);
                                 }
                             }
                         }
