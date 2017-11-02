@@ -213,7 +213,6 @@ namespace TTSAutomate
             webRequest.Headers.Add("X-Amz-date", requestDate);
             webRequest.Headers.Add("Authorization", authorization);
             webRequest.Headers.Add("x-amz-content-sha256", hashedRequestPayload);
-            webRequest.ContentLength = requestPayload.Length;
             webRequest.ContentLength = bytes.Length;
 
             try
