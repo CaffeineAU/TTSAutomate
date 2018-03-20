@@ -288,7 +288,7 @@ namespace TTSAutomate
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            var file = new AudioFileReader(FileName);
+            var file = new AutoDisposeFileReader( new AudioFileReader(FileName));
             var trimmed = new OffsetSampleProvider(file);
             int totrim = pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key;
             pwfc.SelectionStart = pwfc.XLocationToTimeSpan(pwfc.WaveFormDisplay.Values.First(n => n.Value.Item1 > NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold) && n.Value.Item2 < NAudio.Utils.Decibels.DecibelsToLinear(SilenceThreshold)).Key);
@@ -303,7 +303,7 @@ namespace TTSAutomate
             pwfc.AddNewWaveForm(Color.FromRgb(67, 217, 150), SampleRate, BitsPerSample, Channels);
 
             FileName = @"c:\temp\trimmed.wav";
-            //LoadSound(sound0, 0);
+
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(FileName));
             var file2 = new WaveFileReader(ms);
             new Task(() =>

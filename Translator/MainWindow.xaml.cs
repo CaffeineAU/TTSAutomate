@@ -421,10 +421,32 @@ namespace TTSAutomate
 
         private void DownloaderWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
             try
             {
+
+             //   Parallel.ForEach(PhraseItems, (item) =>
+             //   {
+             //       if (!IsPhraseEmpty(item))
+             //       {
+             //           if (!DownloaderWorker.CancellationPending)
+             //           {
+             //               if (!item.DownloadComplete)
+             //               {
+             //                   DownloadItem(item, false);
+             //               }
+             //           }
+             //           else
+             //           {
+             //               e.Result = true;
+             //               //break;
+             //           }
+             //       }
+             //   });
+
                 foreach (var item in PhraseItems)
-                {
+                {                
                     if (!IsPhraseEmpty(item))
                     {
                         if (!DownloaderWorker.CancellationPending)
@@ -441,6 +463,7 @@ namespace TTSAutomate
                         }
                     }
                 }
+
             }
             catch (Exception Ex)
             {
@@ -459,6 +482,8 @@ namespace TTSAutomate
                 }
 
             }
+                sw.Stop();
+                Console.WriteLine("Elapsed {0}", sw.Elapsed);
         }
 
         private void DownloadItem(PhraseItem item, bool play)
@@ -609,11 +634,20 @@ namespace TTSAutomate
 
             filenameSelected = true;
             Properties.Settings.Default.LastPhraseFile = filename; //Path.GetDirectoryName(dlg.FileName);
-            NeedToSave = false;
 
+            FileInfo fi = new FileInfo(filename);
+
+            Boolean isCSV = fi.Extension.ToLower() != "csv";
+
+            NeedToSave = !isCSV; // If it's a CSV, prompt to save as a PSV when closing
 
             PhraseItems.Clear();
             Regex r = new Regex(@"(?<Folder>.*)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
+
+            if (isCSV)
+            {
+                r = new Regex(@"(?<Folder>.*)\,(?<FileName>.*)\,(?<Phrase>.*)\s{2}");
+            }
 
             List<PhraseItem> items = new List<PhraseItem>();
 
@@ -1188,7 +1222,7 @@ namespace TTSAutomate
                 WebClient wc = new WebClient();
                 wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
                 String responseString = "";
-
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
                 using (Stream responseStream = new MemoryStream(wc.DownloadData("https://api.github.com/repos/CaffeineAU/TTSAutomate/releases/latest")))
                 {
@@ -1295,6 +1329,14 @@ namespace TTSAutomate
         }
 
         private void OpenPhraseFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            PhraseFileName = e.Parameter.ToString();
+
+            LoadPhraseFile(e.Parameter.ToString(), Encoding.Default);
+
+        }
+
+        private void OpenCSVFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             PhraseFileName = e.Parameter.ToString();
 

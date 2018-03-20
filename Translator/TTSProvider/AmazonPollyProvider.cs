@@ -30,6 +30,7 @@ namespace TTSAutomate
 
             polly = new AmazonPollyClient(AccessKey, SecretKey, Amazon.RegionEndpoint.USEast2);
 
+
             loadVoicesWorker.DoWork += delegate
             {
                 try
@@ -73,22 +74,23 @@ namespace TTSAutomate
 
             try
             {
-                new Task(() =>
+                //new Task(() =>
+                //{
+                Amazon.Polly.Model.SynthesizeSpeechRequest ssr = new Amazon.Polly.Model.SynthesizeSpeechRequest();
+
+                ssr.TextType = TextType.Ssml;
+                ssr.Text = SSMLText;
+                ssr.VoiceId = polly.DescribeVoices(new Amazon.Polly.Model.DescribeVoicesRequest()).Voices.Find(n => n.Name == SelectedVoice.Name).Id;
+                ssr.OutputFormat = OutputFormat.Mp3;
+
+                using (FileStream output = File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
                 {
-                    Amazon.Polly.Model.SynthesizeSpeechRequest ssr = new Amazon.Polly.Model.SynthesizeSpeechRequest();
+                    polly.SynthesizeSpeech(ssr).AudioStream.CopyTo(output);
+                }
 
-                    ssr.TextType = TextType.Ssml;
-                    ssr.Text = SSMLText;
-                    ssr.VoiceId = polly.DescribeVoices(new Amazon.Polly.Model.DescribeVoicesRequest()).Voices.Find(n => n.Name == SelectedVoice.Name).Id;
-                    ssr.OutputFormat = OutputFormat.Mp3;
+                ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
 
-                    using (FileStream output = File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
-                    {
-                        polly.SynthesizeSpeech(ssr).AudioStream.CopyTo(output);
-                    }
-
-                    ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
-                }).Start();
+                //}).Start();
             }
             catch (Exception Ex)
             {
@@ -96,6 +98,41 @@ namespace TTSAutomate
                 item.DownloadComplete = false;
             }
         }
+
+//        public override void DownloadItem(PhraseItem item, string folder)
+//        {
+//            String SSMLText = String.Format(@"
+//<speak>
+//  {0}
+//</speak >
+//", item.Phrase.Replace("&", "&amp;"));
+
+//            try
+//            {
+//                new Task(() =>
+//                {
+//                    Amazon.Polly.Model.SynthesizeSpeechRequest ssr = new Amazon.Polly.Model.SynthesizeSpeechRequest();
+
+//                ssr.TextType = TextType.Ssml;
+//                ssr.Text = SSMLText;
+//                ssr.VoiceId = polly.DescribeVoices(new Amazon.Polly.Model.DescribeVoicesRequest()).Voices.Find(n => n.Name == SelectedVoice.Name).Id;
+//                ssr.OutputFormat = OutputFormat.Mp3;
+
+//                using (FileStream output = File.Create(String.Format("{0}\\mp3\\{1}\\{2}.mp3", folder, item.Folder, item.FileName)))
+//                {
+//                    polly.SynthesizeSpeech(ssr).AudioStream.CopyTo(output);
+//                }
+
+//                ConvertToWav(item, folder, false, new String[] { Name, SelectedVoice.Name, SelectedDiscreteSpeed, SelectedDiscreteVolume });
+
+//                }).Start();
+//            }
+//            catch (Exception Ex)
+//            {
+//                Logger.Log(Ex.ToString());
+//                item.DownloadComplete = false;
+//            }
+//        }
 
         public override void DownloadAndPlayItem(PhraseItem item, string folder)
         {

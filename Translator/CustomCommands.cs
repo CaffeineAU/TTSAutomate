@@ -212,5 +212,13 @@ namespace TTSAutomate.Commands
             null
     );
 
+        public static readonly RoutedUICommand OpenCSVFileCommand = new RoutedUICommand
+    (
+            "OpenCSVFileCommand",
+            "OpenCSVFileCommand",
+            typeof(CustomCommands),
+            null
+    );
+
     }
 }
