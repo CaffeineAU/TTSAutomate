@@ -136,7 +136,6 @@
     <Compile Include="TTSProvider\GoogleTTSProvider.cs" />
     <Compile Include="TTSProvider\AmazonPollyProvider.cs" />
     <Compile Include="TTSProvider\MicrosoftTTSProvider.cs" />
-    <Compile Include="TTSProvider\IvonaTTSProvider.cs" />
     <Compile Include="TTSProvider\TTSProvider.cs" />
     <Page Include="AudioEditor.xaml">
       <SubType>Designer</SubType>
