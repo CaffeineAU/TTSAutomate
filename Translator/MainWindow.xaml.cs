@@ -625,28 +625,34 @@ namespace TTSAutomate
 
         private void LoadPhraseFile(String filename, System.Text.Encoding encoding)
         {
-            PhraseFileName = filename;
-            if (Properties.Settings.Default.RecentFiles.Contains(filename))
-            {
-                Properties.Settings.Default.RecentFiles.Remove(filename);
-            }
-            Properties.Settings.Default.RecentFiles.Insert(0, filename);
-
-            filenameSelected = true;
-            Properties.Settings.Default.LastPhraseFile = filename; //Path.GetDirectoryName(dlg.FileName);
-
             FileInfo fi = new FileInfo(filename);
 
-            Boolean isCSV = fi.Extension.ToLower() != "csv";
+            Boolean isCSV = fi.Extension.ToLower() == ".csv";
 
-            NeedToSave = !isCSV; // If it's a CSV, prompt to save as a PSV when closing
+            PhraseFileName = filename;
+
+            if (!isCSV)
+            {
+                if (Properties.Settings.Default.RecentFiles.Contains(filename))
+                {
+                    Properties.Settings.Default.RecentFiles.Remove(filename);
+                }
+                Properties.Settings.Default.RecentFiles.Insert(0, filename);
+
+                filenameSelected = true;
+                Properties.Settings.Default.LastPhraseFile = filename; //Path.GetDirectoryName(dlg.FileName);
+
+            }
+
+
+            NeedToSave = isCSV; // If it's a CSV, prompt to save as a PSV when closing
 
             PhraseItems.Clear();
             Regex r = new Regex(@"(?<Folder>.*)\|(?<FileName>.*)\|(?<Phrase>.*)\s{2}");
 
             if (isCSV)
             {
-                r = new Regex(@"(?<Folder>.*)\,(?<FileName>.*)\,(?<Phrase>.*)\s{2}");
+                r = new Regex(@"(?<Folder>.*)\;(?<FileName>.*)\;(?<Phrase>.*)\s{2}");
             }
 
             List<PhraseItem> items = new List<PhraseItem>();
@@ -733,7 +739,7 @@ namespace TTSAutomate
             dlg.FileName = Properties.Settings.Default.LastPhraseFile;
 
             dlg.Title = String.Format("Open a Phrase file as {0}", encoding.EncodingName);
-            dlg.Filter = "Phrase Files (*.psv)|*.psv|All Files (*.*)|*.*";
+            dlg.Filter = "Phrase Files (*.psv)|*.psv";
             System.Windows.Forms.DialogResult result = dlg.ShowDialog();
 
             if (result == System.Windows.Forms.DialogResult.OK)
@@ -838,7 +844,11 @@ namespace TTSAutomate
 
         private Boolean SaveOrSaveAs()
         {
-            if (filenameSelected)
+            FileInfo fi = new FileInfo(PhraseFileName);
+
+            Boolean isCSV = fi.Extension.ToLower() == ".csv";
+
+            if (filenameSelected && !isCSV)
             {
                 SavePhraseFile(PhraseFileName);
                 return true;
@@ -1339,9 +1349,41 @@ namespace TTSAutomate
 
         private void OpenCSVFileCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            PhraseFileName = e.Parameter.ToString();
+            if (NeedToSave && PhraseItems.Count(n => !IsPhraseEmpty(n)) > 0)
+            {
+                switch (MessageBox.Show("Your phrases file is not saved. Would you like to save it before you open another file?", "Unsaved Phrases file", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
+                {
+                    case MessageBoxResult.Cancel:
+                        return;
+                    case MessageBoxResult.Yes:
+                        SaveOrSaveAs();
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        break;
+                }
+            }
 
-            LoadPhraseFile(e.Parameter.ToString(), Encoding.Default);
+            System.Text.Encoding encoding = e.Parameter as System.Text.Encoding ?? System.Text.Encoding.Default;
+
+            var dlg = new System.Windows.Forms.OpenFileDialog();
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.LastPhraseFile))
+            {
+                dlg.InitialDirectory = Path.GetDirectoryName(Properties.Settings.Default.LastPhraseFile);
+
+            }
+            dlg.FileName = Properties.Settings.Default.LastPhraseFile;
+
+            dlg.Title = String.Format("Import a CSV file");
+            dlg.Filter = "CSV Files (*.csv)|*.csv";
+            System.Windows.Forms.DialogResult result = dlg.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                PhraseFileName = dlg.FileName;
+                LoadPhraseFile(PhraseFileName, encoding);
+            }
 
         }
 

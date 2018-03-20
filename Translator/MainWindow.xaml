@@ -141,14 +141,7 @@
         <StackPanel x:Uid="StackPanel_1" Grid.Column="4" HorizontalAlignment="Stretch"  Grid.Row="0" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="5" >
             <local:SplitButton  x:Uid="OpenPhraseFile" Content="Open Phrase File..." ToolTip="Ctrl O"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Column="3" Margin="5" Command="self:CustomCommands.BrowsePhraseFileCommand">
                 <local:SplitButton.MenuItemsSource>
-                    <MenuItem x:Uid="ImportCSVFileMenu" ItemsSource="{Binding RecentFiles, Source={x:Static properties:Settings.Default}}" Header="Import CSV file">
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Command" Value="self:CustomCommands.OpenCSVFileCommand" />
-                                <Setter Property="CommandParameter" Value="{Binding}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
+                    <MenuItem x:Uid="ImportCSVFileMenu" Header="Import CSV file..." Command="self:CustomCommands.OpenCSVFileCommand" />
                     <Separator />
                     <MenuItem x:Uid="OpenRecentFileMenu" ItemsSource="{Binding RecentFiles, Source={x:Static properties:Settings.Default}}" Header="Open recent file">
                         <MenuItem.ItemContainerStyle>
