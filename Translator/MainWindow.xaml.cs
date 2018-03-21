@@ -674,7 +674,7 @@ namespace TTSAutomate
                 {
                     items.Add(new PhraseItem { Phrase = "" });
                 }
-                items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = match.Groups["FileName"].Value, Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
+                items[j++] = (new PhraseItem { Index = PhraseItems.Count, Folder = match.Groups["Folder"].Value, FileName = (isCSV? match.Groups["FileName"].Value.ToLower().Replace(".wav", "") : match.Groups["FileName"].Value), Phrase = match.Groups["Phrase"].Value, DownloadComplete = false });
             }
             //}
             PhraseItems = new ObservableCollection<PhraseItem>(items);
