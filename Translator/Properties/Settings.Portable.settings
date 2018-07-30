@@ -65,7 +65,13 @@
      <Setting Name="CheckForNewVersion" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-	    <Setting Name="RecentFiles" Provider="PortableSettingsProvider" Roaming="true" Type="System.Collections.Specialized.StringCollection" Scope="User">
+     <Setting Name="TrimSilence" Provider="PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TrimSilenceThreshold" Provider="PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-48</Value>
+    </Setting>
+    <Setting Name="RecentFiles" Provider="PortableSettingsProvider" Roaming="true" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)"></Value>
     </Setting>
  </Settings>

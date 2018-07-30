@@ -1406,17 +1406,19 @@ namespace TTSAutomate
 
         private void WordsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            DependencyObject dep = (DependencyObject)e.OriginalSource;
-            while ((dep != null) && !(dep is DataGridRow) && !(dep is System.Windows.Controls.Primitives.DataGridColumnHeader))
-            {
-                dep = VisualTreeHelper.GetParent(dep);
-            }
-            if (dep != null && ((dep as DataGridRow).Item as PhraseItem).DownloadComplete)
-            {
-                AudioEditor ae = new AudioEditor(String.Format("{0}\\wav\\{1}.{2}", OutputDirectoryName, ((dep as DataGridRow).Item as PhraseItem).FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
-                ae.Show();
+            // Disable the double click audio editor
 
-            }
+            //DependencyObject dep = (DependencyObject)e.OriginalSource;
+            //while ((dep != null) && !(dep is DataGridRow) && !(dep is System.Windows.Controls.Primitives.DataGridColumnHeader))
+            //{
+            //    dep = VisualTreeHelper.GetParent(dep);
+            //}
+            //if (dep != null && ((dep as DataGridRow).Item as PhraseItem).DownloadComplete)
+            //{
+            //    AudioEditor ae = new AudioEditor(String.Format("{0}\\wav\\{1}.{2}", OutputDirectoryName, ((dep as DataGridRow).Item as PhraseItem).FullPathAndFile, Properties.Settings.Default.EncodeToWav ? "wav" : "mp3"));
+            //    ae.Show();
+
+            //}
 
 
         }

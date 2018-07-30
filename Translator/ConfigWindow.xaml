@@ -7,7 +7,7 @@
         xmlns:properties="clr-namespace:TTSAutomate.Properties"
         xmlns:local="clr-namespace:TTSAutomate"
         mc:Ignorable="d"
-        Title="Configure..." Height="570" Width="800" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+        Title="Configure..." Height="600" Width="800" Background="#FF4692D1" Icon="speech-bubble.ico" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Grid x:Uid="Grid_1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Uid="ColumnDefinition_1" Width="90"/>
@@ -38,6 +38,11 @@
                     <CheckBox x:Uid="CopyWhenInserting" Margin="5" Content="Copy previous folder when inserting rows" IsChecked="{Binding CopyFolderWhenInsertingLines, Source={x:Static properties:Settings.Default}}"/>
                     <CheckBox x:Uid="CopyWhenSelecting" Margin="5" Content="Copy previous folder when selecting empty row" IsChecked="{Binding CopyFolderWhenSelectingEmptyRow, Source={x:Static properties:Settings.Default}}"/>
                     <CheckBox x:Uid="CheckForNewVersion" Margin="5" Content="Check for new program version on start" IsChecked="{Binding CheckForNewVersion, Source={x:Static properties:Settings.Default}}"/>
+                    <StackPanel Orientation="Horizontal" >
+                        <CheckBox x:Uid="TrimSilence" Margin="5,10" Content="Automatically trim silence less than " VerticalContentAlignment="Center" IsChecked="{Binding TrimSilence, Source={x:Static properties:Settings.Default}}"/>
+                        <TextBox VerticalContentAlignment="Center"  Margin="0,5" Width="30" Text="{Binding TrimSilenceThreshold, Source={x:Static properties:Settings.Default}}"/>
+                        <Label  x:Uid="decibelUnit" Margin="0,5,5,5" Content="dB" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"  />
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
             <GroupBox  x:Uid="VoiceOptions" Margin="5,0" Padding="10,5" Header="Voice options" BorderBrush="#FF4692D1" >
@@ -52,7 +57,7 @@
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10,5" Header="TTS specific options" BorderBrush="#FF4692D1" >
+            <GroupBox  x:Uid="TTSOptions" Margin="5,0" Padding="10,0" Header="TTS specific options" BorderBrush="#FF4692D1" >
                 <StackPanel x:Uid="StackPanel_5">
                     <StackPanel x:Uid="StackPanel_8" Orientation="Horizontal">
                         <Label  x:Uid="IvonaRegion" Margin="0,5,5,5" Content="Amazon Polly Region" HorizontalContentAlignment="Left" Width="150"/>
@@ -60,7 +65,7 @@
                     </StackPanel>
                     <StackPanel x:Uid="StackPanel_7" Orientation="Horizontal">
                         <Label  x:Uid="BingString" Margin="0,5,5,5" Content="Bing Header String" HorizontalContentAlignment="Left" Width="150"/>
-                        <TextBox  x:Uid="TextBox_1" Margin="0,5" Text="{Binding BingHeaderString, Source={x:Static properties:Settings.Default}}" HorizontalAlignment="Stretch" Width="490" Height="54" TextWrapping="Wrap"/>
+                        <TextBox  x:Uid="TextBox_1" Margin="0,5" Text="{Binding BingHeaderString, Source={x:Static properties:Settings.Default}}" HorizontalAlignment="Stretch" Width="490" Height="45" TextWrapping="Wrap"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
